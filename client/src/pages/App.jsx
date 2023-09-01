@@ -1,6 +1,6 @@
 
-
-import './App.css'
+import RegisterPage from './RegisterPage';
+import '../styles/App.css'
 import { Button } from 'antd';
 
 function App() {
@@ -12,6 +12,10 @@ function App() {
     </h1>
     <div></div>
     <Button type="primary">Button</Button>
+
+    <RegisterPage />
+
+    
     </>
   )
 }
