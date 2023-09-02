@@ -26,7 +26,8 @@ function TopServices() {
         <h2 className="font-bold text-[20px] mt-3">
           ทำความสะอาดทั่วไป
           </h2>
-        <div className="flex items-center"><SellBlack />
+        <div className="flex items-center">
+          <SellBlack />
         <p className="ml-2 text-[#646C80]">
           ค่าบริการประมาณ 500.00 - 1,000.00 ฿
           </p>
@@ -50,7 +51,8 @@ function TopServices() {
         <h2 className="font-bold text-[20px] mt-3">
           ล้างแอร์
           </h2>
-        <div className="flex items-center"><SellBlack />
+        <div className="flex items-center">
+          <SellBlack />
         <p className="ml-2 text-[#646C80]">
           ค่าบริการประมาณ 500.00 - 1,000.00 ฿
           </p>
@@ -75,7 +77,9 @@ function TopServices() {
         <h2 className="font-bold text-[20px] mt-3">
           ซ่อมเครื่องซักผ้า
           </h2>
-        <div className="flex items-center"><SellBlack /><p className="ml-2 text-[#646C80]">
+        <div className="flex items-center">
+          <SellBlack />
+          <p className="ml-2 text-[#646C80]">
           ค่าบริการประมาณ 500.00 ฿
           </p>
           </div>
