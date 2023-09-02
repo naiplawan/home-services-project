@@ -2,7 +2,18 @@
 @font-face {
   font-family: prompt;
   src: url(../public/Prompt\ Regular.ttf);
+  
 }
+
+@font-face {
+  font-family: prompt-Bold;
+  src: url(../public/Prompt-Bold.ttf);
+}
+
 .prompt {
   font-family: prompt;
+}
+
+.prompt-Bold {
+  font-family: prompt-Bold;;
 }
