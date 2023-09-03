@@ -17,7 +17,7 @@ function TopServices() {
       <div >
         <img src={Cleaning} alt="cleaning"/>
       </div>
-      <div className="p-5 bg-white">
+      <div className="p-2 md:p-5 bg-white min-h-full">
         <div className="bg-[#E7EEFF] text-center w-[100px] p-1 text-[#0E3FB0] rounded-lg">
           <p>
             บริการทั่วไป
@@ -43,7 +43,7 @@ function TopServices() {
     <div>
         <img src={Air} alt="air" />
       </div>
-      <div className="p-5 bg-white">
+      <div className="p-2 md:p-5 bg-white min-h-full">
         <div className="bg-[#E7EEFF] text-center w-[100px] p-1 text-[#0E3FB0] rounded-lg" >
           <p>บริการทั่วไป
             </p>
@@ -68,7 +68,7 @@ function TopServices() {
     <div>
         <img src={Washing} alt="washing" />
       </div>
-      <div className="p-5 bg-white">
+      <div className="p-2 md:p-5 bg-white min-h-full">
         <div className="bg-[#E7EEFF] text-center w-[100px] p-1 text-[#0E3FB0] rounded-lg">
           <p>
             บริการทั่วไป
@@ -83,8 +83,8 @@ function TopServices() {
           ค่าบริการประมาณ 500.00 ฿
           </p>
           </div>
-        <div>
-          <button className="underline text-[#336DF2] font-bold text-[16px] mt-6">
+        <div className="bg-white">
+          <button className="underline text-[#336DF2] font-bold text-[16px] mt-6 bg-white">
           เลือกบริการ
           </button>
         </div>
