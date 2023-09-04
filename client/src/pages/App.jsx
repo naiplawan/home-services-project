@@ -1,20 +1,18 @@
-import '../styles/App.css'
-import { Button } from 'antd';
-import LoginForm from './LoginPage';
+import "../styles/App.css";
+import LoginForm from "./LoginPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
-
-
   return (
     <>
-    {/* Tailwind CSS */}
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-    <LoginForm/>
-
+      <BrowserRouter>
+        <Routes>
+          <Route path="/LoginPage" element={LoginForm} />
+        </Routes>
+      </BrowserRouter>
+      <LoginForm/>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
