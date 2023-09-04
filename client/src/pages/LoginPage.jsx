@@ -1,4 +1,5 @@
 import { Button, Form, Input } from "antd";
+import Navbar from "../components/NavBar";
 
 function LoginForm() {
  
@@ -12,7 +13,7 @@ function LoginForm() {
 
   return (
     <>
-      <navbar></navbar>
+      <Navbar/>
       <div className="form-container">
         <Form
           name="basic"
