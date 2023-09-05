@@ -1,6 +1,8 @@
 import { Router } from "express";
 
 import supabase from "../utils/supabase.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 console.log(supabase);
 const authRouter = Router();
@@ -65,5 +67,41 @@ authRouter.post('/register', async (req, res) => {
     });
 
 });
+
+authRouter.post("/login", async (req, res) => {
+    const user = await supabase
+    .from('user')
+    .find({ eamil: req.body.email})
+
+    if (!user) {
+        return res.status(404).json({
+            message: "email not found",
+        })
+    }
+    
+    const isValidPassword = await bcrypt.compare(
+        req.body.password,
+        user.password
+    );
+
+    if (!isValidPassword) {
+        return res.status(400).json({
+            message: "password not valid"
+        })
+    }
+
+    const token = jwt.sign(
+        { id: user._id, fullname: user.fullname },
+        process.env.SECRET_KEY,
+        {
+            expiresIn: "900000"
+        }
+        
+    )
+    return res.json({
+        message: "login succesfully",
+        token,
+    })
+})
 
 export default authRouter
