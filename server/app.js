@@ -1,11 +1,11 @@
-import express from 'express';
-import authRouter from './apps/auth.js';
+import express from "express";
+import authRouter from "./apps/auth.js";
 
 async function init() {
   const app = express();
   const port = 4000;
 
-  app.use("/auth", authRouter)
+  app.use("/auth", authRouter);
 
   app.get("/", (req, res) => {
     res.send("Welcome to Home Service!");
