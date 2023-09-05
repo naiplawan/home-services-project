@@ -1,6 +1,6 @@
-import HouseIcon from '../../assets/homepagePhoto/HouseIcon.svg'
-import LetterIcon from '../../assets/homepagePhoto/LetterIcon.svg'
-import Phone from '../../assets/homepagePhoto/Phone.svg'
+import HouseIcon from '../assets/HouseIcon.svg'
+import LetterIcon from '../assets/LetterIcon.svg'
+import Phone from '../assets/Phone.svg'
 
 function Footer () {
 
