@@ -1,69 +1,69 @@
 import { Router } from "express";
-import bcrypt from "bcrypt"; //เป็นการเข้ารหัส
-import jwt from "jsonwebtoken";
-// import { db } from "../utils/db.js";
 
+import supabase from "../utils/supabase.js";
+
+console.log(supabase);
 const authRouter = Router();
 
-// function Register
-authRouter.post("/register", async (req, res) => {
-  const user = {
-    name: req.body.name,
-    phoneNumber: req.body.phoneNumber,
-    email: req.body.email,
-    password: req.body.password,
-    role: req.body.role,
-  };
+authRouter.get('/', async (req, res) => {
+    // const user = {
+    //     fullname: req.body.fullname,
+    //     phoneNumber: req.body.phoneNumber,
+    //     email: req.body.email,
+    //     password: req.body.password,
+    //     role: req.body.role,
+    // }
 
-  const salt = await bcrypt.genSalt(10);
-  user.password = await bcrypt.hash(user.password, salt);
-  // coursebook เป้น mongoDB 🐷 ตรงนี้เหมือนเป็นการ access ข้อมุลใน data มิ้นไม่แน่ใจว่าโค้ดแบบไหน
-  // const collection = db.collection("users");
-  //   await collection.insertOne(user);
+    // await pool.query(
+    //     `select * from users values ($1, $2, $3, $4, $5)`,
+    //         [user]
+    // )
+    
 
-  return res.json({ message: "User has been created successfully" });
+    try {
+        const data = await supabase
+            .from('users')
+            .select("*") 
+
+        return (
+            res.json({
+                data
+            })
+        )
+    }catch (error) {
+        res.status(500).json({
+            error: error
+        });
+    }
 });
 
-// todo 3 ให้สร้าง API เพื่อเอาไว้ Login ตัว User ตามตารางที่ออกแบบไว้
-authRouter.post("/login", async (req, res) => {
-  // coursebook เป้น mongoDB 🐷
-  // const user = await await db.collection("users").findOne({
-  //     username: req.body.username,
-  //   });
+authRouter.post('/register', async (req, res) => {
+    const user = {
+        fullname: req.body.fullname,
+        phoneNumber: req.body.phoneNumber,
+        email: req.body.email,
+        password: req.body.password,
+        role: req.body.role,
+    }
 
-  //   if (!user) {
-  //     return res.status(404).json({
-  //       message: "User not found",
-  //     });
-  //   }
+//     const salt = await bcrypt.genSalt(10);
+//     user.password = await bcrypt.hash(user.password, salt);
 
-  //   const isValidPassword = await bcrypt.compare(
-  //     req.body.password,
-  //     user.password
-  //   );
+//     await pool.query(
+//         `insert into users (fullname, phoneNumber, email, password, role)
+//       values ($1, $2, $3, $4, $5)`,
+//         [user.fullname, user.phoneNumber, user.email, user.password, user.role]
+//       );
+    
+    await supabase
+        .from('users')
+        .insert(user)
 
-  //   if (!isValidPassword) {
-  //     return res.status(404).json({
-  //       message: "password not valid",
-  //     });
-  //   }
 
-  //   const token = jwt.sign(
-  //     {
-  //       id: user._id,
-  //       firstName: user.firstName,
-  //       lastName: user.lastName,
-  //       role: user.role,
-  //     },
-  //     process.env.SECRET_KEY,
-  //     {
-  //       expiresIn: "900000",
-  //     }
-  //   );
-  return res.json({
-    message: "Login successfully",
-    token,
-  });
+    return res.json({
+        message: "Your account has been ceated successfully",
+    });
+
 });
 
-export default authRouter;
+export default authRouter

@@ -5,15 +5,17 @@
     
   }
   
-  @font-face {
-    font-family: prompt-Bold;
-    src: url(../public/Prompt-Bold.ttf);
-  }
-  
-  .prompt {
-    font-family: prompt;
-  }
-  
-  .prompt-Bold {
-    font-family: prompt-Bold;;
-  }
+}
+
+@font-face {
+  font-family: prompt-Bold;
+  src: url(../public/Prompt-Bold.ttf);
+}
+
+.prompt {
+  font-family: prompt;
+}
+
+.prompt-Bold {
+  font-family: prompt-Bold;;
+}
