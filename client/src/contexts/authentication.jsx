@@ -29,10 +29,7 @@ function AuthProvider(props) {
       const userDataFromToken = jwtDecode(token);
       setState({ ...state, user: userDataFromToken });
       // ******** ตรงนี้จะแก้เพราะจะดู data ว่ามีรายละเอียดอะไรบ้าง อันนี้ mock ไว้ก่อนค่ะ
-      localStorage.setItem("name", userDataFromToken);
       localStorage.setItem("email", userDataFromToken);
-      localStorage.setItem("password", userDataFromToken);
-      localStorage.setItem("phoneNumber", userDataFromToken);
       localStorage.setItem("role", userDataFromToken);
       // ใส่ condition login ตรวจสอบ role
       if (userDataFromToken.role === "admin") {

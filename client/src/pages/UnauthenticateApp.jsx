@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 
 import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
-import "./styles/App.css";
+import Homepage from "./HomePage";
 
 function UnauthenticatedApp() {
   return (
@@ -12,7 +12,7 @@ function UnauthenticatedApp() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="*" element={<LoginPage />} />
+        <Route path="*" element={<Homepage/>}/>
       </Routes>
     </div>
   );
