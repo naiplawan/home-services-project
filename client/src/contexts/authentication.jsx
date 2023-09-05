@@ -14,7 +14,6 @@ function AuthProvider(props) {
   const [errorLogin, setErrorLogin] = useState("");
   const navigate = useNavigate();
 
-  //ใส่ logic register
   const register = async (data) => {
     await axios.post("http://localhost:4000/auth/register", data);
     navigate("/login");

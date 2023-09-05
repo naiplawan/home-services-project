@@ -1,6 +1,6 @@
-import { useAuth } from "./contexts/authentication.js";
-import AuthenticatedApp from "./pages/AuthenticatedApp.js";
-import UnauthenticatedApp from "./pages/UnauthenticatedApp.js";
+import { useAuth } from "./contexts/authentication.jsx";
+import AuthenticatedApp from "./pages/AuthenticatedApp.jsx";
+import UnauthenticatedApp from "./pages/UnauthenticateApp.jsx";
 
 function App() {
   const auth = useAuth();

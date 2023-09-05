@@ -4,12 +4,14 @@ import { Routes, Route } from "react-router-dom";
 
 import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
-import "./styles/App.css";
+import HomePage from "./HomePage";
+import "../styles/App.css";
 
 function UnauthenticatedApp() {
   return (
     <div className="App">
       <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<LoginPage />} />

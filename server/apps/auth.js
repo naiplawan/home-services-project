@@ -1,36 +1,17 @@
 import { Router } from "express";
-
 import supabase from "../utils/supabase.js";
-
-console.log(supabase);
+import bcrypt from "bcrypt";
 const authRouter = Router();
 
 authRouter.get('/', async (req, res) => {
-    // const user = {
-    //     fullname: req.body.fullname,
-    //     phoneNumber: req.body.phoneNumber,
-    //     email: req.body.email,
-    //     password: req.body.password,
-    //     role: req.body.role,
-    // }
-
-    // await pool.query(
-    //     `select * from users values ($1, $2, $3, $4, $5)`,
-    //         [user]
-    // )
-    
-
     try {
         const data = await supabase
             .from('users')
-            .select("*") 
-
-        return (
-            res.json({
-                data
-            })
-        )
-    }catch (error) {
+            .select("*");
+        return res.json({
+            data
+        });
+    } catch (error) {
         res.status(500).json({
             error: error
         });
@@ -39,31 +20,48 @@ authRouter.get('/', async (req, res) => {
 
 authRouter.post('/register', async (req, res) => {
     const user = {
-        fullname: req.body.fullname,
+        fullName: req.body.fullName,
         phoneNumber: req.body.phoneNumber,
         email: req.body.email,
         password: req.body.password,
         role: req.body.role,
     }
 
-//     const salt = await bcrypt.genSalt(10);
-//     user.password = await bcrypt.hash(user.password, salt);
-
-//     await pool.query(
-//         `insert into users (fullname, phoneNumber, email, password, role)
-//       values ($1, $2, $3, $4, $5)`,
-//         [user.fullname, user.phoneNumber, user.email, user.password, user.role]
-//       );
+    console.log('Received data from frontend:', user); // Log the data
     
-    await supabase
-        .from('users')
-        .insert(user)
+    try {
+           // Generate a salt
+           const salt = await bcrypt.genSalt(10);
 
+           // Hash the password with the generated salt
+        const hashedPassword = await bcrypt.hash(user.password, salt);
+        const { data, error } = await supabase
+            .from('users')
+            .insert([
+                {
+                    fullName: user.fullName,
+                    phoneNumber: user.phoneNumber,
+                    email: user.email,
+                    password: hashedPassword, 
+                    role: user.role,
+                },
+            ])
+            .select();
 
-    return res.json({
-        message: "Your account has been ceated successfully",
-    });
+        if (error) {
+            return res.status(500).json({ error: 'Failed to register user.' });
+        }
 
+        // Log the data
+        console.log('User data after registration:', data);
+
+        return res.json({
+            message: "Your account has been created successfully",
+        });
+    } catch (err) {
+        console.error('Error while registering user:', err);
+        return res.status(500).json({ error: 'Failed to register user.' });
+    }
 });
 
-export default authRouter
+export default authRouter;  

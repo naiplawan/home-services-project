@@ -4,6 +4,7 @@ import Navbar from "../components/NavBar";
 import { useSate, useState } from "react";
 
 function LoginForm() {
+  const navigate = useNavigate();
   const onFinish = (values) => {
     console.log("Success:", values);
   };
@@ -96,7 +97,7 @@ function LoginForm() {
               <span className="text-gray-700">
                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
               </span>
-              <a onClick={() => navigate("register")}>
+              <a onClick={() => navigate("/register")}>
                 <span className="underline">ลงทะเบียน</span>
               </a>
             </div>
