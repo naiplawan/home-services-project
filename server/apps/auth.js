@@ -71,7 +71,7 @@ authRouter.post('/register', async (req, res) => {
 authRouter.post("/login", async (req, res) => {
     const user = await supabase
     .from('user')
-    .find({ eamil: req.body.email})
+    .find({ email: req.body.email})
 
     if (!user) {
         return res.status(404).json({
@@ -94,7 +94,7 @@ authRouter.post("/login", async (req, res) => {
         { id: user._id, fullname: user.fullname },
         process.env.SECRET_KEY,
         {
-            expiresIn: "900000"
+            expiresIn: "9000000"
         }
         
     )
