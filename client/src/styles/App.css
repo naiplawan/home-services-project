@@ -1,13 +1,19 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+
+@font-face {
+  font-family: prompt;
+  src: url(../public/Prompt\ Regular.ttf);
+  
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  font-family: Prompt;
+@font-face {
+  font-family: prompt-Bold;
+  src: url(../public/Prompt-Bold.ttf);
+}
+
+.prompt {
+  font-family: prompt;
+}
+
+.prompt-Bold {
+  font-family: prompt-Bold;;
 }
