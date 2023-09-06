@@ -1,4 +1,4 @@
-import Navbar from "../components/NavBar";
+import Navbar from "/src/components/Navbar.jsx";
 import Slogan from "/src/components/Homepage/Slogan.jsx";
 import TopServices from "/src/components/HomePage/TopServices.jsx";
 import ForJob from "/src/components/HomePage/ForJob.jsx";

@@ -16,7 +16,7 @@ function Slogan () {
           </button>
         </div>
       </div>
-    <div className=" lg:absolute bottom-0 lg:right-0 xl:right-80">
+    <div className=" lg:absolute bottom-0 lg:right-0 xl:right-40">
       <img src={BlueMan} alt="blueman" className=""/>
     </div>
     </div>
