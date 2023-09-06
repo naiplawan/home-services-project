@@ -1,6 +1,6 @@
 import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import Navbar from "/src/components/NavBar.jsx";
+import Navbar from "../components/Navbar";
 import { useAuth } from "../contexts/authentication";
 
 function LoginForm() {
@@ -13,7 +13,9 @@ function LoginForm() {
   const onFinish = async (values) => {
 
     try {
-      await login(values)
+
+      console.log(values);
+      await login(values);
     } catch (error) {
       console.error("Login failed:", error)
     }
@@ -33,7 +35,7 @@ function LoginForm() {
     <>
       <div className="flex flex-col">
         <Navbar />
-        <div className="flex w-1440px min-h-screen justify-center  bg-bg ">
+        <div className="flex w-1440px min-h-screen  justify-center bg-bg ">
           <Form
             name="basic"
             labelCol={{

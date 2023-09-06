@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode"; //package npm install jwt-decode //npm install jsonwebtoken
 
 const AuthContext = React.createContext();
+//Comment Code//
 
 function AuthProvider(props) {
   const [state, setState] = useState({
@@ -14,15 +15,27 @@ function AuthProvider(props) {
   const [errorLogin, setErrorLogin] = useState("");
   const navigate = useNavigate();
 
-  const register = async (data) => {
-    await axios.post("http://localhost:4000/auth/register", data);
+  const register = async (values) => {
+    await axios.post("http://localhost:4000/auth/register", values);
     navigate("/login");
   };
 
   //ใส่ logic login
-  const login = async (data) => {
+  const login = async (values) => {
     try {
+
+      const data = {
+        email: values.email,
+        password: values.password,
+      };
+      console.log(data)
       const result = await axios.post("http://localhost:4000/auth/login", data);
+      
+      const response = result.data;
+
+      // Debugging: Log the data being sent to the API
+      console.log("Data sent to API:", response);
+
       const token = result.data.token;
       localStorage.setItem("token", token);
       const userDataFromToken = jwtDecode(token);

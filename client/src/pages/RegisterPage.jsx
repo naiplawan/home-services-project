@@ -1,5 +1,5 @@
 import { Button, Form, Input, Checkbox, message } from "antd";
-import Navbar from "/src/components/NavBar.jsx";
+import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 // import { useAuth } from "../contexts/authentication.jsx";
@@ -75,7 +75,7 @@ function RegisterPage() {
   return (
     <div className="flex flex-col">
       <Navbar />
-      <div className="flex w-1440px min-h-screen justify-center bg-bg ">
+      <div className="flex w-1440px min-h-screen  justify-center bg-bg">
         <Form
           {...layout}
           name="nest-messages"
