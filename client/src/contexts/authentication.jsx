@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios"; //npm install axios
 import { useNavigate } from "react-router-dom";
-import jwtDecode from "jwt-decode"; //package npm install jwt-decode
+import jwtDecode from "jwt-decode"; //package npm install jwt-decode //npm install jsonwebtoken
 
 const AuthContext = React.createContext();
 
@@ -28,12 +28,10 @@ function AuthProvider(props) {
       localStorage.setItem("token", token);
       const userDataFromToken = jwtDecode(token);
       setState({ ...state, user: userDataFromToken });
-      // ******** ตรงนี้จะแก้เพราะจะดู data ว่ามีรายละเอียดอะไรบ้าง อันนี้ mock ไว้ก่อนค่ะ
-      localStorage.setItem("email", userDataFromToken);
-      localStorage.setItem("role", userDataFromToken);
+      navigate("/");
       // ใส่ condition login ตรวจสอบ role
       if (userDataFromToken.role === "admin") {
-        navigate("/category-dashboard");
+        navigate("/admin-category");
       } else if (userDataFromToken.role === "customer") {
         navigate("/");
       }
