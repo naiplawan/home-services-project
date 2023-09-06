@@ -13,7 +13,7 @@ function LoginForm() {
   const onFinish = async (values) => {
 
     try {
-      await login(values.email, values.password)
+      await login(values)
     } catch (error) {
       console.error("Login failed:", error)
     }

@@ -1,7 +1,6 @@
 import HouseIcon from '../assets/HouseIcon.svg';
 
 function Navbar () {
-
   return(
     
       <div className="flex justify-between p-5 shadow-[2px_2px_24px_rgba(23,51,106,0.12)] sticky top-0 z-[100] bg-white">
@@ -18,7 +17,8 @@ function Navbar () {
         </div>
 
         <div className="lg:mr-40">
-          <button className="prompt text-sm font-bold text-[#336DF2] border border-[#336DF2] w-[100px] h-[35px] rounded-lg ">เข้าสู่ระบบ</button>
+          <button 
+          className="prompt text-sm font-bold text-[#336DF2] border border-[#336DF2] w-[100px] h-[35px] rounded-lg ">เข้าสู่ระบบ</button>
         </div>
       </div>
     
