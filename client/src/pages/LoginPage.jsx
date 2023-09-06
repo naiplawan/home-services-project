@@ -1,6 +1,6 @@
 import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/NavBar";
+import Navbar from "../components/Navbar";
 import { useAuth } from "../contexts/authentication";
 
 function LoginForm() {
@@ -33,7 +33,7 @@ function LoginForm() {
     <>
       <div className="flex flex-col">
         <Navbar />
-        <div className="flex w-1440px min-h-screen flex justify-center bg-bg ">
+        <div className="flex w-1440px min-h-screen  justify-center bg-bg ">
           <Form
             name="basic"
             labelCol={{
