@@ -1,6 +1,6 @@
 import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/NavBar";
+import Navbar from "/src/components/NavBar.jsx";
 import { useAuth } from "../contexts/authentication";
 
 function LoginForm() {
