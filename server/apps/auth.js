@@ -67,37 +67,40 @@ authRouter.post('/register', async (req, res) => {
 });
 
 authRouter.post("/login", async (req, res) => {
-  const user = await supabase.from("user").find({ email: req.body.email });
-
-  if (!user) {
-    return res.status(404).json({
-      message: "email not found",
-    });
-  }
-
-  const isValidPassword = await bcrypt.compare(
-    req.body.password,
-    user.password
-  );
-
-  if (!isValidPassword) {
-    return res.status(400).json({
-      message: "password not valid",
-    });
-  }
-
-  const token = jwt.sign(
-    { id: user._id, fullname: user.fullname },
-    process.env.SECRET_KEY,
-    {
-      expiresIn: "9000000",
+  try {
+    const { data: user, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", req.body.email);
+    if (error) {
+      console.log(error);
     }
-  );
-  return res.json({
-    message: "login succesfully",
-    token,
-  });
+    if (!user[0]) {
+      return res.status(404).json({
+        message: "Email not found",
+      });
+    }
+    const isValidPassword = await bcrypt.compare(
+      req.body.password,
+      user[0].password
+    );
+    if (!isValidPassword) {
+      return res.status(401).json({
+        message: "Password is invalid",
+      });
+    }
+    const token = jwt.sign(
+      { id: user[0].id, username: user[0].username },
+      process.env.REACT_APP_JWT_KEY,
+      { expiresIn: "900000" }
+    );
+    return res.json({
+      data: user[0],
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 export default authRouter;  
-
