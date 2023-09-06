@@ -1,7 +1,7 @@
 import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import { useAuth } from "../contexts/authentication";
+import Navbar from "../../components/Navbar";
+import { useAuth } from "../authentication";
 
 function LoginForm() {
   const { login } = useAuth();
