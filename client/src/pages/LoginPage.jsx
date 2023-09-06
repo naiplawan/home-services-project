@@ -1,28 +1,32 @@
 import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar";
-import { useSate, useState } from "react";
+import { useAuth } from "../contexts/authentication";
 
 function LoginForm() {
+
+
+  const { login } = useAuth();
   const navigate = useNavigate();
-  const onFinish = (values) => {
-    console.log("Success:", values);
+
+
+  const onFinish = async (values) => {
+
+    try {
+      await login(values.email, values.password)
+    } catch (error) {
+      console.error("Login failed:", error)
+    }
+  
   };
-  // const navigate = useNavigate()
-  // const [error, setError] = useState(null)
 
-  // const onFinish = async (values) => {
-  //  const { email, password} = values;
-
-  //  const isValid = await checkCredentials(email, password); // ใส่ database ลงไป
-
-  //  if (!isvalid) {
-  //   setError("กรุณากรอกอีเมลและรหัสผ่านให้ถูกต้อง")
-  //  }
-  // };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
+  };
+
+  const handleRegisterClick = () => {
+    navigate("/register");
   };
 
   return (
@@ -97,7 +101,7 @@ function LoginForm() {
               <span className="text-gray-700">
                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
               </span>
-              <a onClick={() => navigate("/register")}>
+              <a onClick={handleRegisterClick}>
                 <span className="underline">ลงทะเบียน</span>
               </a>
             </div>
