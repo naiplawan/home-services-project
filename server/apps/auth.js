@@ -1,62 +1,69 @@
 import { Router } from "express";
-
 import supabase from "../utils/supabase.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"; // npm install jsonwebtoken
 
-console.log(supabase);
 const authRouter = Router();
 
-authRouter.get("/", async (req, res) => {
-  // const user = {
-  //     fullname: req.body.fullname,
-  //     phoneNumber: req.body.phoneNumber,
-  //     email: req.body.email,
-  //     password: req.body.password,
-  //     role: req.body.role,
-  // }
-
-  // await pool.query(
-  //     `select * from users values ($1, $2, $3, $4, $5)`,
-  //         [user]
-  // )
-
-  try {
-    const data = await supabase.from("users").select("*");
-
-    return res.json({
-      data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: error,
-    });
-  }
+authRouter.get('/', async (req, res) => {
+    try {
+        const data = await supabase
+            .from('users')
+            .select("*");
+        return res.json({
+            data
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: error
+        });
+    }
 });
 
-authRouter.post("/register", async (req, res) => {
-  const user = {
-    fullname: req.body.fullname,
-    phoneNumber: req.body.phoneNumber,
-    email: req.body.email,
-    password: req.body.password,
-    role: req.body.role,
-  };
+authRouter.post('/register', async (req, res) => {
+    const user = {
+        fullName: req.body.fullName,
+        phoneNumber: req.body.phoneNumber,
+        email: req.body.email,
+        password: req.body.password,
+        role: req.body.role,
+    }
 
-  //     const salt = await bcrypt.genSalt(10);
-  //     user.password = await bcrypt.hash(user.password, salt);
+    console.log('Received data from frontend:', user); // Log the data
+    
+    try {
+           // Generate a salt
+           const salt = await bcrypt.genSalt(10);
 
-  //     await pool.query(
-  //         `insert into users (fullname, phoneNumber, email, password, role)
-  //       values ($1, $2, $3, $4, $5)`,
-  //         [user.fullname, user.phoneNumber, user.email, user.password, user.role]
-  //       );
+           // Hash the password with the generated salt
+        const hashedPassword = await bcrypt.hash(user.password, salt);
+        const { data, error } = await supabase
+            .from('users')
+            .insert([
+                {
+                    fullName: user.fullName,
+                    phoneNumber: user.phoneNumber,
+                    email: user.email,
+                    password: hashedPassword, 
+                    role: user.role,
+                },
+            ])
+            .select();
 
-  await supabase.from("users").insert(user);
+        if (error) {
+            return res.status(500).json({ error: 'Failed to register user.' });
+        }
 
-  return res.json({
-    message: "Your account has been ceated successfully",
-  });
+        // Log the data
+        console.log('User data after registration:', data);
+
+        return res.json({
+            message: "Your account has been created successfully",
+        });
+    } catch (err) {
+        console.error('Error while registering user:', err);
+        return res.status(500).json({ error: 'Failed to register user.' });
+    }
 });
 
 authRouter.post("/login", async (req, res) => {
@@ -92,4 +99,5 @@ authRouter.post("/login", async (req, res) => {
   });
 });
 
-export default authRouter;
+export default authRouter;  
+

@@ -1,8 +1,14 @@
 import { Button, Form, Input, Checkbox, message } from "antd";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/NavBar";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+// import { useAuth } from "../contexts/authentication.jsx";
+import axios from "axios";
 
 function RegisterPage() {
+  // const { register } = useAuth();
+  const navigate = useNavigate();
+
   const layout = {
     labelCol: {
       span: 10,
@@ -15,31 +21,49 @@ function RegisterPage() {
   const inputStyle =
     "border rounded-lg border-gray-300 w-full h-11 px-4 py-2.5";
 
-    const formStyle = {
-      display: 'flex',
-      width: '440px',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      gap: '4px',
-    };
-    
+  const formStyle = {
+    display: "flex",
+    width: "440px",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: "4px",
+  };
 
   const [isChecked, setIsChecked] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission // State to track checkbox status
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onFinish = async (values) => {
     if (!isSubmitting) {
       try {
-        setIsSubmitting(true); // Set form submission to true to prevent double submission
+        setIsSubmitting(true);
         console.log(values);
-        // Simulate API request (replace this with your actual API call)
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        message.success("Registration successful!");
+
+        const data = {
+          fullName: values.fullName, // Access the field directly by its name
+          phoneNumber: values.phoneNumber,
+          email: values.email,
+          password: values.password,
+          role: "customer",
+        };
+
+        // Debugging: Log the data being sent to the API
+        console.log("Data sent to API:", data);
+
+        const response = await axios.post("http://localhost:4000/auth/register", data);
+
+        // Debugging: Log the entire response from the API
+        console.log("API Response:", response);
+
+        if (response.status === 200) {
+          message.success("ลงทะเบียนสำเร็จ");
+        } else {
+          message.error("ลงทะเบียนล้มเหลว");
+        }
       } catch (error) {
         console.error(error);
-        message.error("Registration failed.");
+        message.error("กรุณากรอกข้อมูลให้ครบถ้วน");
       } finally {
-        setIsSubmitting(false); // Reset form submission state
+        setIsSubmitting(false);
       }
     }
   };
@@ -49,13 +73,9 @@ function RegisterPage() {
   };
 
   return (
-    <div className="register-form-container min-h-screen">
+    <div className="flex flex-col">
       <Navbar />
-      <div className="flex flex-col justify-center items-center bg-bg ">
-        <h1 className="text-blue-950 text-center text-3xl font-medium">
-          ลงทะเบียน
-        </h1>
-
+      <div className="flex w-1440px min-h-screen flex justify-center bg-bg">
         <Form
           {...layout}
           name="nest-messages"
@@ -63,12 +83,16 @@ function RegisterPage() {
           style={{ maxWidth: 600 }}
         >
           {/* Name */}
+          <h1 className="text-blue950 text-center text-[32px] font-medium">
+            ลงทะเบียน
+          </h1>
+
           <Form.Item
             className="flex flex-col mt-5"
-            name={["user", "name"]}
+            name="fullName"
             label="ชื่อ-นามสกุล"
             style={{
-              formStyle
+              formStyle,
             }}
             rules={[
               {
@@ -77,16 +101,12 @@ function RegisterPage() {
               },
               {
                 validator: (rule, value) => {
-                  if (
-                    !/^[-a-zA-Z'.ก-๙\s]+$/.test(
-                      value
-                    )
-                  ) {
+                  if (!/^[-a-zA-Z'.ก-๙\s]+$/.test(value)) {
                     return Promise.reject("กรุณากรอกชื่อ นามสกุลให้ถูกต้อง");
                   }
                   return Promise.resolve();
                 },
-              }
+              },
             ]}
           >
             <Input
@@ -98,10 +118,10 @@ function RegisterPage() {
           {/* Phone Number */}
           <Form.Item
             className="mt-5"
-            name={["user", "phoneNumber"]}
+            name="phoneNumber"
             label="เบอร์โทรศัพท์"
             style={{
-              formStyle
+              formStyle,
             }}
             rules={[
               {
@@ -110,16 +130,12 @@ function RegisterPage() {
               },
               {
                 validator: (rule, value) => {
-                  if (
-                    !/^0[6-9]{1}[0-9]{8}$/.test(
-                      value
-                    )
-                  ) {
+                  if (!/^0[6-9]{1}[0-9]{8}$/.test(value)) {
                     return Promise.reject("กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง");
                   }
                   return Promise.resolve();
                 },
-              }
+              },
             ]}
           >
             <Input
@@ -131,10 +147,10 @@ function RegisterPage() {
           {/* Email */}
           <Form.Item
             className="mt-5"
-            name={["user", "email"]}
+            name="email"
             label="อีเมล"
             style={{
-              formStyle
+              formStyle,
             }}
             rules={[
               {
@@ -148,11 +164,13 @@ function RegisterPage() {
               {
                 validator: (rule, value) => {
                   if (
-                    !/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])/.test(
+                    !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i.test(
                       value
                     )
                   ) {
-                    return Promise.reject("กรุณากรอกอีเมลให้ถูกต้อง");
+                    return Promise.reject(
+                      "กรุณากรอกอีเมลให้ถูกต้อง (email-validator)"
+                    );
                   }
                   return Promise.resolve();
                 },
@@ -165,10 +183,10 @@ function RegisterPage() {
           {/* Password */}
           <Form.Item
             className="mt-5"
-            name={["user", "password"]}
+            name="password"
             label="รหัสผ่าน"
             style={{
-              formStyle
+              formStyle,
             }}
             rules={[
               {
@@ -240,7 +258,9 @@ function RegisterPage() {
               {isSubmitting ? "กำลังลงทะเบียน..." : "ลงทะเบียน"}
             </Button>
             <div className="text-center">
-              <a className="btn-ghost">กลับไปหน้าเข้าสู่ระบบ</a>
+              <a className="btn-ghost" onClick={() => navigate("/login")}>
+                กลับไปหน้าเข้าสู่ระบบ
+              </a>
             </div>
           </Form.Item>
         </Form>
