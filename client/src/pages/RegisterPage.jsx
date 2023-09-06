@@ -81,16 +81,16 @@ function RegisterPage() {
           name="nest-messages"
           onFinish={onFinish}
           style={{ maxWidth: 600 }}
+          className="border border-grey300 bg-white mt-12 h-[50%] p-20 pt-12 rounded-lg"
         >
           {/* Name */}
-          <h1 className="text-blue950 text-center text-[32px] font-medium">
+          <h1 className="text-blue950 text-center text-[30px] prompt font-bold">
             ลงทะเบียน
           </h1>
 
           <Form.Item
             className="flex flex-col mt-5"
             name="fullName"
-            label="ชื่อ-นามสกุล"
             style={{
               formStyle,
             }}
@@ -109,9 +109,13 @@ function RegisterPage() {
               },
             ]}
           >
+            <div className="prompt">
+            ชื่อ-นามสกุล 
+              </div>
             <Input
-              className={inputStyle}
+              className="w-[400px]"
               placeholder="กรุณากรอกชื่อ - นามสกุล"
+              
             />
           </Form.Item>
 
@@ -119,7 +123,6 @@ function RegisterPage() {
           <Form.Item
             className="mt-5"
             name="phoneNumber"
-            label="เบอร์โทรศัพท์"
             style={{
               formStyle,
             }}
@@ -138,8 +141,11 @@ function RegisterPage() {
               },
             ]}
           >
+            <div className="prompt">
+            เบอร์โทรศัพท์
+              </div>
             <Input
-              className={inputStyle}
+              className="w-[400px]"
               placeholder="กรุณากรอกเบอร์โทรศัพท์"
             />
           </Form.Item>
@@ -148,7 +154,6 @@ function RegisterPage() {
           <Form.Item
             className="mt-5"
             name="email"
-            label="อีเมล"
             style={{
               formStyle,
             }}
@@ -177,14 +182,16 @@ function RegisterPage() {
               },
             ]}
           >
-            <Input className={inputStyle} placeholder="กรุณากรอกอีเมล" />
+            <div className="prompt">
+            อีเมล
+              </div>
+            <Input className="w-[400px]" placeholder="กรุณากรอกอีเมล" />
           </Form.Item>
 
           {/* Password */}
           <Form.Item
             className="mt-5"
             name="password"
-            label="รหัสผ่าน"
             style={{
               formStyle,
             }}
@@ -222,24 +229,27 @@ function RegisterPage() {
               },
             ]}
           >
+            <div className="prompt">
+            รหัสผ่าน
+              </div>
             <Input.Password
-              className={inputStyle}
+              className="w-[400px]"
               placeholder="กรุณากรอกรหัสผ่าน"
             />
           </Form.Item>
 
           {/* Accept Terms and Conditions */}
-          <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+          <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 3 }}>
             <div className="mt-5">
               <label className="flex items-center">
                 <Checkbox checked={isChecked} onChange={handleCheckboxChange} />
                 <span className="ml-2">
                   ยอมรับ{" "}
-                  <a href="#" className="underline text-blue-950">
+                  <a href="#" className="underline text-blue500">
                     ข้อตกลงและเงื่อนไข
                   </a>{" "}
                   และ{" "}
-                  <a href="#" className="underline text-blue-950">
+                  <a href="#" className="underline text-blue500">
                     นโยบายความเป็นส่วนตัว
                   </a>
                 </span>
@@ -257,7 +267,7 @@ function RegisterPage() {
             >
               {isSubmitting ? "กำลังลงทะเบียน..." : "ลงทะเบียน"}
             </Button>
-            <div className="text-center">
+            <div className="text-center text-blue500 underline">
               <a className="btn-ghost" onClick={() => navigate("/login")}>
                 กลับไปหน้าเข้าสู่ระบบ
               </a>

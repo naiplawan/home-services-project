@@ -1,3 +1,4 @@
+
 import Navbar from "../components/Navbar";
 import Slogan from "/src/components/Homepage/Slogan.jsx";
 import TopServices from "/src/components/HomePage/TopServices.jsx";
@@ -6,9 +7,11 @@ import Footer from "/src/components/HomePage/Footer.jsx";
 
 
 function Homepage() {
+
+
   return (
     <div className="prompt">
-      <div className="">
+      <div className="components">
         <Navbar />
         <Slogan />
         <TopServices />

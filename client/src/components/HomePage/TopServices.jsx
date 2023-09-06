@@ -6,7 +6,7 @@ import SellBlack from '../../assets/homepagePhoto/sellBlack.jsx';
 function TopServices() {
 
   return (
-   <div className="flex flex-col justify-center items-center top-20 h-full bg-gray-50">
+   <div className="flex flex-col justify-center items-center top-20 h-full bg-[#f0f0f0]">
     <div className="pt-20">
       <h1 className="text-[#001C59] font-bold text-[32px]">
         บริการยอดฮิตของเรา
