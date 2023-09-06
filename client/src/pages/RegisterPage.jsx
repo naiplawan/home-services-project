@@ -1,5 +1,9 @@
 import { Button, Form, Input, Checkbox, message } from "antd";
+<<<<<<< HEAD
 import Navbar from "../components/NavBar.jsx";
+=======
+import Navbar from "../../components/Navbar";
+>>>>>>> 05e1569 (feat:add logout feature)
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 // import { useAuth } from "../contexts/authentication.jsx";
