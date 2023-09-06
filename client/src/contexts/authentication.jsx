@@ -14,15 +14,27 @@ function AuthProvider(props) {
   const [errorLogin, setErrorLogin] = useState("");
   const navigate = useNavigate();
 
-  const register = async (data) => {
-    await axios.post("http://localhost:4000/auth/register", data);
+  const register = async (values) => {
+    await axios.post("http://localhost:4000/auth/register", values);
     navigate("/login");
   };
 
   //ใส่ logic login
-  const login = async (data) => {
+  const login = async (values) => {
     try {
-      const result = await axios.post("http://localhost:4000/auth/", data);
+
+      const data = {
+        email: values.email,
+        password: values.password,
+      };
+      console.log(data)
+      const result = await axios.post("http://localhost:4000/auth/login", data);
+      
+      const response = result.data;
+
+      // Debugging: Log the data being sent to the API
+      console.log("Data sent to API:", response);
+
       const token = result.data.token;
       localStorage.setItem("token", token);
       const userDataFromToken = jwtDecode(token);
