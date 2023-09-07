@@ -1,255 +1,8 @@
-// import { Button, Form, Input } from "antd";
-// import { useNavigate } from "react-router-dom";
-// import Navbar from "../components/Navbar";
-// import { useAuth } from "../contexts/authentication";
-
-// function LoginForm() {
-//   const { login } = useAuth();
-//   const navigate = useNavigate();
-
-//   const onFinish = async (values) => {
-//     try {
-//       console.log(values);
-//       await login(values);
-//     } catch (error) {
-//       console.error("Login failed:", error);
-//     }
-//   };
-
-//   const onFinishFailed = (errorInfo) => {
-//     console.log("Failed:", errorInfo);
-//   };
-
-//   const handleRegisterClick = () => {
-//     navigate("/register");
-//   };
-
-//   return (
-//     <>
-//       <div className="flex flex-col">
-//         <Navbar />
-//         <div className="flex w-1440px min-h-screen  justify-center bg-bg ">
-//           <Form
-//             name="basic"
-//             labelCol={{
-//               span: 8,
-//             }}
-//             wrapperCol={{
-//               span: 16,
-//             }}
-//             style={{
-//               maxWidth: 600,
-//             }}
-//             initialValues={{
-//               remember: true,
-//             }}
-//             onFinish={onFinish}
-//             onFinishFailed={onFinishFailed}
-//             autoComplete="off"
-//             className="bg-white border border-grey300 rounded-lg w-[614px] h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px]"
-//           >
-//             <div className="flex w-217 h-47 flex-col justify-center flex-shrink-0 text-blue-500 text-center font-Prompt font-medium text-24 ">
-//               <h1 className="text-blue950 text-center text-[32px] font-bold prompt ">
-//                 เข้าสู่ระบบ
-//               </h1>
-//             </div>
-//             <Form.Item
-//               className="pt-5 items-center"
-//               name="email"
-//               rules={[
-//                 {
-//                   required: true,
-//                   message: "กรุณากรอกอีเมล",
-//                 },
-//               ]}
-//             >
-//               <div className="prompt">
-//                 <span className="text-red font-bold text-[15px] ">*</span> อีเมล
-//               </div>
-//               <Input placeholder="กรุณากรอกอีเมล" className="w-[400px]" />
-//             </Form.Item>
-//             {/* validate email */}
-
-//             <Form.Item
-//               className="items-center"
-//               name="password"
-//               rules={[
-//                 {
-//                   required: true,
-//                   message: "กรุณากรอกรหัสผ่าน",
-//                 },
-//               ]}
-//             >
-//               <div className="prompt">
-//                 <span className="text-red font-bold text-[15px] ">*</span>{" "}
-//                 รหัสผ่าน
-//               </div>
-//               <Input.Password
-//                 placeholder="กรุณากรอกรหัสผ่าน"
-//                 className="w-[400px]"
-//               />
-//             </Form.Item>
-//             {/* validate password  */}
-
-//             <Form.Item
-//               wrapperCol={{
-//                 offset: 2,
-//                 span: 18,
-//               }}
-//             >
-//               <Button
-//                 type="primary"
-//                 htmlType="submit"
-//                 className="bg-[#336DF2] min-w-full "
-//               >
-//                 เข้าสู่ระบบ
-//               </Button>
-//               {/* ต้องมี state มารองรับ เพื่อ navigate ไปหน้า userdashboard or admindashboard*/}
-//             </Form.Item>
-//             <div>
-//               <span className="text-gray-700 ml-12">
-//                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
-//               </span>
-//               <a onClick={handleRegisterClick}>
-//                 <span className="underline text-blue500">ลงทะเบียน</span>
-//               </a>
-//             </div>
-//           </Form>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-// //edit commit
-
-// export default LoginForm;
-
-// import { Button, Form, Input } from "antd";
-// import { useNavigate } from "react-router-dom";
-// import Navbar from "../components/Navbar";
-// import { useAuth } from "../contexts/authentication";
-
-// function LoginForm() {
-//   const { login } = useAuth();
-//   const navigate = useNavigate();
-
-//   const onFinish = async (values) => {
-//     try {
-//       console.log(values);
-//       await login(values);
-//     } catch (error) {
-//       console.error("Login failed:", error);
-//     }
-//   };
-
-//   const onFinishFailed = (errorInfo) => {
-//     console.log("Failed:", errorInfo);
-//   };
-
-//   const handleRegisterClick = () => {
-//     navigate("/register");
-//   };
-
-//   return (
-//     <>
-//       <div className="flex flex-col">
-//         <Navbar />
-//         <div className="flex w-1440px min-h-screen  justify-center bg-bg ">
-//           <Form
-//             name="basic"
-//             labelCol={{
-//               span: 8,
-//             }}
-//             wrapperCol={{
-//               span: 16,
-//             }}
-//             style={{
-//               maxWidth: 600,
-//             }}
-//             initialValues={{
-//               remember: true,
-//             }}
-//             onFinish={onFinish}
-//             onFinishFailed={onFinishFailed}
-//             autoComplete="off"
-//             className="bg-white border border-grey300 rounded-lg w-[614px] h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px]"
-//           >
-//             <div className="flex w-217 h-47 flex-col justify-center flex-shrink-0 text-blue-500 text-center font-Prompt font-medium text-24 ">
-//               <h1 className="text-blue950 text-center text-[32px] font-medium">
-//                 เข้าสู่ระบบ
-//               </h1>
-//             </div>
-//             <Form.Item
-//               // className="pt-5 items-center"
-//               label="อีเมล"
-//               name="email"
-//               rules={[
-//                 {
-//                   required: true,
-//                   message: "กรุณากรอกอีเมล",
-//                 },
-//               ]}
-//             >
-//               <div className="prompt">
-//                 <span className="text-red font-bold text-[15px] ">*</span> อีเมล
-//               </div>
-//               <Input  placeholder="กรุณากรอกอีเมล" className="w-[400px]"/>
-//             </Form.Item>
-//             {/* validate email */}
-
-//             <Form.Item
-//             //  className="items-center"
-//               label="รหัสผ่าน"
-//               name="password"
-//               rules={[
-//                 {
-//                   required: true,
-//                   message: "กรุณากรอกรหัสผ่าน",
-//                 },
-//               ]}
-//             >
-//               <div className="prompt">
-//                 <span className="text-red font-bold text-[15px] ">*</span> รหัสผ่าน
-//               </div>
-//               <Input.Password placeholder="กรุณากรอกรหัสผ่าน" className="w-[400px]" />
-//             </Form.Item>
-//             {/* validate password  */}
-
-//             <Form.Item
-//               wrapperCol={{
-//                 offset: 8,
-//                 span: 16,
-//               }}
-//             >
-//               <Button type="primary" htmlType="submit" className="bg-[#336DF2] min-w-full">
-//                 เข้าสู่ระบบ
-//               </Button>
-//               {/* ต้องมี state มารองรับ เพื่อ navigate ไปหน้า userdashboard or admindashboard*/}
-//             </Form.Item>
-//             <div>
-//               <span className="text-gray-700 ml-12">
-//                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
-//               </span>
-//               <a onClick={handleRegisterClick}>
-//                 <span className="underline text-blue500">ลงทะเบียน</span>
-//               </a>
-//             </div>
-//           </Form>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-// //edit commit
-
-// export default LoginForm;
-
 import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../contexts/authentication";
+import "../styles/App.css";
 
 function LoginForm() {
   const { login } = useAuth();
@@ -282,10 +35,10 @@ function LoginForm() {
     },
   };
 
-  const inputStyle =
-    "border rounded-lg border-gray-300 w-full h-11 px-4 py-2.5";
+  const inputStyle = "border rounded-lg border-gray-300 w-440 h-11 px-4 py-2.5";
 
-  const formStyle = "flex flex-col w-440px items-start gap-4";
+  const formStyle =
+    "bg-white border border-grey300 rounded-lg h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px]  w-614px items-center gap-4";
 
   const labelStyle = {
     color: "var(--gray-900, #323640)",
@@ -303,7 +56,7 @@ function LoginForm() {
         <div className="flex w-1440px min-h-screen justify-center bg-bg ">
           <Form
             labelCol={{ span: 10 }}
-            wrapperCol={{ span: 16 }}
+            wrapperCol={{ span: 24 }}
             name="basic"
             initialValues={{
               remember: true,
@@ -311,18 +64,17 @@ function LoginForm() {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
-            className="bg-white border border-grey300 rounded-lg w-[614px] h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px]"
+            className={formStyle}
           >
             <h1 className="text-blue950 text-center text-[32px] font-medium">
               เข้าสู่ระบบ
             </h1>
             <Form.Item
-              className="mt-5"
+              className="w-440px h-72px"
               label={<span style={labelStyle}>อีเมล</span>}
               name="email"
-              style={{
-                formStyle,
-              }}
+              labelAlign="top" // Use labelAlign to position the label on top
+              labelCol={{ span: 24 }} // Set the label column to take up the full width
               rules={[
                 {
                   required: true,
@@ -346,12 +98,11 @@ function LoginForm() {
             </Form.Item>
 
             <Form.Item
-              className="flex flex-col justify-center items-center mt-5"
-              style={{
-                formStyle,
-              }}
+              className="w-440px h-72px"
               label={<span style={labelStyle}>รหัสผ่าน</span>}
+              labelAlign="top"
               name="password"
+              labelCol={{ span: 24 }}
               rules={[
                 {
                   required: true,
@@ -394,17 +145,13 @@ function LoginForm() {
               />
             </Form.Item>
 
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-              <Button
-                htmlType="submit"
-                className="btn-primary"
-              >
+            <Form.Item style={{textAlign: 'center'}}>
+              <button  className="btn-primary">
                 เข้าสู่ระบบ
-              </Button>
-              {/* ต้องมี state มารองรับ เพื่อ navigate ไปหน้า userdashboard or admindashboard*/}
+              </button>
             </Form.Item>
-            <div>
-              <span className="text-gray-700 ml-12">
+            <div className="text-center">
+              <span className="text-gray-700">
                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
               </span>
               <a className="btn-ghost" onClick={handleRegisterClick}>
@@ -414,6 +161,7 @@ function LoginForm() {
           </Form>
         </div>
       </div>
+      <button className="btn-primary">hello</button>
     </>
   );
 }

@@ -22,7 +22,7 @@
 /* Button Primary */
 
 .btn-primary {
-  @apply font-medium text-base py-2.5 px-6 rounded-lg bg-blue600 text-white hover:bg-blue500 active:bg-blue800 !important;
+  @apply text-center font-medium text-base py-2.5 px-6 rounded-lg bg-blue600 text-white hover:bg-blue500 active:bg-blue800 !important;
 }
 
 .btn-primary:disabled,
