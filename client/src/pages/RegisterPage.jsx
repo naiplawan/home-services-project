@@ -1,54 +1,58 @@
+import { useState } from "react";
 import { Button, Form, Input, Checkbox, message } from "antd";
 import Navbar from "../components/NavBar.jsx";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-// import { useAuth } from "../contexts/authentication.jsx";
 import axios from "axios";
 
 function RegisterPage() {
-  // const { register } = useAuth();
+  // Initialize form
+  const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const layout = {
-    labelCol: {
-      span: 10,
-    },
-    wrapperCol: {
-      span: 16,
-    },
+  const inputStyle = "border rounded-lg border-gray-300 w-440 h-11 px-4 py-2.5";
+
+  const formStyle =
+    "bg-white border border-grey300 rounded-lg h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px] flex flex-col w-440px items-center gap-4";
+
+  const labelStyle = {
+    color: "var(--gray-900, #323640)",
+    fontFamily: "Prompt",
+    fontSize: "16px",
+    fontStyle: "normal",
+    fontWeight: 500,
+    lineHeight: "150%", // 24px
   };
 
-  const inputStyle = "border rounded-lg border-gray-300 w-full h-11 px-4 py-2.5";
-
-    const formStyle = "flex flex-col w-440px items-start gap-4";
-
+  // State for checked checkbox and form submission
   const [isChecked, setIsChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Handle form submission
   const onFinish = async (values) => {
     if (!isSubmitting) {
       try {
         setIsSubmitting(true);
-        console.log(values);
 
+        // Prepare registration data
         const data = {
-          fullName: values.fullName, // Access the field directly by its name
+          fullName: values.fullName,
           phoneNumber: values.phoneNumber,
           email: values.email,
           password: values.password,
           role: "customer",
         };
 
-        // Debugging: Log the data being sent to the API
-        console.log("Data sent to API:", data);
+        // Make API request
+        const response = await axios.post(
+          "http://localhost:4000/auth/register",
+          data
+        );
 
-        const response = await axios.post("http://localhost:4000/auth/register", data);
-
-        // Debugging: Log the entire response from the API
-        console.log("API Response:", response);
-
+        // Check API response
         if (response.status === 200) {
           message.success("ลงทะเบียนสำเร็จ");
+          // Redirect to login page or another page on success
+          navigate("/login");
         } else {
           message.error("ลงทะเบียนล้มเหลว");
         }
@@ -61,6 +65,7 @@ function RegisterPage() {
     }
   };
 
+  // Handle checkbox change
   const handleCheckboxChange = (e) => {
     setIsChecked(e.target.checked);
   };
@@ -68,12 +73,14 @@ function RegisterPage() {
   return (
     <div className="flex flex-col">
       <Navbar />
-      <div className="flex w-1440px min-h-screen flex justify-center bg-bg">
+      <div className="flex w-1440px min-h-screen justify-center bg-bg">
         <Form
-          {...layout}
-          name="nest-messages"
+          labelCol={{ span: 10 }}
+          wrapperCol={{ span: 24 }}
+          form={form}
+          autoComplete="off"
           onFinish={onFinish}
-          style={{ maxWidth: 600 }}
+          className={formStyle}
         >
           {/* Name */}
           <h1 className="text-blue950 text-center text-[32px] font-medium">
@@ -81,12 +88,11 @@ function RegisterPage() {
           </h1>
 
           <Form.Item
-            className="flex flex-col mt-5"
+            className="w-440px h-72px"
             name="fullName"
-            label="ชื่อ-นามสกุล"
-            style={{
-              formStyle,
-            }}
+            label={<span style={labelStyle}>ชื่อ - นามสกุล</span>}
+            labelAlign="top"
+            labelCol={{ span: 24 }}
             rules={[
               {
                 required: true,
@@ -110,12 +116,11 @@ function RegisterPage() {
 
           {/* Phone Number */}
           <Form.Item
-            className="mt-5"
+            className="w-440px h-72px"
             name="phoneNumber"
-            label="เบอร์โทรศัพท์"
-            style={{
-              formStyle,
-            }}
+            label={<span style={labelStyle}>เบอร์โทรศัพท์</span>}
+            labelAlign="top"
+            labelCol={{ span: 24 }}
             rules={[
               {
                 required: true,
@@ -139,16 +144,11 @@ function RegisterPage() {
 
           {/* Email */}
           <Form.Item
-            className="mt-5"
+            className="w-440px h-72px"
             name="email"
-            label={
-              <span>
-                อีเมล <span className="required">*</span>
-              </span>
-            }
-            style={{
-              formStyle,
-            }}
+            label={<span style={labelStyle}>อีเมล </span>}
+            labelAlign="top"
+            labelCol={{ span: 24 }}
             rules={[
               {
                 type: "email",
@@ -165,9 +165,7 @@ function RegisterPage() {
                       value
                     )
                   ) {
-                    return Promise.reject(
-                      "กรุณากรอกอีเมลให้ถูกต้อง"
-                    );
+                    return Promise.reject("กรุณากรอกอีเมลให้ถูกต้อง");
                   }
                   return Promise.resolve();
                 },
@@ -179,12 +177,11 @@ function RegisterPage() {
 
           {/* Password */}
           <Form.Item
-            className="mt-5"
+            className="w-440px h-72px"
             name="password"
-            label="รหัสผ่าน"
-            style={{
-              formStyle,
-            }}
+            label={<span style={labelStyle}>รหัสผ่าน</span>}
+            labelAlign="top"
+            labelCol={{ span: 24 }}
             rules={[
               {
                 required: true,
@@ -226,17 +223,52 @@ function RegisterPage() {
           </Form.Item>
 
           {/* Accept Terms and Conditions */}
-          <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-            <div className="mt-5">
+          <Form.Item>
+            <div className="w-440px h-72px">
               <label className="flex items-center">
                 <Checkbox checked={isChecked} onChange={handleCheckboxChange} />
-                <span className="ml-2">
+                <span
+                  className="ml-2"
+                  style={{
+                    color: "var(--gray-900, #323640)",
+                    fontFamily: "Prompt",
+                    fontSize: "16px",
+                    fontStyle: "normal",
+                    fontWeight: "400",
+                    lineHeight: "150%", // 24px
+                    textDecorationLine: "underline",
+                  }}
+                >
                   ยอมรับ{" "}
-                  <a href="#" className="underline text-blue-950">
+                  <a
+                    href="#"
+                    className="underline"
+                    style={{
+                      color: "var(--blue-600, #336DF2)",
+                      fontFamily: "Prompt",
+                      fontSize: "16px",
+                      fontStyle: "normal",
+                      fontWeight: "600",
+                      lineHeight: "150%", // 24px
+                      textDecorationLine: "underline",
+                    }}
+                  >
                     ข้อตกลงและเงื่อนไข
                   </a>{" "}
                   และ{" "}
-                  <a href="#" className="underline text-blue-950">
+                  <a
+                    href="#"
+                    className="underline"
+                    style={{
+                      color: "var(--blue-600, #336DF2)",
+                      fontFamily: "Prompt",
+                      fontSize: "16px",
+                      fontStyle: "normal",
+                      fontWeight: "600",
+                      lineHeight: "150%", // 24px
+                      textDecorationLine: "underline",
+                    }}
+                  >
                     นโยบายความเป็นส่วนตัว
                   </a>
                 </span>
@@ -251,11 +283,29 @@ function RegisterPage() {
               }`}
               htmlType="submit"
               disabled={!isChecked || isSubmitting}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                fontFamily: "Prompt",
+              }}
             >
               {isSubmitting ? "กำลังลงทะเบียน..." : "ลงทะเบียน"}
             </Button>
+
             <div className="text-center">
-              <a className="btn-ghost" onClick={() => navigate("/login")}>
+              <a
+                className="btn-ghost"
+                onClick={() => navigate("/login")}
+                style={{
+                  color: "var(--blue-600, #336DF2)",
+                  fontFamily: "Prompt",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  textDecorationLine: "underline",
+                }}
+              >
                 กลับไปหน้าเข้าสู่ระบบ
               </a>
             </div>

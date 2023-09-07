@@ -10,7 +10,6 @@ function Homepage() {
     <div className="prompt">
       <div>
         <Navbar />
-        {/* <LogoutMock /> */}
         <Slogan />
         <LogoutMock />
         <TopServices />
