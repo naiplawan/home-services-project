@@ -14,9 +14,7 @@ function Navbar () {
   const { logout } = useAuth();
   const auth = useAuth();
   const navigate = useNavigate();
-  const handleLogout = () => {
-    navigate('/homepage');
-  };
+ 
 
   return (
     <div className="flex justify-between p-5 shadow-[2px_2px_24px_rgba(23,51,106,0.12)] sticky top-0 z-[100] bg-white">
@@ -46,7 +44,7 @@ function Navbar () {
               <button className="flex p-2 hover:bg-[#EFEFF2] hover:text-[#232630]"><span><img src={person} className="mr-3 "/></span>ข้อมูลผู้ใช้งาน</button>
               <button className="flex p-1 hover:bg-[#EFEFF2] hover:text-[#232630]"><span><img src={form} className="mr-3"/></span>รายการคำสั่งซ่อม</button>
               <button className="flex pt-2 p-1 hover:bg-[#EFEFF2] hover:text-[#232630]"><span><img src={watch} className="mr-3"/></span>ประวัติการซ่อม</button>
-              <button className="flex pt-2 p-2 border-t border-grey300 hover:bg-[#EFEFF2] hover:text-[#232630]" onClick={handleLogout}><span><img src={exit} className="mr-3"/></span>ออกจากระบบ</button>
+              <button className="flex pt-2 p-2 border-t border-grey300 hover:bg-[#EFEFF2] hover:text-[#232630]" onClick={logout}><span><img src={exit} className="mr-3"/></span>ออกจากระบบ</button>
             </ul>
             </div>
             )}
@@ -56,7 +54,7 @@ function Navbar () {
         ) : (
           <button
             className="prompt text-sm font-bold text-[#336DF2] border border-[#336DF2] w-[100px] h-[35px] rounded-lg"
-            onClick={logout}
+            onClick={() => navigate("/login")}
           >
             เข้าสู่ระบบ
           </button>

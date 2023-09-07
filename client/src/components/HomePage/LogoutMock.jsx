@@ -1,5 +1,3 @@
-// LogoutMock.js
-
 import { useAuth } from "../contexts/authentication";
 
 function LogoutMock() {
@@ -11,7 +9,7 @@ function LogoutMock() {
 
   return (
     <div>
-      <button className="w-[200px] h-[50px] bg-blue600" onClick={handleLogout}>
+      <button className="prompt text-sm font-bold text-[#336DF2] border border-[#336DF2] w-[100px] h-[35px] rounded-lg" onClick={handleLogout}>
         Logout
       </button>
     </div>

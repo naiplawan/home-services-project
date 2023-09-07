@@ -1,6 +1,7 @@
+
 import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/NavBar.jsx";
 import { useAuth } from "../contexts/authentication";
 import "../styles/App.css";
 
@@ -26,14 +27,7 @@ function LoginForm() {
     console.log("Failed:", errorInfo);
   };
 
-  const layout = {
-    labelCol: {
-      span: 10,
-    },
-    wrapperCol: {
-      span: 16,
-    },
-  };
+
 
   const inputStyle = "border rounded-lg border-gray-300 w-440 h-11 px-4 py-2.5";
 
