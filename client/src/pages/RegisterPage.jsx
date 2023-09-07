@@ -167,7 +167,7 @@ function RegisterPage() {
                     )
                   ) {
                     return Promise.reject(
-                      "กรุณากรอกอีเมลให้ถูกต้อง (email-validator)"
+                      "กรุณากรอกอีเมลให้ถูกต้อง"
                     );
                   }
                   return Promise.resolve();
