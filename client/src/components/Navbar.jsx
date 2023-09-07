@@ -1,9 +1,8 @@
 import HouseIcon from '../assets/HouseIcon.svg';
 import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Navbar () {
-
-  const navigate = useNavigate();
 
   const navigate = useNavigate();
 
@@ -23,6 +22,7 @@ function Navbar () {
         </div>
 
         <div className="lg:mr-40">
+          <button className="prompt text-sm font-bold text-[#336DF2] border border-[#336DF2] w-[100px] h-[35px] rounded-lg " onClick={() => navigate("/login")}>เข้าสู่ระบบ</button>
           <button className="prompt text-sm font-bold text-[#336DF2] border border-[#336DF2] w-[100px] h-[35px] rounded-lg " onClick={() => navigate("/login")}>เข้าสู่ระบบ</button>
         </div>
       </div>
