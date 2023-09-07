@@ -1,4 +1,4 @@
-import Navbar from "../components/Navbar";
+import Navbar from "../components/NavBar.jsx";
 import Slogan from "/src/components/Homepage/Slogan.jsx";
 import TopServices from "/src/components/HomePage/TopServices.jsx";
 import ForJob from "/src/components/HomePage/ForJob.jsx";
@@ -10,7 +10,6 @@ function Homepage() {
     <div className="prompt">
       <div className="components">
         <Navbar />
-        <LogoutMock />
         <Slogan />
         <LogoutMock />
         <TopServices />
