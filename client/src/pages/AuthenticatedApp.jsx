@@ -12,12 +12,12 @@ function AuthenticatedApp() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="" element={<NotFoundPage />} />
         </Routes>
       ) : (
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="" element={<NotFoundPage />} />
         </Routes>
       )}
     </div>

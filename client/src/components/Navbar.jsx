@@ -30,6 +30,7 @@ function Navbar () {
         </div>
       </div>
 
+
       <div className="lg:mr-40 flex items-center">
         {auth.isAuthenticated ? (
           <>
@@ -60,6 +61,7 @@ function Navbar () {
             เข้าสู่ระบบ
           </button>
         )}
+
       </div>
     </div>
   );
