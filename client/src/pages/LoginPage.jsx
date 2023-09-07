@@ -1,4 +1,5 @@
 import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar.jsx";
 import { useAuth } from "../contexts/authentication";
@@ -14,7 +15,12 @@ function LoginForm() {
     } catch (error) {
       console.error("Login failed:", error);
       message.error("เข้าสู่ระบบล้มเหลว");
+      message.error("เข้าสู่ระบบล้มเหลว");
     }
+  };
+
+  const handleRegisterClick = () => {
+    navigate("/register");
   };
 
   const handleRegisterClick = () => {
@@ -53,7 +59,10 @@ function LoginForm() {
       <div className="flex flex-col">
         <Navbar />
         <div className="flex w-1440px min-h-screen justify-center bg-bg ">
+        <div className="flex w-1440px min-h-screen justify-center bg-bg ">
           <Form
+            labelCol={{ span: 10 }}
+            wrapperCol={{ span: 16 }}
             labelCol={{ span: 10 }}
             wrapperCol={{ span: 16 }}
             name="basic"
@@ -68,10 +77,18 @@ function LoginForm() {
             <h1 className="text-blue950 text-center text-[32px] font-medium">
               เข้าสู่ระบบ
             </h1>
+            <h1 className="text-blue950 text-center text-[32px] font-medium">
+              เข้าสู่ระบบ
+            </h1>
             <Form.Item
               className="mt-5"
               label={<span style={labelStyle}>อีเมล</span>}
+              className="mt-5"
+              label={<span style={labelStyle}>อีเมล</span>}
               name="email"
+              style={{
+                formStyle,
+              }}
               style={{
                 formStyle,
               }}
@@ -83,9 +100,15 @@ function LoginForm() {
               ]}
             >
               <Input className={inputStyle} placeholder="กรุณากรอกอีเมล" />
+              <Input className={inputStyle} placeholder="กรุณากรอกอีเมล" />
             </Form.Item>
 
             <Form.Item
+              className="flex flex-col justify-center items-center mt-5"
+              style={{
+                formStyle,
+              }}
+              label={<span style={labelStyle}>รหัสผ่าน</span>}
               className="flex flex-col justify-center items-center mt-5"
               style={{
                 formStyle,
@@ -126,8 +149,41 @@ function LoginForm() {
                     return Promise.resolve();
                   },
                 },
+                {
+                  validator: (rule, value) => {
+                    if (
+                      !/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])/.test(
+                        value
+                      )
+                    ) {
+                      return Promise.reject("กรุณากรอกรหัสผ่านให้ถูกต้อง");
+                    }
+                    if (!/[A-Z]/.test(value)) {
+                      return Promise.reject("ต้องมี Uppercase อย่างน้อย 1 ตัว");
+                    }
+                    if (!/[a-z]/.test(value)) {
+                      return Promise.reject("ต้องมี Lowercase อย่างน้อย 1 ตัว");
+                    }
+                    if (!/[0-9]/.test(value)) {
+                      return Promise.reject("ต้องมีตัวเลขอย่างน้อย 1 ตัว");
+                    }
+                    if (!/[!@#$%^&*]/.test(value)) {
+                      return Promise.reject("ต้องมีอักขระพิเศษอย่างน้อย 1 ตัว");
+                    }
+                    if (value.length < 8) {
+                      return Promise.reject(
+                        "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร"
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
               ]}
             >
+              <Input.Password
+                className={inputStyle}
+                placeholder="กรุณากรอกรหัสผ่าน"
+              />
               <Input.Password
                 className={inputStyle}
                 placeholder="กรุณากรอกรหัสผ่าน"
@@ -136,7 +192,13 @@ function LoginForm() {
 
             <Form.Item
               wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
+              wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
             >
+              <Button
+                className="btn-blue-950 w-full my-5"
+                type="primary"
+                htmlType="submit"
+              >
               <Button
                 className="btn-blue-950 w-full my-5"
                 type="primary"
@@ -150,6 +212,7 @@ function LoginForm() {
               <span className="text-gray-700 ml-12">
                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
               </span>
+              <a className="btn-ghost" onClick={handleRegisterClick}>
               <a className="btn-ghost" onClick={handleRegisterClick}>
                 <span className="underline">ลงทะเบียน</span>
               </a>

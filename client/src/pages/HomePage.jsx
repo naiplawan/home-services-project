@@ -8,8 +8,9 @@ import LogoutMock from "../components/LogoutMock";
 function Homepage() {
   return (
     <div className="prompt">
-      <div className="components">
+      <div>
         <Navbar />
+        {/* <LogoutMock /> */}
         <Slogan />
         <LogoutMock />
         <TopServices />
