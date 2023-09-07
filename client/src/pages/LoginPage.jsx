@@ -146,7 +146,7 @@ function LoginForm() {
               </Button>
               {/* ต้องมี state มารองรับ เพื่อ navigate ไปหน้า userdashboard or admindashboard*/}
             </Form.Item>
-            <div className="flex-col text-center ml-12">
+            <div>
               <span className="text-gray-700">
                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
               </span>
