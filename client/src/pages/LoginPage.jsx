@@ -1,7 +1,7 @@
 import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../components/Navbar";
-import { useAuth } from "../authentication";
+import Navbar from "../components/Navbar";
+import { useAuth } from "../contexts/authentication";
 
 function LoginForm() {
   const { login } = useAuth();
@@ -80,18 +80,6 @@ function LoginForm() {
                   required: true,
                   message: "กรุณากรอกอีเมล",
                 },
-                {
-                  validator: (rule, value) => {
-                    if (
-                      !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i.test(
-                        value
-                      )
-                    ) {
-                      return Promise.reject("กรุณากรอกอีเมลให้ถูกต้อง");
-                    }
-                    return Promise.resolve();
-                  },
-                },
               ]}
             >
               <Input className={inputStyle} placeholder="กรุณากรอกอีเมล" />
@@ -158,8 +146,8 @@ function LoginForm() {
               </Button>
               {/* ต้องมี state มารองรับ เพื่อ navigate ไปหน้า userdashboard or admindashboard*/}
             </Form.Item>
-            <div className="flex-col text-center ml-12">
-              <span className="text-gray-700">
+            <div>
+              <span className="text-gray-700 ml-12">
                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
               </span>
               <a className="btn-ghost" onClick={handleRegisterClick}>
