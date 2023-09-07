@@ -41,9 +41,11 @@ function AuthProvider(props) {
       const userDataFromToken = jwtDecode(token);
       setState({ ...state, user: userDataFromToken });
       navigate("/");
+      localStorage.setItem("role", userDataFromToken.role);
       // ใส่ condition login ตรวจสอบ role
+      // localStorage.setItem("role", userDataFromToken.role);
       if (userDataFromToken.role === "admin") {
-        navigate("/admin-category");
+        navigate("/admin");
       } else if (userDataFromToken.role === "customer") {
         navigate("/");
       }
