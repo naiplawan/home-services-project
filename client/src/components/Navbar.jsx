@@ -5,8 +5,6 @@ function Navbar () {
 
   const navigate = useNavigate();
 
-  const navigate = useNavigate();
-
   return(
     
       <div className="flex justify-between p-5 shadow-[2px_2px_24px_rgba(23,51,106,0.12)] sticky top-0 z-[100] bg-white">

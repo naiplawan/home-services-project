@@ -1,5 +1,5 @@
 import { Button, Form, Input, Checkbox, message } from "antd";
-import Navbar from "../../components/Navbar";
+import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 // import { useAuth } from "../contexts/authentication.jsx";
