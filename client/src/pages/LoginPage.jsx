@@ -1,4 +1,4 @@
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import { useAuth } from "../authentication";
@@ -147,7 +147,7 @@ function LoginForm() {
               {/* ต้องมี state มารองรับ เพื่อ navigate ไปหน้า userdashboard or admindashboard*/}
             </Form.Item>
             <div>
-              <span className="text-gray-700">
+              <span className="text-gray-700 ml-12">
                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
               </span>
               <a className="btn-ghost" onClick={handleRegisterClick}>
