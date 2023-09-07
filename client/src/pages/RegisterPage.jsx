@@ -18,16 +18,9 @@ function RegisterPage() {
     },
   };
 
-  const inputStyle =
-    "border rounded-lg border-gray-300 w-full h-11 px-4 py-2.5";
+  const inputStyle = "border rounded-lg border-gray-300 w-full h-11 px-4 py-2.5";
 
-  const formStyle = {
-    display: "flex",
-    width: "440px",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    gap: "4px",
-  };
+    const formStyle = "flex flex-col w-440px items-start gap-4";
 
   const [isChecked, setIsChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);

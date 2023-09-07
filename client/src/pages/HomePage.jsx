@@ -11,6 +11,7 @@ function Homepage() {
     <div className="prompt">
       <div className="components">
         <Navbar />
+        <LogoutMock />
         <Slogan />
         <LogoutMock />
         <TopServices />
