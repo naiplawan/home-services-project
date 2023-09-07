@@ -1,3 +1,4 @@
+import '../../styles/App.css'
 import Cleaning from '../../assets/homepagePhoto/Cleaning.png';
 import Air from '../../assets/homepagePhoto/Air.png';
 import Washing from '../../assets/homepagePhoto/Washing.png';
@@ -33,7 +34,7 @@ function TopServices() {
           </p>
           </div>
         <div>
-          <button className="underline text-[#336DF2] font-bold text-[16px] mt-6">
+          <button className="btn-ghost">
           เลือกบริการ
           </button>
         </div>
@@ -58,7 +59,7 @@ function TopServices() {
           </p>
           </div>
         <div>
-          <button className="underline text-[#336DF2] font-bold text-[16px] mt-6">
+          <button className="btn-ghost">
           เลือกบริการ
           </button>
         </div>
@@ -84,7 +85,7 @@ function TopServices() {
           </p>
           </div>
         <div className="bg-white">
-          <button className="underline text-[#336DF2] font-bold text-[16px] mt-6 bg-white">
+          <button className="btn-ghost">
           เลือกบริการ
           </button>
         </div>
@@ -92,7 +93,7 @@ function TopServices() {
     </div>
     </div>
     <div className="pt-12 pb-40">
-      <button className="text-white bg-[#336DF2] py-2 px-6 rounded-lg">
+      <button className="btn-primary">
       ดูบริการท้ังหมด
       </button></div>
    </div>

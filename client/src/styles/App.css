@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
   font-family: prompt;
   src: url(../public/Prompt\ Regular.ttf);
@@ -13,4 +17,39 @@
 
 .prompt-Bold {
   font-family: prompt-Bold;
+}
+
+/* Button Primary */
+
+.btn-primary {
+  @apply font-medium text-base py-2.5 px-6 rounded-lg bg-blue600 text-white hover:bg-blue500 active:bg-blue800 !important;
+}
+
+.btn-primary:disabled,
+btn-primary[disabled] {
+  @apply bg-grey300 text-grey100;
+}
+
+/* Button Secondary */
+
+.btn-secondary {
+  @apply font-medium text-base py-2.5 px-6 rounded-lg border border-blue600 bg-white text-blue600;
+}
+
+.btn-secondary:hover {
+  @apply text-blue400 border-blue400 bg-white;
+}
+
+.btn-secondary:active {
+  @apply text-blue800 border-blue800 bg-white;
+}
+.btn-secondary:disabled,
+btn-secondary[disabled] {
+  @apply text-grey400 border-grey400 bg-grey100;
+}
+
+/* Button Ghost */
+
+.btn-ghost {
+  @apply cursor-pointer mt-6 font-semibold text-base underline underline-offset-auto text-blue600 hover:text-blue400 active:text-blue800;
 }
