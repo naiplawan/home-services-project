@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: prompt;
+}
+
 @font-face {
   font-family: prompt;
   src: url(../public/Prompt\ Regular.ttf);
@@ -51,5 +58,10 @@ btn-secondary[disabled] {
 /* Button Ghost */
 
 .btn-ghost {
-  @apply cursor-pointer mt-6 font-semibold text-base underline underline-offset-auto text-blue600 hover:text-blue400 active:text-blue800;
+  @apply cursor-pointer mt-6 font-semibold text-base underline underline-offset-auto text-blue600 hover:text-blue400 active:text-blue800 rounded-md;
+}
+
+/* placeholder */
+::placeholder {
+  font-family: prompt;
 }

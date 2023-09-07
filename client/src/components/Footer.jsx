@@ -7,10 +7,10 @@ function Footer () {
   return (
     <div>
       <div className="flex py-2 lg:py-5 xl:p-12 xl:px-40 justify-evenly">
-      <div className="flex items-center">
-      <img src={HouseIcon} alt="" className="w-[40px] hidden xl:block"/>
-        <div className="lg:text-[30px] font-semibold text-[#336DF2] prompt md:ml-2">
-          HomeServices
+        <div className="flex items-center">
+          <img src={HouseIcon} alt="" className="w-[40px] hidden xl:block"/>
+          <div className="lg:text-[30px] font-semibold text-[#336DF2] prompt md:ml-2">
+            HomeServices
           </div>
         </div>
       <div className="">
@@ -28,12 +28,12 @@ function Footer () {
         </div>
       </div>
       </div>
-      <div className="bg-[#EFEFF2] flex justify-between p-2 md:px-40">
-      <div className="text-[12px] text-gray-400">copyright © 2021 HomeServices.com All rights reserved</div>
-      <div className="flex text-[10px] md:text-[14px] text-gray-700">
-        <p className="mr-5">เงื่อนไขและข้อตกลงการใช้งานเว็บไซต์</p>
-        <p>นโยบายความเป็นส่วนตัว</p>
-      </div>
+      <div className="bg-[#EFEFF2] flex p-2 md:px-40">
+        <div className="text-[12px] text-grey500">copyright © 2021 HomeServices.com All rights reserved</div>
+        <div className="flex text-[10px] md:text-[14px] text-grey700">
+          <p className="mr-5">เงื่อนไขและข้อตกลงการใช้งานเว็บไซต์</p>
+          <p>นโยบายความเป็นส่วนตัว</p>
+        </div>
       </div>
     </div>
   )

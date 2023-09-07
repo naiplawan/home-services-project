@@ -29,12 +29,13 @@ function LoginForm() {
 
 
 
-  const inputStyle = "border rounded-lg border-gray-300 w-440 h-11 px-4 py-2.5";
+  const inputStyle = "border rounded-lg border-grey300 w-[100%] h-11 px-4 py-2.5";
 
   const formStyle =
-    "bg-white border border-grey300 rounded-lg h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px]  w-614px items-center gap-4";
+    "bg-white border border-grey300 rounded-lg h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px] w-[28%] items-center gap-4";
 
   const labelStyle = {
+    marginTop: "10px",
     color: "var(--gray-900, #323640)",
     fontFamily: "Prompt",
     fontSize: "16px",
@@ -47,7 +48,7 @@ function LoginForm() {
     <>
       <div className="flex flex-col">
         <Navbar />
-        <div className="flex w-1440px min-h-screen justify-center bg-bg ">
+        <div className="flex w-[100%] min-h-screen justify-center bg-bg ">
           <Form
             labelCol={{ span: 10 }}
             wrapperCol={{ span: 24 }}
@@ -140,16 +141,16 @@ function LoginForm() {
             </Form.Item>
 
             <Form.Item style={{textAlign: 'center'}}>
-              <button  className="btn-primary">
+              <button  className="btn-primary w-[100%] mt-5 mb-5">
                 เข้าสู่ระบบ
               </button>
             </Form.Item>
             <div className="text-center">
-              <span className="text-gray-700">
+              <span className="text-base text-grey700">
                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
               </span>
               <a className="btn-ghost" onClick={handleRegisterClick}>
-                <span className="underline">ลงทะเบียน</span>
+                <span className="underline ml-2">ลงทะเบียน</span>
               </a>
             </div>
           </Form>
