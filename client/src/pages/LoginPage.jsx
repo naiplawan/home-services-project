@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import { Button, Form, Input } from "antd";
 // import { useNavigate } from "react-router-dom";
 // import Navbar from "../components/Navbar";
@@ -246,6 +247,8 @@
 
 // export default LoginForm;
 
+=======
+>>>>>>> f67a685 (fix:merge conflict solve)
 import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
@@ -288,12 +291,21 @@ function LoginForm() {
   const formStyle = "flex flex-col w-440px items-start gap-4";
 
   const labelStyle = {
+<<<<<<< HEAD
     color: "var(--gray-900, #323640)",
     fontFamily: "Prompt",
     fontSize: "16px",
     fontStyle: "normal",
     fontWeight: 500,
     lineHeight: "150%", // 24px
+=======
+    color: 'var(--gray-900, #323640)',
+    fontFamily: 'Prompt',
+    fontSize: '16px',
+    fontStyle: 'normal',
+    fontWeight: 500,
+    lineHeight: '150%', // 24px
+>>>>>>> f67a685 (fix:merge conflict solve)
   };
 
   return (
@@ -394,17 +406,32 @@ function LoginForm() {
               />
             </Form.Item>
 
+<<<<<<< HEAD
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
               <Button
                 htmlType="submit"
                 className="btn-primary"
+=======
+            <Form.Item
+              wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
+            >
+              <Button
+                className="btn-blue-950 w-full my-5"
+                type="primary"
+                htmlType="submit"
+>>>>>>> f67a685 (fix:merge conflict solve)
               >
                 เข้าสู่ระบบ
               </Button>
               {/* ต้องมี state มารองรับ เพื่อ navigate ไปหน้า userdashboard or admindashboard*/}
             </Form.Item>
+<<<<<<< HEAD
             <div>
               <span className="text-gray-700 ml-12">
+=======
+            <div className="flex-col text-center ml-12">
+              <span className="text-gray-700">
+>>>>>>> f67a685 (fix:merge conflict solve)
                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
               </span>
               <a className="btn-ghost" onClick={handleRegisterClick}>
@@ -418,4 +445,8 @@ function LoginForm() {
   );
 }
 
+<<<<<<< HEAD
 export default LoginForm;
+=======
+export default LoginForm;
+>>>>>>> f67a685 (fix:merge conflict solve)
