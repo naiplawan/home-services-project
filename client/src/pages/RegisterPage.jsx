@@ -9,12 +9,13 @@ function RegisterPage() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const inputStyle = "border rounded-lg border-gray-300 w-full h-11 px-4 py-2.5" ;
+  const inputStyle = "border rounded-lg border-grey300 w-[420px] h-11 px-4 py-2.5" ;
 
   const formStyle =
-    "bg-white border border-grey300 rounded-lg h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px] flex flex-col w-440px items-center gap-4";
+    "bg-white border border-grey300 rounded-lg h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px] flex flex-col w-[28%] items-center gap-4";
 
   const labelStyle = {
+    marginTop: "10px",
     color: "var(--gray-900, #323640)",
     fontFamily: "Prompt",
     fontSize: "16px",
@@ -73,7 +74,7 @@ function RegisterPage() {
   return (
     <div className="flex flex-col">
       <Navbar />
-      <div className="flex w-1440px min-h-screen justify-center bg-bg">
+      <div className="flex w-[100%] min-h-screen justify-center bg-bg">
         <Form
           labelCol={{ span: 10 }}
           wrapperCol={{ span: 24 }}
@@ -88,7 +89,7 @@ function RegisterPage() {
           </h1>
 
           <Form.Item
-            className="w-440px h-72px"
+            className="h-[72px]"
             name="fullName"
             label={<span style={labelStyle}>ชื่อ - นามสกุล</span>}
             labelAlign="top"
@@ -116,7 +117,7 @@ function RegisterPage() {
 
           {/* Phone Number */}
           <Form.Item
-            className="w-440px h-72px"
+            className="h-[72px]"
             name="phoneNumber"
             label={<span style={labelStyle}>เบอร์โทรศัพท์</span>}
             labelAlign="top"
@@ -144,7 +145,7 @@ function RegisterPage() {
 
           {/* Email */}
           <Form.Item
-            className="w-440 h-72px"
+            className="h-[72px]"
             name="email"
             label={<span style={labelStyle}>อีเมล </span>}
             labelAlign="top"
@@ -178,7 +179,6 @@ function RegisterPage() {
 
           {/* Password */}
           <Form.Item
-            className="w-440px h-72px"
             name="password"
             label={<span style={labelStyle}>รหัสผ่าน</span>}
             labelAlign="top"
@@ -225,7 +225,7 @@ function RegisterPage() {
 
           {/* Accept Terms and Conditions */}
           <Form.Item>
-            <div className="w-440px h-72px">
+            <div className="h-[36px]">
               <label className="flex items-center">
                 <Checkbox checked={isChecked} onChange={handleCheckboxChange} />
                 <span
@@ -237,7 +237,6 @@ function RegisterPage() {
                     fontStyle: "normal",
                     fontWeight: "400",
                     lineHeight: "150%", // 24px
-                    textDecorationLine: "underline",
                   }}
                 >
                   ยอมรับ{" "}
@@ -277,7 +276,7 @@ function RegisterPage() {
             </div>
 
             <Button
-              className={`btn-blue-950 w-full my-5 ${
+              className={`btn-blue-950 w-full h-10 my-5 ${
                 !isChecked || isSubmitting
                   ? "disabled:opacity-50 cursor-not-allowed"
                   : ""
@@ -285,6 +284,8 @@ function RegisterPage() {
               htmlType="submit"
               disabled={!isChecked || isSubmitting}
               style={{
+                marginTop: "30px",
+                marginBottom: "30px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
