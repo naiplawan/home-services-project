@@ -9,7 +9,7 @@ function RegisterPage() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const inputStyle = "border rounded-lg border-gray-300 w-440 h-11 px-4 py-2.5";
+  const inputStyle = "border rounded-lg border-gray-300 w-full h-11 px-4 py-2.5" ;
 
   const formStyle =
     "bg-white border border-grey300 rounded-lg h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px] flex flex-col w-440px items-center gap-4";
@@ -144,7 +144,7 @@ function RegisterPage() {
 
           {/* Email */}
           <Form.Item
-            className="w-440px h-72px"
+            className="w-440 h-72px"
             name="email"
             label={<span style={labelStyle}>อีเมล </span>}
             labelAlign="top"
@@ -172,7 +172,8 @@ function RegisterPage() {
               },
             ]}
           >
-            <Input className={inputStyle} placeholder="กรุณากรอกอีเมล" />
+            <Input className={inputStyle} 
+            placeholder="กรุณากรอกอีเมล" />
           </Form.Item>
 
           {/* Password */}
