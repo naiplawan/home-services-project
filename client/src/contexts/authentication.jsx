@@ -21,29 +21,26 @@ function AuthProvider(props) {
   };
 
   //ใส่ logic login
-  const login = async (values) => {
+  const login = async (data) => {
     try {
-
-      const data = {
-        email: values.email,
-        password: values.password,
-      };
-      console.log(data)
       const result = await axios.post("http://localhost:4000/auth/login", data);
-      
-      const response = result.data;
-
-      // Debugging: Log the data being sent to the API
-      console.log("Data sent to API:", response);
-
+      console.log(result);
       const token = result.data.token;
+      const fullName = result.data.data.token;
       localStorage.setItem("token", token);
+      localStorage.setItem("fullName", fullName);
       const userDataFromToken = jwtDecode(token);
+      console.log(userDataFromToken.role);
       setState({ ...state, user: userDataFromToken });
+      localStorage.setItem("user_id", userDataFromToken.user_id);
+      localStorage.setItem("role", userDataFromToken.role);
+      localStorage.setItem("fullName", userDataFromToken.fullName);
+      localStorage.setItem("phoneNumber", userDataFromToken.phoneNumber);
+      localStorage.setItem("email", userDataFromToken.email);
       navigate("/");
       // ใส่ condition login ตรวจสอบ role
       if (userDataFromToken.role === "admin") {
-        navigate("/admin-category");
+        navigate("/admin");
       } else if (userDataFromToken.role === "customer") {
         navigate("/");
       }
@@ -59,6 +56,12 @@ function AuthProvider(props) {
     //  Function logout ทำหน้าที่ในการลบ JWT Token ออกจาก Local Storage
     localStorage.removeItem("token");
     setState({ ...state, user: null, error: null });
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("fullName");
+    localStorage.removeItem("phoneNumber");
+    localStorage.removeItem("email");
+    localStorage.removeItem("role");
+    navigate("/");
   };
   const isAuthenticated = Boolean(localStorage.getItem("token"));
   return (
