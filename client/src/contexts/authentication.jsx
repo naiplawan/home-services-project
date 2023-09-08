@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios"; //npm install axios
 import { useNavigate } from "react-router-dom";
-import jwtDecode from "jwt-decode"; //package npm install jwt-decode //npm install jsonwebtoken
+import jwtDecode from "jwt-decode";
 
 const AuthContext = React.createContext();
 //Comment Code//
@@ -62,6 +62,26 @@ function AuthProvider(props) {
     localStorage.removeItem("role");
     navigate("/");
   };
+
+  const logInWithFacebook = async () => { 
+    try {
+
+       const response = await axios.post(
+        "http://localhost:4000//auth/facebook/login"
+       )
+      if (error) {
+        console.error(error);
+      } else {
+        console.log('Logged in user:', user);
+        console.log('Session:', session);
+        navigate("/")
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
   const isAuthenticated = Boolean(localStorage.getItem("token"));
   return (
     <AuthContext.Provider

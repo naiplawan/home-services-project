@@ -1,5 +1,5 @@
 import { Router } from "express";
-import supabase from "../utils/supabase.js";
+import {supabase} from "../utils/supabase.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"; // npm install jsonwebtoken
 
@@ -17,6 +17,23 @@ authRouter.get("/", async (req, res) => {
     });
   }
 });
+
+authRouter.post("/facebook/login",async(req,res)=>{  
+  try{
+    const data = await supabase.auth.signInWithOAuth({
+      provider: "facebook",
+    })
+    console.log(data)
+  }
+  catch{
+    if (error) {
+      console.error(error);
+      return res.status(500).json({
+        message: "Internal server error",
+      });
+    }
+  }
+})
 
 authRouter.post("/register", async (req, res) => {
   const user = {

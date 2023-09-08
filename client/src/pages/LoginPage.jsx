@@ -1,9 +1,10 @@
 
-import { Button, Form, Input, message } from "antd";
+import { Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar.jsx";
 import { useAuth } from "../contexts/authentication";
 import "../styles/App.css";
+import FacebookLogin from "../components/FacebookLoginButton.jsx";
 
 function LoginForm() {
   const { login } = useAuth();
@@ -155,6 +156,7 @@ function LoginForm() {
             </div>
           </Form>
         </div>
+        <FacebookLogin/>
       </div>
     </>
   );
