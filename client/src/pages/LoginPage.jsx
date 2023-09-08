@@ -150,7 +150,7 @@ function LoginForm() {
                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
               </span>
               <a className="btn-ghost" onClick={handleRegisterClick}>
-                <span className="underline ml-2">ลงทะเบียน</span>
+                <span className="underline">ลงทะเบียน</span>
               </a>
             </div>
           </Form>

@@ -58,7 +58,7 @@ btn-secondary[disabled] {
 /* Button Ghost */
 
 .btn-ghost {
-  @apply cursor-pointer mt-6 font-semibold text-base underline underline-offset-auto text-blue600 hover:text-blue400 active:text-blue800 rounded-md;
+  @apply cursor-pointer mt-6 p-1 font-semibold text-base underline underline-offset-auto text-blue600 hover:text-blue400 active:text-blue800 rounded-md;
 }
 
 /* placeholder */
