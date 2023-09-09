@@ -63,12 +63,14 @@ function AuthProvider(props) {
     navigate("/");
   };
 
+ //ใส่ logic login facebook
   const logInWithFacebook = async () => { 
     try {
 
-       const response = await axios.post(
+       const {response,error,user,session} = await axios.post(
         "http://localhost:4000//auth/facebook/login"
        )
+       console.log(response)
       if (error) {
         console.error(error);
       } else {
