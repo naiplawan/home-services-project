@@ -7,7 +7,7 @@ function Slogan () {
   return (
     <div className="flex justify-between bg-[#E7EEFF] relative">
       {/* right side */}
-      <div className="p-5 md:p-7 lg:p-20 xl:ml-30">
+      <div className="p-4 md:p-1 lg:py-20 xl:ml-30">
         <div className="text-[#1852D6] md:text-[35px] lg:text-[40px] xl:text-[64px] prompt-Bold xl:ml-40 text-[20px] ">
           เรื่องบ้าน...ให้เราช่วยดูแลคุณ
         </div>
@@ -25,8 +25,8 @@ function Slogan () {
       </div>
 
       {/* left side */}
-      <div className=" lg:absolute bottom-0 lg:right-0 xl:right-40">
-        <img src={BlueMan} alt="blueman" className=""/>
+      <div className=" lg:absolute bottom-0 lg:right-0 xl:right-20">
+        <img src={BlueMan} alt="blueman" className="w-[100%]"/>
       </div>
     </div>
   )
