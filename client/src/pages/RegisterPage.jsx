@@ -12,7 +12,7 @@ function RegisterPage() {
   const inputStyle = "border rounded-lg border-grey300 w-[440px] h-11 px-4 py-2.5" ;
 
   const formStyle =
-    "bg-white border border-grey300 rounded-lg h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px] flex flex-col w-[45%] items-center gap-4";
+    "bg-white border border-grey300 rounded-lg h-full mt-[3.25rem] mb-[5.4375rem] px-[5.4375rem] pt-[2rem] pb-[3.3125rem] flex flex-col w-[45%] items-center gap-4";
 
   const labelStyle = {
     marginTop: "10px",

@@ -1,7 +1,7 @@
 
-import { Button, Form, Input, message } from "antd";
+import {Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/NavBar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import { useAuth } from "../contexts/authentication";
 import "../styles/App.css";
 

@@ -3,7 +3,7 @@ import supabase from "../utils/supabase.js";
 
 const categoryRouter = Router();
 
-// ดูcategories
+// ดู categories
 categoryRouter.get("/", async (req, res) => {
   try {
     const data = await supabase.from("category").select("*");
@@ -72,22 +72,21 @@ categoryRouter.put("/:id", async (req, res) => {
 });
 
 // category search keyword
-categoryRouter.get("/:id", async (req, res) => {
+categoryRouter.get("/:keyword", async (req, res) => {
   try {
-    const categoryId = req.params.id;
+    const keyword = req.params.keyword;
 
     const { data, error } = await supabase
       .from("category")
       .select("*")
-      .eq("category_id", categoryId)
-      ; // ใช้ .insert แทน .insertOne
-      return res.json({
-        data,
-      });
+      .ilike("category_name", `%${keyword}%`);
 
-
+    return res.json({
+      data,
+    });
   } catch (error) {
-    return res.status(500).json({ error: error.message });}
+    return res.status(500).json({ error: error.message });
+  }
 });
 
 export default categoryRouter;
