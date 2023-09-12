@@ -1,9 +1,9 @@
 import { Routes, Route } from "react-router-dom";
-import HomePage from "./HomePage";
-import NotFoundPage from "./NotFoundPage";
-import AdminDashboard from "./AdminDashboard";
-import AdminCategoryPageMock from "./AdminCategoryPageMock";
-
+import HomePage from "./HomePage.jsx";
+import NotFoundPage from "./NotFoundPage.jsx";
+import AdminDashboard from "./AdminDashboard.jsx";
+import AdminCategoryPageMock from "./AdminCategoryPageMock.jsx";
+import AdminServicePage from "./AdminServicePage.jsx";
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
 
@@ -13,14 +13,15 @@ function AuthenticatedApp() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="" element={<NotFoundPage />} />
-          {/* Route mocking */}
           <Route path="/admin-category" element={<AdminCategoryPageMock />} />
+          <Route path="/admin-service" element={<AdminServicePage />} /> 
+          <Route path="" element={<NotFoundPage />} />
+        
         </Routes>
       ) : (
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="" element={<NotFoundPage />} />
+                 <Route path="/" element={<HomePage />} />
+  <Route path="" element={<NotFoundPage />} />
         </Routes>
       )}
     </div>

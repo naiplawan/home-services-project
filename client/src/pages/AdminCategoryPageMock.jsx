@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/App.css";
@@ -7,6 +8,34 @@ function AdminCategoryPageMock() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
+
+  const deleteCategory = async (categoryId) => {
+    if (window.confirm("คุณต้องการลบหมวดหมู่นี้ใช่หรือไม่?")) {
+      try {
+        setError(null);
+        const response = await axios.delete(
+          `http://localhost:4000/category/${categoryId}`
+        );
+
+        if (response.data.success) {
+          // อัปเดตข้อมูลหมวดหมู่โดยเรียก API อีกรอบ
+          const updatedCategories = await axios.get(
+            `http://localhost:4000/category`
+          );
+
+          // อัปเดตข้อมูล UI โดยไม่ต้องรีเฟรชหน้า คือพอเรากดยืนยันที่ alert ข้อมูลก็จะถูกลบทันที
+          setData(updatedCategories.data.data);
+
+        } else {
+          setError("เกิดข้อผิดพลาดในการลบหมวดหมู่");
+        }
+      } catch (err) {
+        console.error(err);
+        setError("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,16 +103,22 @@ function AdminCategoryPageMock() {
                     <span className="font-semibold">Edited Date:</span>{" "}
                     {dateFormat(category.category_edited_date)}
                     <span className="mx-[20px]">
-                      <button className="ml-2 focus:outline-none focus:ring focus:border-blue-300 rounded-lg">
-                        Delete
-                      </button>
-                      <button
-                        // logic ของ handleEdit คืออาจจะลิ้งค์ไปยังอีกหน้า /edit-category  จะเป็น page แยกไปอีกเป็น Admin_Edit_Category ตามแบบใน figma
-                        onClick={() => handleEdit(category.category_id)}
-                        className="ml-2 focus:outline-none focus:ring focus:border-blue-300 rounded-lg"
-                      >
-                        Edit
-                      </button>
+                      {category.category_id !== categoryToDelete && (
+                        <>
+                          <button
+                            className="ml-2 focus:outline-none focus:ring focus:border-blue-300 rounded-lg"
+                            onClick={() => deleteCategory(category.category_id)}
+                          >
+                            Delete
+                          </button>
+                          <button
+                            onClick={() => handleEdit(category.category_id)}
+                            className="ml-2 focus:outline-none focus:ring focus:border-blue-300 rounded-lg"
+                          >
+                            Edit
+                          </button>
+                        </>
+                      )}
                     </span>
                   </li>
                 ))}

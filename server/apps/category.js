@@ -3,7 +3,7 @@ import supabase from "../utils/supabase.js";
 
 const categoryRouter = Router();
 
-// ดู categories
+// ดู categories ทั้งหมด
 categoryRouter.get("/", async (req, res) => {
   try {
     const data = await supabase.from("category").select("*");
@@ -71,7 +71,7 @@ categoryRouter.put("/:id", async (req, res) => {
   }
 });
 
-// category search keyword
+// category search by keyword
 categoryRouter.get("/:keyword", async (req, res) => {
   try {
     const keyword = req.params.keyword;
@@ -86,6 +86,32 @@ categoryRouter.get("/:keyword", async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });
+  }
+});
+
+// category delete เพิ่มส่วนนี้ค่ะ ui หน้าบ้านมีไอคอนลบ
+categoryRouter.delete("/:id", async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+
+    const { data, error } = await supabase
+      .from("category")
+      .delete()
+      .eq("category_id", categoryId);
+
+    if (error) {
+      return res.status(500).json({ error: "ไม่สามารถลบได้" });
+    }
+
+    if (data && data.length === 0) {
+      return res
+        .status(404)
+        .json({ error: `ไม่พบรายการที่ตรงกับ ${categoryId}` });
+    }
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "ไม่สามารถลบได้" });
   }
 });
 
