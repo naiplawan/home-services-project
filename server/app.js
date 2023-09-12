@@ -10,7 +10,7 @@ async function init() {
   dotenv.config();
 
   const app = express();
-  const port = 4001;
+  const port = 4000;
 
   app.use(cors());
   app.use(bodyParser.json());
@@ -18,7 +18,6 @@ async function init() {
   app.use("/auth", authRouter);
   app.use("/category", categoryRouter);
   app.use("/service", serviceRouter);
-  
 
   app.get("/", (req, res) => {
     res.send("Welcome to Home Service!");
