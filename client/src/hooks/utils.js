@@ -5,6 +5,15 @@ import { useNavigate } from "react-router-dom";
 export function useUtils() {
   const navigate = useNavigate();
 
+    //Filter
+    const [searchService, setSearchService] = useState("");
+    const [searchCategory, setSearchCategory] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [minFilter, setMinFilter] = useState(0);
+    const [maxFilter, setMaxFilter] = useState(20000);
+    const [orderFilter, setOrderFilter] = useState("asc");
+
+
   //service
   const [service, setService] = useState([
     {
@@ -19,7 +28,7 @@ export function useUtils() {
       sub_service_quantity: 0,
     },
   ]);
-  
+
   const [service_name, setService_name] = useState("");
   const [sub_service_name, setSub_service_name] = useState("");
   const [price_per_unit, setPrice_per_unit] = useState(0);
@@ -31,6 +40,37 @@ export function useUtils() {
   ]);
 
   const [editHeader, setEditHeader] = useState("");
+
+  //Get Service Data
+  const getService = async () => {
+    const result = await axios("http://localhost:4000/service");
+    setService(result.data.data);
+    console.log(result.data.data);
+  };
+
+  const getServiceById = async (serviceId) => {
+    const result = await axios.get(
+      `http://localhost:4000/service/${serviceId}`
+    );
+    setService(result.data.data);
+    setEditHeader(result.data.data[0].service_name);
+  };
+
+    //Service Image
+    const handleFileChange = (event) => {
+      const uniqueId = Date.now();
+      setServicePhotos({
+        ...servicePhotos,
+        [uniqueId]: event.target.files[0],
+      });
+    };
+
+    const handleRemoveImageService = (event, servicePhotosKey) => {
+      event.preventDefault();
+      delete servicePhotos[servicePhotosKey];
+      setServicePhotos({ ...servicePhotos });
+    };
+
 
 
   //Create Service
@@ -57,10 +97,59 @@ export function useUtils() {
     createService(formData);
   };
 
+  //alert box
+  const [deleteService, setDeleteService] = useState(false);
+  const [deleteCategory, setDeleteCategory] = useState(false);
+  const [service_Id, setService_Id] = useState();
+  const [category_Id, setCategory_Id] = useState();
+
+  const serviceDeleteAlert = async (serviceId) => {
+    setService_Id(serviceId);
+    setDeleteService(true);
+  };
+
+  const categoryDeleteAlert = async (categoryId) => {
+    setCategory_Id(categoryId);
+    setDeleteCategory(true);
+  };
+
 
 
   return {
     createService,
-    handleSubmitService
+    handleSubmitService,
+    getService,
+    service,
+    service_name,
+    setService_name,
+    sub_service_name,
+    setSub_service_name,
+    price_per_unit,
+    setPrice_per_unit,
+    unit,
+    setUnit,
+    servicePhotos,
+    setServicePhotos,
+    subServiceList,
+    setSubServiceList,
+    editHeader,
+    setEditHeader,
+    deleteService,
+    setDeleteService,
+    deleteCategory,
+    setDeleteCategory,
+    service_Id,
+    setService_Id,
+    category_Id,
+    setCategory_Id,
+    serviceDeleteAlert,
+    categoryDeleteAlert,
+    handleFileChange,
+    handleRemoveImageService,
+    // getCategory,
+    // category,
+    // category_name,
+    // setCategory_name,
+    searchService,
   };
 }

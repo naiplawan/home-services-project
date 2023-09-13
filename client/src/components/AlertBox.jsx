@@ -1,5 +1,5 @@
-import "../App.css";
-import image from "../AdminPhoto/imageIndex";
+import "../styles/App.css";
+import image from "../assets/AdminPhoto/imageIndex";
 
 function AlertBoxDelete(props) {
   return (
