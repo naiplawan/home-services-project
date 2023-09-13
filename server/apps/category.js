@@ -17,6 +17,23 @@ categoryRouter.get("/", async (req, res) => {
   }
 });
 
+// ดู category แบบเจาะจง id
+categoryRouter.get("/:id", async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+
+    const { data, error } = await supabase
+      .from("category")
+      .select("*")
+      .eq("category_id", categoryId);
+    return res.json({
+      data,
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 // สร้าง category ใหม่
 categoryRouter.post("/", async (req, res) => {
   try {
@@ -41,7 +58,7 @@ categoryRouter.post("/", async (req, res) => {
 
     return res
       .status(201) // ใช้ HTTP status code 201 เมื่อสร้างสำเร็จ
-      .json({ message: "สร้างหมวดหมู่เรียบร้อยแล้ว"  });
+      .json({ message: "สร้างหมวดหมู่เรียบร้อยแล้ว" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -52,20 +69,21 @@ categoryRouter.put("/:id", async (req, res) => {
   try {
     const { category_name } = req.body; // ดึง category_name จาก req.body
     const categoryId = req.params.id;
-    const updatedCatagory ={
+    const updatedCatagory = {
       category_name,
       category_edited_date: new Date(),
-    }
+    };
 
     const { data, error } = await supabase
       .from("category")
       .update(updatedCatagory)
-      .eq("category_id", categoryId)
-      ; // ใช้ .insert แทน .insertOne
+      .eq("category_id", categoryId); // ใช้ .insert แทน .insertOne
     if (error) {
       return res.status(500).json({ error: "ไม่สามารถupdate" });
     }
-    return res.status(200).json({ message:  ` ${categoryId} has been updated.`})
+    return res
+      .status(200)
+      .json({ message: ` ${categoryId} has been updated.` });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
