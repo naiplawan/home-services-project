@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 function CategoryAddForm() {
@@ -7,6 +8,7 @@ function CategoryAddForm() {
   const [categoryName, setCategoryName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     setCategoryName(event.target.value);
@@ -26,7 +28,7 @@ function CategoryAddForm() {
       if (response.status === 201) {
         setCategoryName("");
         alert("success")
-        navigate("/");
+        navigate("/admin-category");
       }
     } catch (error) {
       setIsError(true);
@@ -37,7 +39,7 @@ function CategoryAddForm() {
 
   const handleCancel = () => {
     setCategoryName(""); 
-    navigate("/");
+    navigate("/admin-category");
   };
 
   return (
@@ -59,7 +61,7 @@ function CategoryAddForm() {
           <button
             className="btn-primary flex items-center justify-center
                ml-6 text-base font-medium w-28 h-11"
-            type="submit"
+            type="submit" 
           >
             สร้าง
           </button>

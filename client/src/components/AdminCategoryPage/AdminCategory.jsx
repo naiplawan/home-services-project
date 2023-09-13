@@ -150,7 +150,7 @@ function AdminCategory() {
                             <img
                               src={editIcon}
                               className="cursor-pointer w-[25px] h-[25px]  "
-                              onClick={() => navigate("/admin-category-edit")}
+                              onClick={() => navigate(`/admin-category-edit/${category.category_id}`)}
                             />
                           </div>
                         )}
