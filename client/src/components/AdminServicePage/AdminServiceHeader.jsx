@@ -14,6 +14,8 @@ const AdminServiceHeader = () => {
         );
         setService(results.data.data);
         console.log(results.data.data);
+        setService(results.data.data);
+        console.log(results.data.data);
     };
 
     useEffect(() => {
