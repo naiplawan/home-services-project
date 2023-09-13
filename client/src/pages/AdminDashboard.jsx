@@ -16,6 +16,14 @@ function AdminDashboard() {
         <span className="text-lg ">👨‍🔧 GO HOME 👩‍🔧</span>
 
       </button>
+
+      <button
+        className="btn primary"
+        onClick={() => navigate("/admin-service")}
+      >
+        <span className="text-lg ">👨‍🔧 Service 👩‍🔧</span>
+
+      </button>
       </div>
     </>
   );
