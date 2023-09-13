@@ -1,7 +1,7 @@
 import AdminCategory from "../components/AdminCategoryPage/AdminCategory.jsx";
 import AdminSidebar from "../components/ServicePage/AdminSidebar.jsx";
 
-function AdminCategoryPageMock() {
+function AdminCategoryPage() {
   return (
     <div className="bg-bg h-screen  ">
       <AdminSidebar />
@@ -10,4 +10,4 @@ function AdminCategoryPageMock() {
   );
 }
 
-export default AdminCategoryPageMock;
+export default AdminCategoryPage;
