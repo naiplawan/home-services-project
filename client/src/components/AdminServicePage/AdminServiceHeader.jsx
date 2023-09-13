@@ -6,13 +6,14 @@ import image from "../../assets/AdminPhoto/imageIndex";
 const AdminServiceHeader = () => {
     const navigate = useNavigate();
     const [searchService, setSearchService] = useState("");
-    // const [service, setService] = useState([])
+    const [service, setService] = useState([])
 
     const searchServiceData = async () => {
         const results = await axios.get(
             `http://localhost:4000/service?keywords=${searchService}`
         );
-        // setService(results.data.data);
+        setService(results.data.data);
+        console.log(results.data.data);
     };
 
     useEffect(() => {
