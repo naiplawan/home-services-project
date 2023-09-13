@@ -19,6 +19,7 @@ export function useUtils() {
       sub_service_quantity: 0,
     },
   ]);
+  
   const [service_name, setService_name] = useState("");
   const [sub_service_name, setSub_service_name] = useState("");
   const [price_per_unit, setPrice_per_unit] = useState(0);
@@ -30,12 +31,36 @@ export function useUtils() {
   ]);
 
   const [editHeader, setEditHeader] = useState("");
-  const getService = async () => {
-    const result = await axios("http://localhost:4000/service");
-    setService(result.data.data);
+
+
+  //Create Service
+  const createService = async (data) => {
+    await axios.post("http://localhost:4000/service", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    navigate("/service-dashboard");
   };
 
+  const handleSubmitService = (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append("service_name", service_name);
+    formData.append("category_name", category_name);
+    formData.append("sub_service", JSON.stringify(subServiceList));
+
+    for (let servicePhotosKey in servicePhotos) {
+      formData.append("servicePhoto", servicePhotos[servicePhotosKey]);
+    }
+
+    createService(formData);
+  };
+
+
+
   return {
-    getService,
+    createService,
+    handleSubmitService
   };
 }
