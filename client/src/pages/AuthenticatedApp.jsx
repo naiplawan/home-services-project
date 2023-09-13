@@ -5,6 +5,7 @@ import AdminDashboard from "./AdminDashboard.jsx";
 import AdminCategoryPage from "./AdminCategoryPage.jsx";
 import AdminServicePage from "./AdminServicePage.jsx";
 import AdminCreateCategory from "./AdminCreateCategory.jsx";
+import AdminCreateServicePage from "./AdminCreateServicePage.jsx";
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
 
@@ -19,6 +20,10 @@ function AuthenticatedApp() {
           <Route
             path="/admin-category-create"
             element={<AdminCreateCategory />}
+          />
+          <Route
+            path="/admin-create-service"
+            element={<AdminCreateServicePage />}
           />
           <Route path="" element={<NotFoundPage />} />
         </Routes>
