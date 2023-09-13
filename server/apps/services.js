@@ -26,105 +26,17 @@ const serviceRouter = Router();
 // API route to service listing page
 serviceRouter.get("/", async (req, res) => {
   try {
-    const keywords = req.query.keywords || '';
-    const categoryFilter = req.query.categoryFilter || '';
-    const maxPriceFilter = req.query.maxPriceFilter || Number.MAX_SAFE_INTEGER;
-    const minPriceFilter = req.query.minPriceFilter || 0;
-    const orderFilter = req.query.orderFilter || '';
-
-    // Create the initial queryData with select statement for the service table
-    let queryData = supabase.from("service").select(`
-        service.service_id,
-        category.category_name,
-        service.category_id,
-        service.service_name,
-        service.service_photo,
-        min(sub_service.price_per_unit) as min_price,
-        max(sub_service.price_per_unit) as max_price,
-        service.service_created_date,
-        service.service_edited_date,
-        sub_service.sub_service_id,
-        sub_service.sub_service_name,
-        sub_service.unit,
-        sub_service.price_per_unit,
-        sub_service.sub_service_quantity
-      `);
-
-    if (keywords) {
-      queryData = queryData.filter("service_name", "ilike", `%${keywords}%`);
-    }
-
-    if (categoryFilter) {
-      queryData = queryData.filter("category_id", "eq", categoryFilter);
-    }
-
-    if (maxPriceFilter) {
-      queryData = queryData.filter(
-        "max_price",
-        "lte",
-        parseFloat(maxPriceFilter)
-      );
-    }
-
-    if (minPriceFilter) {
-      queryData = queryData.filter(
-        "min_price",
-        "gte",
-        parseFloat(minPriceFilter)
-      );
-    }
-
-    if (orderFilter === "asc") {
-      queryData = queryData.order("service_name", { ascending: true });
-    } else if (orderFilter === "desc") {
-      queryData = queryData.order("service_name", { ascending: false });
-    }
-
-    // Execute the query for the service table
-    const { data: serviceData, error: serviceError } = await queryData;
-    if (serviceError) {
-      console.error("Supabase error:", serviceError.message);
-      return res.status(500).json({
-        error: "Error fetching data from Supabase",
-        supabaseError: serviceError.message,
-      });
-    }
-
-    // Create a subquery for fetching category information
-    const categoryQuery = supabase
-      .from("category")
-      .select("category_id", "category_name");
-
-    // Execute the subquery for category information
-    const { data: categoryData, error: categoryError } = await categoryQuery;
-    if (categoryError) {
-      console.error("Supabase error:", categoryError.message);
-      return res.status(500).json({
-        error: "Error fetching category data from Supabase",
-        supabaseError: categoryError.message,
-      });
-    }
-
-    // Combine serviceData and categoryData based on category_id
-    const combinedData = serviceData.map((service) => {
-      const category = categoryData.find(
-        (cat) => cat.category_id === service.category_id
-      );
-      return {
-        ...service,
-        category_name: category ? category.category_name : null,
-      };
+    const data = await supabase.from("service").select("*");
+    return res.json({
+      data,
     });
-
-    // Log the data
-    console.log("Retrieved data:", combinedData);
-
-    return res.status(200).json({ data: combinedData });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Server error" });
+  } catch (error) {
+    res.status(500).json({
+      error: error,
+    });
   }
 });
+
 
 //API route to one service item page
 serviceRouter.get("/:id", async (req, res) => {
@@ -133,48 +45,27 @@ serviceRouter.get("/:id", async (req, res) => {
   try {
     const { data, error } = await supabase
       .from("service")
-      .select(
-        `
-        service.service_id,
-        category.category_name,
-        service.category_id,
-        service.service_name,
-        service.service_photo,
-        min(sub_service.price_per_unit) as min_price,
-        max(sub_service.price_per_unit) as max_price,
-        service.service_created_date,
-        service.service_edited_date,
-        sub_service.sub_service_id,
-        sub_service.sub_service_name,
-        sub_service.unit,
-        sub_service.price_per_unit,
-        sub_service.sub_service_quantity
-        `
-      )
-      .innerJoin("category", { "category.category_id": "service.category_id" })
-      .innerJoin("sub_service", {
-        "service.service_id": "sub_service.service_id",
-      })
-      .eq("service.service_id", serviceId)
-      .groupBy([
-        "service.service_id",
-        "category.category_name",
-        "sub_service.sub_service_id",
-      ])
-      .order("sub_service.sub_service_id", { ascending: true });
+      .select("*")
+      .eq("service_id", serviceId);
 
     if (error) {
-      return res
-        .status(500)
-        .json({ error: "Error fetching data from Supabase" });
+      console.error(error);
+      return res.status(500).json({ error: "Error fetching data from Supabase" });
     }
 
-    return res.status(200).json({ data });
+    if (data.length === 0) {
+      return res.status(404).json({ error: "Service not found" });
+    }
+
+    return res.status(200).json({ data: data[0] }); // Return the first (and only) result
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Server error" });
   }
 });
+
+
+
 
 //Uploading 1
 // serviceRouter.post('/upload', servicePhotoUpload, async (req, res) => {

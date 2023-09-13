@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
 import image from "../../assets/AdminPhoto/imageIndex.js";
+import  useUtils  from "../../hooks/utils.js";
 
 function AdminServiceList(props) {
   const {
@@ -12,10 +14,13 @@ function AdminServiceList(props) {
     service_Id,
     setDeleteService,
   } = props;
+  
+  const { getService } = useUtils();
 
   const navigate = useNavigate();
 
   const hide = () => {
+    document.getElementById("popUp").style.display = "none";
     setDeleteService(false);
   };
 
@@ -39,6 +44,11 @@ function AdminServiceList(props) {
         return "bg-pink text-red";
     }
   };
+
+  useEffect(() => {
+    // Call getService when the component mounts
+    getService();
+  }, [getService]); // Ensure it only runs when getService changes
 
   return (
     <div className="categories-data min-h-screen bg-bg p-[41px]">
@@ -78,7 +88,22 @@ function AdminServiceList(props) {
                     {dateFormat(data.service_created_date)} น.
                   </td>
                   <td className="h-[88px] flex items-center justify-center">
-                    {/* Your delete and edit buttons */}
+                  <img
+                        className="w-6 h-6 cursor-pointer mx-2"
+                        alt="Delete"
+                        src={image.trashIcon}
+                        onClick={() => {
+                          serviceDeleteAlert(data.service_id);
+                        }}
+                      />
+                      <img
+                        className="w-6 h-6 cursor-pointer mx-2"
+                        alt="Edit"
+                        src={image.editIcon}
+                        onClick={() =>
+                          navigate(`/service/edit/${data.service_id}`)
+                        }
+                      />
                   </td>
                 </tr>
               ))}
