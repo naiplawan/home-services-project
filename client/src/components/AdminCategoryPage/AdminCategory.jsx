@@ -75,7 +75,7 @@ function AdminCategory() {
               onChange={(e) => setKeyword(e.target.value)}
               className="px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[400px] "
             />
-            {/* button ตรงนี้น่าจะต้องเป็น  handle ที่ไปหา form add category */}
+
             <button
               className="btn-primary rounded-lg ml-7 h-[100%] w-[150px]  text-white focus:outline-none "
               onClick={() => navigate("/admin-category-create")}
