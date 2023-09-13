@@ -1,25 +1,29 @@
-import { useEffect, useState } from "react";
+import "../../styles/App.css";
+import {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import image from "../../assets/AdminPhoto/imageIndex";
 
 const AdminServiceHeader = () => {
     const navigate = useNavigate();
-    const [searchService, setSearchService] = useState("");
-    // const [service, setService] = useState([])
+    const { searchService, setSearchService, setService } = props;
 
     const searchServiceData = async () => {
         const results = await axios.get(
             `http://localhost:4000/service?keywords=${searchService}`
         );
-        // setService(results.data.data);
+        setService(results.data.data);
+        console.log(results.data.data);
+        setService(results.data.data);
+        console.log(results.data.data);
     };
 
     useEffect(() => {
-        let timerId = setTimeout(searchServiceData, 1000);
-        return () => {
-            clearTimeout(timerId);
-        };
+      let timerId;
+      timerId = setTimeout(searchServiceData, 1000);
+      return () => {
+        clearTimeout(timerId);
+      };
     }, [searchService]);
 
     return (
@@ -40,7 +44,7 @@ const AdminServiceHeader = () => {
                 />
                 <button
                   className="btn-primary flex items-center ml-6"
-                  onClick={() => navigate("/create-service")}
+                  onClick={() => navigate("/admin-create-service")}
                 >
                   <div className="text-base font-medium mr-3">เพิ่มบริการ</div>
                   <img src={image.plusSign} alt="Plus Symbol" />

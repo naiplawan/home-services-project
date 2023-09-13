@@ -24,70 +24,92 @@ const serviceRouter = Router();
 // serviceRouter.use(protect); // protect all user that not login
 
 // API route to service listing page
-serviceRouter.get('/', async (req, res) => {
+serviceRouter.get("/", async (req, res) => {
   try {
-    const keywords = req.query.keywords;
-    const categoryFilter = req.query.categoryFilter;
-    const maxPriceFilter = req.query.maxPriceFilter;
-    const minPriceFilter = req.query.minPriceFilter;
-    const orderFilter = req.query.orderFilter;
+    const keywords = req.query.keywords || '';
+    const categoryFilter = req.query.categoryFilter || '';
+    const maxPriceFilter = req.query.maxPriceFilter || Number.MAX_SAFE_INTEGER;
+    const minPriceFilter = req.query.minPriceFilter || 0;
+    const orderFilter = req.query.orderFilter || '';
 
     // Create the initial queryData with select statement for the service table
-    let queryData = supabase
-      .from('service')
-      .select(`
-        service_id,
-        category_id,
-        service_name,
-        service_photo,
-        service_created_date,
-        service_edited_date
+    let queryData = supabase.from("service").select(`
+        service.service_id,
+        category.category_name,
+        service.category_id,
+        service.service_name,
+        service.service_photo,
+        min(sub_service.price_per_unit) as min_price,
+        max(sub_service.price_per_unit) as max_price,
+        service.service_created_date,
+        service.service_edited_date,
+        sub_service.sub_service_id,
+        sub_service.sub_service_name,
+        sub_service.unit,
+        sub_service.price_per_unit,
+        sub_service.sub_service_quantity
       `);
 
     if (keywords) {
-      queryData = queryData.filter('service_name', 'ilike', `%${keywords}%`);
+      queryData = queryData.filter("service_name", "ilike", `%${keywords}%`);
     }
 
     if (categoryFilter) {
-      queryData = queryData.filter('category_id', 'eq', categoryFilter);
+      queryData = queryData.filter("category_id", "eq", categoryFilter);
     }
 
     if (maxPriceFilter) {
-      queryData = queryData.filter('max_price', 'lte', parseFloat(maxPriceFilter));
+      queryData = queryData.filter(
+        "max_price",
+        "lte",
+        parseFloat(maxPriceFilter)
+      );
     }
 
     if (minPriceFilter) {
-      queryData = queryData.filter('min_price', 'gte', parseFloat(minPriceFilter));
+      queryData = queryData.filter(
+        "min_price",
+        "gte",
+        parseFloat(minPriceFilter)
+      );
     }
 
-    if (orderFilter === 'asc') {
-      queryData = queryData.order('service_name', { ascending: true });
-    } else if (orderFilter === 'desc') {
-      queryData = queryData.order('service_name', { ascending: false });
+    if (orderFilter === "asc") {
+      queryData = queryData.order("service_name", { ascending: true });
+    } else if (orderFilter === "desc") {
+      queryData = queryData.order("service_name", { ascending: false });
     }
 
     // Execute the query for the service table
     const { data: serviceData, error: serviceError } = await queryData;
     if (serviceError) {
-      console.error('Supabase error:', serviceError.message);
-      return res.status(500).json({ error: 'Error fetching data from Supabase', supabaseError: serviceError.message });
+      console.error("Supabase error:", serviceError.message);
+      return res.status(500).json({
+        error: "Error fetching data from Supabase",
+        supabaseError: serviceError.message,
+      });
     }
 
     // Create a subquery for fetching category information
     const categoryQuery = supabase
-      .from('category')
-      .select('category_id', 'category_name');
+      .from("category")
+      .select("category_id", "category_name");
 
     // Execute the subquery for category information
     const { data: categoryData, error: categoryError } = await categoryQuery;
     if (categoryError) {
-      console.error('Supabase error:', categoryError.message);
-      return res.status(500).json({ error: 'Error fetching category data from Supabase', supabaseError: categoryError.message });
+      console.error("Supabase error:", categoryError.message);
+      return res.status(500).json({
+        error: "Error fetching category data from Supabase",
+        supabaseError: categoryError.message,
+      });
     }
 
     // Combine serviceData and categoryData based on category_id
     const combinedData = serviceData.map((service) => {
-      const category = categoryData.find((cat) => cat.category_id === service.category_id);
+      const category = categoryData.find(
+        (cat) => cat.category_id === service.category_id
+      );
       return {
         ...service,
         category_name: category ? category.category_name : null,
@@ -95,22 +117,71 @@ serviceRouter.get('/', async (req, res) => {
     });
 
     // Log the data
-    console.log('Retrieved data:', combinedData);
+    console.log("Retrieved data:", combinedData);
 
     return res.status(200).json({ data: combinedData });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: "Server error" });
   }
 });
 
+//API route to one service item page
+serviceRouter.get("/:id", async (req, res) => {
+  const serviceId = req.params.id;
+
+  try {
+    const { data, error } = await supabase
+      .from("service")
+      .select(
+        `
+        service.service_id,
+        category.category_name,
+        service.category_id,
+        service.service_name,
+        service.service_photo,
+        min(sub_service.price_per_unit) as min_price,
+        max(sub_service.price_per_unit) as max_price,
+        service.service_created_date,
+        service.service_edited_date,
+        sub_service.sub_service_id,
+        sub_service.sub_service_name,
+        sub_service.unit,
+        sub_service.price_per_unit,
+        sub_service.sub_service_quantity
+        `
+      )
+      .innerJoin("category", { "category.category_id": "service.category_id" })
+      .innerJoin("sub_service", {
+        "service.service_id": "sub_service.service_id",
+      })
+      .eq("service.service_id", serviceId)
+      .groupBy([
+        "service.service_id",
+        "category.category_name",
+        "sub_service.sub_service_id",
+      ])
+      .order("sub_service.sub_service_id", { ascending: true });
+
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: "Error fetching data from Supabase" });
+    }
+
+    return res.status(200).json({ data });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
 
 //Uploading 1
 // serviceRouter.post('/upload', servicePhotoUpload, async (req, res) => {
 //   try {
 //     const { path, originalname, mimetype } = req.files['service_photo'][0]; // Access the uploaded file info
 //     const file = await supabase.storage
-//       .from('service_photo')  
+//       .from('service_photo')
 //       .upload(path, { cacheControl: 3600, upsert: true });
 
 //     res.json({ message: 'File uploaded successfully', file });
@@ -122,21 +193,20 @@ serviceRouter.get('/', async (req, res) => {
 
 serviceRouter.post("/", async (req, res) => {
   try {
-
-    const { file } = req.body; 
+    const { file } = req.body;
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    console.log('File Object', file)
+    console.log("File Object", file);
 
-    const fileName = file.originalName || 'defaultFileName.ext'; //ถ้ามีไฟล์มีชื่อให้เป็นชื่อไฟล์เดิม แต่ถ้าไม่มีจะถูกเปลี่ยนเป็นdefaultFileName.ext
-    const folderName = 'service_photo';
+    const fileName = file.originalName || "defaultFileName.ext"; //ถ้ามีไฟล์มีชื่อให้เป็นชื่อไฟล์เดิม แต่ถ้าไม่มีจะถูกเปลี่ยนเป็นdefaultFileName.ext
+    const folderName = "service_photo";
 
-    console.log(fileName)
+    console.log(fileName);
 
     const { data, error } = await supabase.storage
-      .from('home_service')
+      .from("home_service")
       .upload(`${folderName}/${fileName}`, file);
 
     if (error) {
