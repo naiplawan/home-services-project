@@ -40,7 +40,7 @@ function AuthProvider(props) {
       navigate("/");
       // ใส่ condition login ตรวจสอบ role
       if (userDataFromToken.role === "admin") {
-        navigate("/admin");
+        navigate("/admin-category");
       } else if (userDataFromToken.role === "customer") {
         navigate("/");
       }
