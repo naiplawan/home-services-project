@@ -5,6 +5,7 @@ import axios from "axios";
 import dateFormat from "../../utils/dateFormat.js";
 import trashIcon from "../../assets/AdminPhoto/trash-icon.png";
 import editIcon from "../../assets/AdminPhoto/edit-icon.png";
+import plusSign from "../../assets/AdminPhoto/plus-sign.svg";
 
 function AdminCategory() {
   const [keyword, setKeyword] = useState("");
@@ -64,10 +65,10 @@ function AdminCategory() {
 
   return (
     <div className="bg-grey100 h-[100%] pb-[4%] pl-60 ">
-      <div className="  flex flex-col items-center ">
+      <div className="  flex flex-col items-center  ">
         <div className="header-name justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
           <h1 className="text-black   font-semibold text-xl">หมวดหมู่</h1>
-          <div>
+          <div className="flex">
             <input
               type="text"
               placeholder="ค้นหาหมวดหมู่..."
@@ -77,17 +78,21 @@ function AdminCategory() {
             />
 
             <button
-              className="btn-primary rounded-lg ml-7 h-[100%] w-[150px]  text-white focus:outline-none "
+              alt="add-category"
+              className="flex  btn-primary rounded-lg ml-7  h-[100%] w-[190px] text-white focus:outline-none "
               onClick={() => navigate("/admin-category-create")}
             >
-              เพิ่มหมวดหมู่ +
+              <p className=" pl-[15%]">เพิ่มหมวดหมู่</p>
+              <p className="pt-2 pl-[15%]">
+                <img src={plusSign} className=" w-[10px] h-[10px] " />
+              </p>
             </button>
           </div>
         </div>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <div className="results w-[95%]">
           {data.length === 0 ? (
-            <p>ไม่พบผลลัพธ์</p>
+            <p></p>
           ) : (
             <div className="category-list mt-10  w-[100%]">
               <ul className="">
@@ -109,10 +114,17 @@ function AdminCategory() {
                   .map((category) => (
                     <li
                       key={category.category_id}
-                      className=" flex bg-white list-none p-[20px] border-[1px] border-grey200"
+                      className=" flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
                     >
-                      <div className="flex justify-between w-[100%] text-black ">
-                        <div className="flex w-[90%] pl-[8%]">
+                      <div className="category-detail  cursor-pointer flex justify-between w-[100%] text-black ">
+                        <div
+                          onClick={() =>
+                            navigate(
+                              `/admin-category-detail/${category.category_id}`
+                            )
+                          }
+                          className="flex w-[90%] pl-[8%]"
+                        >
                           <span className="w-[20%] ">
                             {category.category_id}
                           </span>
