@@ -98,7 +98,7 @@ function AdminCategory() {
               <ul className="">
                 <li className=" flex text-sm text-grey600 list-none p-[20px]  rounded-t-lg bg-grey200 border-[1px] border-grey300">
                   <span className=" text-grey700 mx-[7%]"> ลำดับ</span>
-                  <span className=" text-grey700 mx-[1%] "> ชื่อหมวดหมู่</span>
+                  <span className=" text-grey700 mx-[1%] "> ชื่อหมวดหมู่ </span>
                   <span className=" text-grey700 mx-[15%]"> สร้างเมื่อ</span>
                   <span className=" text-grey700 mx-[]"> แก้ไขล่าสุด</span>
                   <span className=" text-grey700 mx-[30%] mr-[2%]">
