@@ -7,11 +7,8 @@ import multer from "multer";
 
 const serviceRouter = Router();
 
-
-const upload = multer({ dest: "uploads/" });
-const uploadRouter = Router();
-
-// serviceRouter.use(protect); // protect all user that not login
+const upload = multer({ dest: "uploads/"})
+const uploadRouter = Router()
 
 // API route to service listing page
 serviceRouter.get("/", async (req, res) => {
