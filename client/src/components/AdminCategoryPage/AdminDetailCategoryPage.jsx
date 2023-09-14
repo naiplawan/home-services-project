@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import dateFormat from "../../utils/dateFormat.js";
 import arrow from "../../assets/AdminPhoto/arrow.png";
 
@@ -46,7 +46,12 @@ function AdminDetailCategoryPage() {
                   </h1>
                 </div>
               </div>
-              <button className="btn-primary  h-[100%] w-[112px] p-[20px] text-white focus:outline-none ">
+              <button
+                className="btn-primary  h-[100%] w-[112px] p-[20px] text-white focus:outline-none "
+                onClick={() =>
+                  navigate(`/admin-category-edit/${category.category_id}`)
+                }
+              >
                 แก้ไข
               </button>
             </div>

@@ -6,38 +6,43 @@ import dateFormat from "../../utils/dateFormat.js";
 import trashIcon from "../../assets/AdminPhoto/trash-icon.png";
 import editIcon from "../../assets/AdminPhoto/edit-icon.png";
 import plusSign from "../../assets/AdminPhoto/plus-sign.svg";
+import AlertBoxDelete from "../AlertBox.jsx";
 
 function AdminCategory() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-  const [categoryToDelete, setCategoryToDelete] = useState(null);
+  const [category_Id, setCategory_Id] = useState();
+  const [deleteCategory, setDeleteCategory] = useState(false);
   const navigate = useNavigate();
 
-  const deleteCategory = async (categoryId) => {
-    if (window.confirm("คุณต้องการลบหมวดหมู่นี้ใช่หรือไม่?")) {
-      try {
-        setError(null);
-        const response = await axios.delete(
-          `http://localhost:4000/category/${categoryId}`
-        );
+  const getCategory = async () => {
+    const result = await axios("http://localhost:4000/category");
+    setData(result.data.data);
+    console.log(result.data.data);
+  };
 
-        if (response.data.success) {
-          // อัปเดตข้อมูลหมวดหมู่โดยเรียก API อีกรอบ
-          const updatedCategories = await axios.get(
-            `http://localhost:4000/category`
-          );
+  const deleteCategoryById = async (categoryId) => {
+    await axios.delete(`http://localhost:4000/category/${categoryId}`);
+    getCategory();
+    document.getElementById("popUp").style.display = "none";
+    navigate("/admin-category");
+  };
 
-          // อัปเดตข้อมูล UI โดยไม่ต้องรีเฟรชหน้า คือพอเรากดยืนยันที่ alert ข้อมูลก็จะถูกลบทันที
-          setData(updatedCategories.data.data);
-        } else {
-          setError("เกิดข้อผิดพลาดในการลบหมวดหมู่");
-        }
-      } catch (err) {
-        console.error(err);
-        setError("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
-      }
-    }
+  const categoryDeleteAlert = async (categoryId) => {
+    setCategory_Id(categoryId);
+    console.log(categoryId);
+    setDeleteCategory(true);
+  };
+
+  const handleDelete = () => {
+    deleteCategoryById(category_Id);
+    setDeleteCategory(false);
+  };
+
+  const hide = () => {
+    document.getElementById("popUp").style.display = "none";
+    setDeleteCategory(false);
   };
 
   useEffect(() => {
@@ -64,7 +69,7 @@ function AdminCategory() {
   }, [keyword]);
 
   return (
-    <div className="bg-grey100 h-[100%] pb-[4%] pl-60 ">
+    <div className="bg-bg h-[100%] pb-[4%] pl-60 ">
       <div className="  flex flex-col items-center  ">
         <div className="header-name justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
           <h1 className="text-black   font-semibold text-xl">หมวดหมู่</h1>
@@ -111,7 +116,7 @@ function AdminCategory() {
                   .filter((category) =>
                     category.category_name.includes(keyword)
                   )
-                  .map((category) => (
+                  .map((category, index) => (
                     <li
                       key={category.category_id}
                       className=" flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
@@ -125,9 +130,7 @@ function AdminCategory() {
                           }
                           className="flex w-[90%] pl-[8%]"
                         >
-                          <span className="w-[20%] ">
-                            {category.category_id}
-                          </span>
+                          <span className="w-[20%] ">{index + 1}</span>
                           <span className="w-[30%] ml-[2%]">
                             {category.category_name}
                           </span>
@@ -138,19 +141,23 @@ function AdminCategory() {
                             {dateFormat(category.category_edited_date)}
                           </span>
                         </div>
-                        {category.category_id !== categoryToDelete && (
+                        {category.category_id !== deleteCategory && (
                           <div className="pr-[5%] flex ">
                             <img
                               className="cursor-pointer w-[25px] h-[25px] mr-[50%] "
                               src={trashIcon}
                               onClick={() =>
-                                deleteCategory(category.category_id)
+                                categoryDeleteAlert(category.category_id)
                               }
                             />
                             <img
                               src={editIcon}
                               className="cursor-pointer w-[25px] h-[25px]  "
-                              onClick={() => navigate(`/admin-category-edit/${category.category_id}`)}
+                              onClick={() =>
+                                navigate(
+                                  `/admin-category-edit/${category.category_id}`
+                                )
+                              }
                             />
                           </div>
                         )}
@@ -160,6 +167,19 @@ function AdminCategory() {
               </ul>
             </div>
           )}
+          {deleteCategory ? (
+            <AlertBoxDelete
+              deleteFunction={handleDelete}
+              hideFunction={hide}
+              textAlert="ยืนยันการลบรายการ"
+              alertQuestion={`คุณต้องการลบรายการ '${
+                data.data.find((item) => item.category_id === category_Id)
+                  ?.category_name
+              }' ใช่หรือไม่ ?`}
+              primary="ลบรายการ"
+              secondary="ยกเลิก"
+            />
+          ) : null}
         </div>
       </div>
     </div>
