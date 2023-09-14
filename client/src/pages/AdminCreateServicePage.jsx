@@ -1,13 +1,13 @@
 import SideBar from "../components/ServicePage/AdminSidebar.jsx";
-import AdminEditedHeader from "../components/ServicePage/AdminEditHeader.jsx";
+import AddService from "../components/AdminServicePage/AdminAddService.jsx";
 
 function AdminCreateServicePage() {
-    return (
-        <div className="create-service-container h-screen bg-bg">
-            <SideBar />
-            <AdminEditedHeader />
-        </div>
-    )
+  return (
+    <div className="h-screen bg-bg">
+      <SideBar />
+      <AddService />
+    </div>
+  );
 }
 
-export default AdminCreateServicePage
+export default AdminCreateServicePage;

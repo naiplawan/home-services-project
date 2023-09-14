@@ -7,11 +7,8 @@ import multer from "multer";
 
 const serviceRouter = Router();
 
-
-const upload = multer({ dest: "uploads/" });
-const uploadRouter = Router();
-
-// serviceRouter.use(protect); // protect all user that not login
+const upload = multer({ dest: "uploads/"})
+const uploadRouter = Router()
 
 // API route to service listing page
 serviceRouter.get("/", async (req, res) => {
@@ -64,6 +61,7 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
     }
 
     console.log("File Object", req.file);
+    console.log("File Object", req.file);
 
     const uploadResult = await supabase.storage
       .from("home_service")
@@ -75,6 +73,9 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
     return res.status(200).send("Service photo uploaded successfully");
   } catch (error) {
     console.error("Error on service photo uploading", error);
+    return res.status(500).json({ message: "can't upload file to supabase" });
+  }
+});
     return res.status(500).json({ message: "can't upload file to supabase" });
   }
 });
