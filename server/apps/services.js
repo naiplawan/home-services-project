@@ -1,10 +1,13 @@
 import { Router } from "express";
 import supabase from "../utils/supabase.js";
-// import multer from "multer";
+import multer from "multer";
 // import {protect} from "../middlewares/protects.js";
 // import {uploadFile} from "../utils/upload.js";
 
 const serviceRouter = Router();
+
+const upload = multer({ dest: "uploads/"})
+const uploadRouter = Router()
 
 // const storage = multer.diskStorage({
 //   destination: (req, file, cb) => {
@@ -64,81 +67,30 @@ serviceRouter.get("/:id", async (req, res) => {
   }
 });
 
-
-
-
-//Uploading 1
-// serviceRouter.post('/upload', servicePhotoUpload, async (req, res) => {
-//   try {
-//     const { path, originalname, mimetype } = req.files['service_photo'][0]; // Access the uploaded file info
-//     const file = await supabase.storage
-//       .from('service_photo')
-//       .upload(path, { cacheControl: 3600, upsert: true });
-
-//     res.json({ message: 'File uploaded successfully', file });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'Error uploading file' });
-//   }
-// });
-
-serviceRouter.post("/", async (req, res) => {
+serviceRouter.post("/", upload.single("file"), async (req, res) => {
   try {
-    const { file } = req.body;
+    const  file  = req.file;
+    console.log(req.file)
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    console.log("File Object", file);
+    console.log("File Object", req.file);
 
-    const fileName = file.originalName || "defaultFileName.ext"; //ถ้ามีไฟล์มีชื่อให้เป็นชื่อไฟล์เดิม แต่ถ้าไม่มีจะถูกเปลี่ยนเป็นdefaultFileName.ext
-    const folderName = "service_photo";
-
-    console.log(fileName);
-
-    const { data, error } = await supabase.storage
-      .from("home_service")
-      .upload(`${folderName}/${fileName}`, file);
-
-    if (error) {
-      console.error("Error uploading file");
-      return res.status(500).json({ message: "Internal server error !" });
-    }
-
-    return res
-      .status(200)
-      .json({ message: "Service photo uploaded successfully", data });
+    const uploadResult = await supabase.storage
+    .from("home_service")
+    .upload(`service_photo/${file.originalname}`, file, {
+      cacheControl: "3600",
+      upsert: false,
+    })
+    console.log({uploadResult: uploadResult })
+    return res 
+    .status(200)
+    .send("Service photo uploaded successfully")
   } catch (error) {
     console.error("Error on service photo uploading", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "can't upload file to supabase" });
   }
 });
-
-//Uploading2
-// serviceRouter.post("/", servicePhotoUpload, async (req, res) => {
-//   try {
-//     const uploadFile = req.files.service_photo[0];
-
-//     if (!uploadFile) {
-//       return res.status(400).json({ message: "No file uploaded" });
-//     }
-
-//     const { data, error } = await supabase.storage
-//       .from("home_service")
-//       .upload(uploadFile.originalname, uploadFile);
-
-//     if (error) {
-//       console.error("Error uploading file");
-//       return res.status(500).json({ message: "Internal server error" });
-//     }
-
-//     return res
-//       .status(200)
-//       .json({ message: "Service photo uploaded successfully", data });
-//   } catch (error) {
-//     console.error("Error on service photo uploading", error);
-//     return res.status(500).json({ messsage: "Internal server error" });
-//   }
-// });
 
 export default serviceRouter;
