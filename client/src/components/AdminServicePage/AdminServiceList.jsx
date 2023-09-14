@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
 import image from "../../assets/AdminPhoto/imageIndex.js";
-import  useUtils  from "../../hooks/utils.js";
 
 function AdminServiceList(props) {
   const {
@@ -15,8 +14,6 @@ function AdminServiceList(props) {
     setDeleteService,
   } = props;
   
-  const { getService } = useUtils();
-
   const navigate = useNavigate();
 
   const hide = () => {
