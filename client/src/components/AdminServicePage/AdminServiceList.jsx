@@ -3,6 +3,23 @@ import { useEffect } from "react";
 import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
 import image from "../../assets/AdminPhoto/imageIndex.js";
+import PropTypes from 'prop-types';
+
+
+AdminServiceList.propTypes = {
+  service: PropTypes.arrayOf(
+    PropTypes.shape({
+      service_name: PropTypes.string.isRequired,
+      // Add more prop type validations for other properties if needed
+    })
+  ).isRequired,
+  serviceDeleteAlert: PropTypes.func.isRequired,
+  deleteService: PropTypes.bool.isRequired,
+  deleteServiceId: PropTypes.func.isRequired,
+  service_Id: PropTypes.string, // Adjust the prop type as needed
+  setDeleteService: PropTypes.func.isRequired,
+};
+
 
 function AdminServiceList(props) {
   const {
