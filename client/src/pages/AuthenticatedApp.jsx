@@ -20,10 +20,22 @@ function AuthenticatedApp() {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin-category" element={<AdminCategoryPage />} />
           <Route path="/admin-service" element={<AdminServicePage />} />
-          <Route path="/admin-category-create"element={<AdminCreateCategory />}/>
-          <Route path="/admin-service-create" element={<AdminCreateServicePage />}/>
-          <Route path="/admin-category-detail/:categoryId" element={<AdminDetailCategory />} />
-          <Route path="/admin-category-edit/:categoryId" element={<AdminEditCategory />} />
+          <Route
+            path="/admin-category-create"
+            element={<AdminCreateCategory />}
+          />
+          <Route
+            path="/admin-service-create"
+            element={<AdminCreateServicePage />}
+          />
+          <Route
+            path="/admin-category-detail/:categoryId"
+            element={<AdminDetailCategory />}
+          />
+          <Route
+            path="/admin-category-edit/:categoryId"
+            element={<AdminEditCategory />}
+          />
           <Route path="" element={<NotFoundPage />} />
         </Routes>
       ) : (

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Navigate } from "react-router-dom";
 import dateFormat from "../../utils/dateFormat.js";
 import arrow from "../../assets/AdminPhoto/arrow.png";
+import trash from "../../assets/homepagePhoto/trash.svg";
 
 function EditedCategoryForm() {
   const [categoryById, setCategoryById] = useState([]);
@@ -12,6 +13,27 @@ function EditedCategoryForm() {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleDelete = async () => {
+    if (window.confirm("คุณแน่ใจหรือไม่ที่ต้องการลบหมวดหมู่นี้?")) {
+      try {
+        setIsError(false);
+        setIsLoading(true);
+  
+        const response = await axios.delete(`http://localhost:4000/category/${categoryId}`);
+  
+        setIsLoading(false);
+        if (response.status === 200) {
+          alert("ลบหมวดหมู่สำเร็จ");
+          navigate("/admin-category");
+        }
+      } catch (error) {
+        setIsError(true);
+        setIsLoading(false);
+        console.error("เกิดข้อผิดพลาดในการลบหมวดหมู่:", error);
+      }
+    }
+  };
 
   const handleCancel = () => {
     setCategoryName(""); 
@@ -95,7 +117,7 @@ function EditedCategoryForm() {
           <button
             className="btn-primary flex items-center justify-center
                ml-6 text-base font-medium w-28 h-11"
-            type="submit" onclick={() => navigate("/admin-category")}
+            type="submit" onClick={() => navigate("/admin-category")}
           >
             ยืนยัน
           </button>
@@ -133,6 +155,7 @@ function EditedCategoryForm() {
         );
       })}
       </form>
+      <div className="flex justify-end mr-12 mt-10 text-[#80899C] underline cursor-pointer" onClick={handleDelete}><img src={trash}/> ลบหมวดหมู่</div>
     </div>
   );
 }
