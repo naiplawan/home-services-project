@@ -76,8 +76,5 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
     return res.status(500).json({ message: "can't upload file to supabase" });
   }
 });
-    return res.status(500).json({ message: "can't upload file to supabase" });
-  }
-});
 
 export default serviceRouter;
