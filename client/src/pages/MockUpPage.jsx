@@ -1,55 +1,53 @@
-import {Form, Upload } from 'antd'
-// import supabase from '../../../server/utils/supabase';
+import React, { useState } from 'react';
+import { Upload, Button, message, Form } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
-function PhotoUploadingForm() {
+function UploadForm() {
+  const [fileList, setFileList] = useState([]);
 
+  const handleChange = ({ fileList }) => setFileList([...fileList]);
 
-    const onFinish = async (values) => {
-        try {
-          const { file } = values.upload[0].originFileObj; 
-          
-        //   const { error } = await supabase.storage
-        const { error } = await axios.post("http://localhost:4000/service")
-            .from('home_service') 
-            .upload(file.name, file);
-            
-          if (error) {
-            console.error('Error uploading file');
-          } else {
-            console.success('File uploaded successfully');
-          }
-        } catch (error) {
-          console.error(error);
-          console.error('Error uploading file');
-        }
-      };
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append('file', fileList[0].originFileObj);
 
-    return (
-        <>
-        <h1> Photo Upload </h1>
-        <Form onFinish={onFinish}> 
-        <Form.Item label="Upload" name="upload" valuePropName="fileList" >
-          <Upload 
-          action="/upload.do" 
-          listType="picture-card"
-          beforeUpload={() => false} >
-            <div>
-              <div>Upload</div>
-            </div>
-          </Upload>
-        </Form.Item>
-        <Form.Item >
-              <button  
-              className="btn-primary w-[100%] mt-5 mb-5">
-                Upload
-              </button>
-            </Form.Item>
-            </Form>
-        </>
-       
-    )
+    try {
+      const response = await axios.post("http://localhost:4000/service", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 200) {
+        message.success(response.data);
+        setFileList([]);
+      } else {
+        message.error("Error.");
+      }
+    } catch (error) {
+      message.error("Error uploading file.");
+    }
+  };
+
+  return (
+    <Form onFinish={handleSubmit}>
+      <Form.Item label="Upload File">
+        <Upload
+          fileList={fileList}
+          onChange={handleChange}
+          beforeUpload={() => false} // Prevents auto uploading
+        >
+          <Button icon={<UploadOutlined />}>Select File</Button>
+        </Upload>
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType="submit">Submit</Button>
+      </Form.Item>
+    </Form>
+  );
 }
 
-export default PhotoUploadingForm
+export default UploadForm;
+
 
