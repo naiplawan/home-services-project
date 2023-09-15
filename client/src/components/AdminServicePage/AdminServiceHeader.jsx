@@ -14,7 +14,7 @@ const AdminServiceHeader = () => {
 
     const searchServiceData = async () => {
       const results = await axios.get(
-        `http://localhost:4000/service?keywords=${searchService}`
+        `http://localhost:4000/service?keywords=${searchService}&categoryFilter=${categoryFilter}&maxPriceFilter=${maxFilter}&minPriceFilter=${minFilter}`
       );
       setService(results.data.data);
     };
