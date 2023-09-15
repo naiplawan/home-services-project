@@ -7,7 +7,7 @@ import AdminServiceHeader from "../components/AdminServicePage/AdminServiceHeade
 import { useUtils }  from "../hooks/utils.js";
 // import dateFormat from "../utils/dateFormat";
 
-function AdminServicePage() {
+function AdminServicePage(props) {
     const {
         searchService,
         setSearchService,
@@ -18,7 +18,7 @@ function AdminServicePage() {
         deleteService,
         service_Id,
         setDeleteService,
-      } = useUtils();
+      } = props;
 
     return (
         <div className="admin-service-page" >

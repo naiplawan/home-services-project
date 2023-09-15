@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export function useUtils() {
+export function useUtils(props) {
   const navigate = useNavigate();
 
   // Category State and Functions
@@ -114,6 +114,12 @@ export function useUtils() {
   };
 
   // Function to create a new service
+  const getService = async () => {
+    const result = await axios("http://localhost:4000/service");
+    setService(result.data.data);
+  };
+
+  // Function to create a new service
   const createService = async (data) => {
     await axios.post("http://localhost:4000/service", data, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -127,14 +133,12 @@ export function useUtils() {
 
     const formData = new FormData();
 
-    for (const key in serviceForm) {
-      if (key === "servicePhotos") {
-        for (const servicePhotosKey in servicePhotos) {
-          formData.append("servicePhoto", servicePhotos[servicePhotosKey]);
-        }
-      } else {
-        formData.append(key, JSON.stringify(serviceForm[key]));
-      }
+    formData.append("service_name", service_name);
+    formData.append("category_name", category_name);
+    formData.append("sub_service", JSON.stringify(subServiceList));
+
+    for (let servicePhotosKey in servicePhotos) {
+      formData.append("servicePhoto", servicePhotos[servicePhotosKey]);
     }
 
     createService(formData);

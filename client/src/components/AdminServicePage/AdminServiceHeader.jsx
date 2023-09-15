@@ -2,18 +2,28 @@ import "../../styles/App.css";
 import {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useUtils } from "../../hooks/utils.js";
 import image from "../../assets/AdminPhoto/imageIndex";
 
 const AdminServiceHeader = (props) => {
     const navigate = useNavigate();
-    const { searchService, setSearchService, setService } = props;
+    const {
+      category,
+      searchService,
+      setSearchService,
+      setService,
+      getCategory,
+      orderFilter,
+      setOrderFilter,
+      categoryFilter,
+      setCategoryFilter,
+      minFilter, setMinFilter, maxFilter, setMaxFilter
+    } = useUtils();
 
     const searchServiceData = async () => {
       const results = await axios.get(
-        `http://localhost:4000/service?keywords=${searchService}`
+        `http://localhost:4000/service?keywords=${searchService}&categoryFilter=${categoryFilter}&maxPriceFilter=${maxFilter}&minPriceFilter=${minFilter}`
       );
-      setService(results.data.data);
-      console.log(results.data.data);
       setService(results.data.data);
       console.log(results.data.data);
     };
@@ -24,22 +34,26 @@ const AdminServiceHeader = (props) => {
       return () => {
         clearTimeout(timerId);
       };
-    }, [searchService]);
-  
+    }, []);
+
+    useEffect(() => {
+      getCategory();
+    }, []);
+
     return (
       <header className="sticky top-0 bg-white">
       <div className="pl-60 flex items-center h-20 pr-10 justify-between border-b border-grey300 ">
-        <h1 className="text-xl font-medium pl-10">บริการ</h1>
+        <h1 className="text-xl font-medium text-black pl-10">บริการ</h1>
         <div className="flex">
           <input
             id="search-text"
             name="search-text"
             type="text"
             placeholder="ค้นหาบริการ..."
+            value={searchService}
             onChange={(event) => {
               setSearchService(event.target.value);
             }}
-            value={searchService}
             className="border rounded-lg border-grey300 py-2.5 px-4"
           />
           <button
