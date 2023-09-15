@@ -3,18 +3,29 @@ import {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useUtils } from "../../hooks/utils.js";
-import { useUtils } from "../../hooks/utils.js";
 import image from "../../assets/AdminPhoto/imageIndex";
 
 const AdminServiceHeader = () => {
     const navigate = useNavigate();
-    const { searchService, setSearchService, setService } = useUtils;
+    const {
+      category,
+      searchService,
+      setSearchService,
+      setService,
+      getCategory,
+      orderFilter,
+      setOrderFilter,
+      categoryFilter,
+      setCategoryFilter,
+      minFilter, setMinFilter, maxFilter, setMaxFilter
+    } = useUtils();
 
     const searchServiceData = async () => {
       const results = await axios.get(
-        `http://localhost:4000/service?keywords=${searchService}`
+        `http://localhost:4000/service?keywords=${searchService}&categoryFilter=${categoryFilter}&maxPriceFilter=${maxFilter}&minPriceFilter=${minFilter}`
       );
       setService(results.data.data);
+      console.log(results.data.data);
     };
   
     useEffect(() => {
@@ -23,11 +34,16 @@ const AdminServiceHeader = () => {
       return () => {
         clearTimeout(timerId);
       };
-    }, [searchService]);
+    }, []);
+
+    useEffect(() => {
+      getCategory();
+    }, []);
 
     return (
       <header className="sticky top-0 bg-white">
       <div className="pl-60 flex items-center h-20 pr-10 justify-between border-b border-grey300 ">
+        <h1 className="text-xl font-medium text-black pl-10">บริการ</h1>
         <h1 className="text-xl font-medium text-black pl-10">บริการ</h1>
         <div className="flex">
           <input
@@ -36,11 +52,10 @@ const AdminServiceHeader = () => {
             type="text"
             placeholder="ค้นหาบริการ..."
             value={searchService}
-            value={searchService}
             onChange={(event) => {
               setSearchService(event.target.value);
             }}
-            className="px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[400px]"
+            className="border rounded-lg border-grey300 py-2.5 px-4"
           />
           <button
             className="btn-primary flex items-center ml-6"
