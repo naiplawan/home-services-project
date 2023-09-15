@@ -68,25 +68,18 @@ function AdminCategory() {
     const fetchData = async () => {
       try {
         setError(null);
-        const storedCategoryOrder = localStorage.getItem("categoryOrder");
-        if (storedCategoryOrder) {
-          setData({ data: JSON.parse(storedCategoryOrder) });
+        const response = await axios.get(`http://localhost:4000/category?keyword=${keyword}`);
+  
+        if (response.data.error) {
+          setError("เกิดข้อผิดพลาดในการค้นหา");
         } else {
-          const response = await axios.get(
-            `http://localhost:4000/category?keyword=${keyword}`
-          );
-
-          if (response.data.error) {
-            setError("เกิดข้อผิดพลาดในการค้นหา");
-          } else {
-            setData(response.data.data);
-          }
+          setData(response.data.data);
         }
       } catch (error) {
         setError("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
       }
     };
-
+  
     fetchData();
   }, [keyword]);
 
@@ -120,7 +113,7 @@ function AdminCategory() {
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <div className="results w-[95%]">
             {data.length === 0 ? (
-              <p>ไม่มีข้อมูลหมวดหมู่</p>
+              <p>loading</p>
             ) : (
               <div className="category-list mt-10  w-[100%]">
                 <ul>
@@ -141,7 +134,7 @@ function AdminCategory() {
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                       >
-                        {data.data
+                        {data && data.data && data.data
                           .filter((category) =>
                             category.category_name.includes(keyword)
                           )
