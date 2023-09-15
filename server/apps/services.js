@@ -15,7 +15,7 @@ const upload = multer({ storage: storage });
 // API route to service listing page
 serviceRouter.get("/", async (req, res) => {
   try {
-    const data = await supabase.from("service").select("*");
+    const data = await supabase.from("service").select("*, sub_service(*), category(*)");
     return res.json({
       data,
     });

@@ -1,24 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
 import image from "../../assets/AdminPhoto/imageIndex.js";
+import { useUtils } from "../../hooks/utils.js";
 
-function AdminServiceList(props) {
-  const {
-    service,
-    serviceDeleteAlert,
-    deleteService,
-    deleteServiceId,
-    service_Id,
-    setDeleteService,
-  } = props;
-  
+function AdminServiceList() {
+
+ 
+  const { service,deleteService,getCategory,deleteCategory,setDeleteService,deleteServiceId,serviceDeleteAlert } = useUtils();
+
+
   const navigate = useNavigate();
 
   const hide = () => {
     document.getElementById("popUp").style.display = "none";
-    setDeleteService(false);
+    setDeleteCategory(false);
   };
 
   const handleDelete = () => {
@@ -42,10 +38,7 @@ function AdminServiceList(props) {
     }
   };
 
-  useEffect(() => {
-    // Call getService when the component mounts
-    getService();
-  }, [getService]); // Ensure it only runs when getService changes
+
 
   return (
     <div className="categories-data min-h-screen bg-bg p-[41px]">
