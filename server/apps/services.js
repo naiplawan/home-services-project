@@ -59,48 +59,61 @@ serviceRouter.get("/:id", async (req, res) => {
 serviceRouter.post("/", upload.single("file"), async (req, res) => {
   try {
 
-    
     const file = req.file;
-    const {
-      service_name,
-      category_name,
-      sub_service,
-      service_created_date,
-      service_edited_date
-    } = req.body;
 
-    console.log(req.body)
-    if (!file) {
-      return res.status(400).json({ message: "No file uploaded" });
+
+
+    const newServiceItem = { service_name: req.body.service_name}
+    // {
+    //   service_name: req.body.service_name,
+    //   service_created_date: new Date(),
+    //   service_edited_date: new Date(),
+    // }
+
+    // const newServiceItem = service_name
+    // ,{
+    //   // service_name,
+    //   service_name: req.body.service_name,
+    //   // category_id: req.body.category_id,
+    // }
+      // service_created_date: new Date(),
+      // service_edited_date: new Date(),
+      // category_id: req.body.category_id, // this is the foreign key
+      // sub_service: {
+      //   sub_service_name: req.body.sub_service_name,
+      //   unit: req.body.unit,
+      //   price_per_unit: req.body.price_per_unit,
+      //   sub_service_quantity: req.body.sub_service_quantity
+      // },
+      // service_photo: `service_photo/${Date.now()}${file.originalname}`}
+
+
+    const serviceData = await supabase
+    .from('service')
+    .insert([newServiceItem], {})
+
+    console.log("Service Data upload", serviceData)
+
+   
+    // Insert data into 'service' table
+    // const { data: serviceData, error: serviceError } = await supabase
+    //   .from('service')
+    //   .insert([newServiceItem]); //insert new object into service table
+
+    // if (serviceError) {
+    //   throw serviceError;
+    // }
+
+    // console.log("Service Data upload", serviceData)
+    
+
+    // console.log("Service Data Inserted", serviceData);
+
+    if (!file && !newServiceItem) {
+      return res.status(400).json({ message: "No data uploaded" });
     }
 
     console.log("File Object", req.file);
-
-    // const fileBlob = new Blob([req.file.buffer]);
-
-    // form.append('file', fileBlob, {
-    //   filename: `${Date.now()}${file.originalname}`,
-    //   contentType: file.mimetype,
-    // });
-    // form.append('service_name', service_name);
-    // form.append('category_name', category_name);
-    // form.append('sub_service', sub_service);
-    // form.append('service_created_date', service_created_date);
-    // form.append('service_edited_date', service_edited_date);
-
-    // const uploadResult = await supabase.storage
-    //   .from("home_service")
-    //   .upload(`service_photo/${Date.now()}${file.originalname}`, form, {
-    //     cacheControl: "3600",
-    //     upsert: false,
-    //   });
-
-    // const uploadResult = await supabase.storage
-    // .from("home_service")
-    // .upload(`service_photo/${Date.now()}${file.originalname}`, form, {
-    //   cacheControl: "3600",
-    //   upsert: false,
-    // });
 
     const uploadResult = await supabase.storage
       .from("home_service")
@@ -110,33 +123,12 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
         contentType: file.mimetype,
       });
 
-    // const insertResult = await supabase
-    // .from('service')
-    // .insert([
-    //   {
-    //     service_name,
-    //     category_name,
-    //     sub_service,
-    //     service_created_date,
-    //     service_edited_date
-    //   },
-    // ]);
-
-    // const insertResult = await supabase
-    //   .from('service')
-    //   .insert([
-    //     {
-    //       service_name,
-    //       category_name,
-    //       sub_service,
-    //       service_created_date,
-    //       service_edited_date
-    //     },
-    //   ]);
-    return res.status(200).send("Service photo uploaded successfully");
+    return res
+    .status(200)
+    .send("Data uploaded successfully");
   } catch (error) {
     console.error("Error on service photo uploading", error);
-    return res.status(500).json({ message: "can't upload file to supabase" });
+    return res.status(500).json({ message: "can't upload data to supabase" });
   }
 });
 
