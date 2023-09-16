@@ -2,13 +2,17 @@ import { Router } from "express";
 import supabase from "../utils/supabase.js";
 import multer from "multer";
 
+
 // import {protect} from "../middlewares/protects.js";
 // import { uploadFile } from "../utils/upload.js";
 
+// npm install form-data
+
 const serviceRouter = Router();
 
-const upload = multer({ dest: "uploads/"})
-const uploadRouter = Router()
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // API route to service listing page
 serviceRouter.get("/", async (req, res) => {
@@ -54,22 +58,81 @@ serviceRouter.get("/:id", async (req, res) => {
 
 serviceRouter.post("/", upload.single("file"), async (req, res) => {
   try {
+
+    
     const file = req.file;
-    console.log(req.file);
+    const {
+      service_name,
+      category_name,
+      sub_service,
+      service_created_date,
+      service_edited_date
+    } = req.body;
+
+    console.log(req.body)
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
     console.log("File Object", req.file);
-    console.log("File Object", req.file);
+
+    // const fileBlob = new Blob([req.file.buffer]);
+
+    // form.append('file', fileBlob, {
+    //   filename: `${Date.now()}${file.originalname}`,
+    //   contentType: file.mimetype,
+    // });
+    // form.append('service_name', service_name);
+    // form.append('category_name', category_name);
+    // form.append('sub_service', sub_service);
+    // form.append('service_created_date', service_created_date);
+    // form.append('service_edited_date', service_edited_date);
+
+    // const uploadResult = await supabase.storage
+    //   .from("home_service")
+    //   .upload(`service_photo/${Date.now()}${file.originalname}`, form, {
+    //     cacheControl: "3600",
+    //     upsert: false,
+    //   });
+
+    // const uploadResult = await supabase.storage
+    // .from("home_service")
+    // .upload(`service_photo/${Date.now()}${file.originalname}`, form, {
+    //   cacheControl: "3600",
+    //   upsert: false,
+    // });
 
     const uploadResult = await supabase.storage
       .from("home_service")
-      .upload(`service_photo/${file.originalname}`, file, {
+      .upload(`service_photo/${Date.now()}${file.originalname}`, file.buffer, {
         cacheControl: "3600",
         upsert: false,
+        contentType: file.mimetype,
       });
-    console.log({ uploadResult: uploadResult });
+
+    // const insertResult = await supabase
+    // .from('service')
+    // .insert([
+    //   {
+    //     service_name,
+    //     category_name,
+    //     sub_service,
+    //     service_created_date,
+    //     service_edited_date
+    //   },
+    // ]);
+
+    // const insertResult = await supabase
+    //   .from('service')
+    //   .insert([
+    //     {
+    //       service_name,
+    //       category_name,
+    //       sub_service,
+    //       service_created_date,
+    //       service_edited_date
+    //     },
+    //   ]);
     return res.status(200).send("Service photo uploaded successfully");
   } catch (error) {
     console.error("Error on service photo uploading", error);
