@@ -84,7 +84,7 @@ function AdminServiceList() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="services-list mt-10 w-[100%]">
+      <div className="services-list mt-10  w-[100%]">
         <ul>
           <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300">
             <span className="text-grey700 mx-[7%] text-center">ลำดับ</span>
