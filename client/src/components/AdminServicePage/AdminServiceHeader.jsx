@@ -1,5 +1,5 @@
 import "../../styles/App.css";
-import {useEffect} from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useUtils } from "../../hooks/utils.js";
@@ -20,25 +20,21 @@ const AdminServiceHeader = () => {
       minFilter, setMinFilter, maxFilter, setMaxFilter
     } = useUtils();
 
-    const searchServiceData = async () => {
-      const results = await axios.get(
-        `http://localhost:4000/service?keywords=${searchService}&categoryFilter=${categoryFilter}&maxPriceFilter=${maxFilter}&minPriceFilter=${minFilter}`
-      );
-      setService(results.data.data);
-      console.log(results.data.data);
-    };
-  
-    useEffect(() => {
-      let timerId;
-      timerId = setTimeout(searchServiceData, 1000);
-      return () => {
-        clearTimeout(timerId);
-      };
-    }, []);
+  const searchServiceData = async () => {
+    const results = await axios.get(
+      `http://localhost:4000/service?keywords=${searchService}&categoryFilter=${categoryFilter}&maxPriceFilter=${maxFilter}&minPriceFilter=${minFilter}`
+    );
+    setService(results.data.data);
+    console.log(results.data.data);
+  };
 
-    useEffect(() => {
-      getCategory();
-    }, []);
+  useEffect(() => {
+    let timerId;
+    timerId = setTimeout(searchServiceData, 1000);
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, []);
 
     return (
       <header className="sticky top-0 bg-white">
@@ -47,27 +43,31 @@ const AdminServiceHeader = () => {
         <h1 className="text-xl font-medium text-black pl-10">บริการ</h1>
         <div className="flex">
           <input
+            type="text"
             id="search-text"
             name="search-text"
-            type="text"
             placeholder="ค้นหาบริการ..."
             value={searchService}
             onChange={(event) => {
               setSearchService(event.target.value);
             }}
-            className="border rounded-lg border-grey300 py-2.5 px-4"
+            className="px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[400px]"
           />
           <button
-            className="btn-primary flex items-center ml-6"
+          alt = "create-service"
+            className="flex  btn-primary rounded-lg ml-7  h-[100%] w-[190px] text-white focus:outline-none"
             onClick={() => navigate("/admin-create-service")}
           >
-            <div className="text-base font-medium mr-3">เพิ่มบริการ</div>
-            <img src={image.plusSign} alt="Plus Symbol" />
+            <p className="t pl-[15%]">เพิ่มบริการ</p>
+            <p className="pt-2 pl-[15%]">
+            <img src={image.plusSign} alt="Plus Symbol" className=" w-[10px] h-[10px] " />
+            </p>
           </button>
         </div>
+      </div>
       </div>
     </header>
   );
 };
 
-export default AdminServiceHeader
+export default AdminServiceHeader;
