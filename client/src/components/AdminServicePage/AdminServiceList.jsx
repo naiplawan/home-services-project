@@ -78,7 +78,8 @@ function AdminServiceList() {
   };
 
   useEffect(() => {
-    getService();
+    getService()
+    console.log(service);
   }, []);
 
   return (
@@ -193,6 +194,5 @@ function AdminServiceList() {
     </DragDropContext>
   );
 }
-
 
 export default AdminServiceList;
