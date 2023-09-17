@@ -6,30 +6,25 @@ import image from "../../assets/AdminPhoto/imageIndex.js";
 import { useUtils } from "../../hooks/utils.js";
 import axios from "axios";
 import drag from "../../assets/AdminPhoto/drag.svg";
-import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
+import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 
 function AdminServiceList() {
   const [service, setService] = useState([]);
   const [service_Id, setService_Id] = useState();
-  const { setDeleteService, deleteService,} = useUtils();
+  const { setDeleteService, deleteService } = useUtils();
   const navigate = useNavigate();
 
   const hide = () => {
     setDeleteService(false);
   };
 
-    // Function to delete a service by ID
-    const deleteServiceId = async (serviceId) => {
-      await axios.delete(`http://localhost:4000/service/${serviceId}`);
-      getService();
-      document.getElementById("popUp").style.display = "none";
-      navigate("/service-dashboard");
-    };
-
-    const categoryServiceAlert = (serviceId) => {
-      setService_Id(serviceId);
-      setDeleteService(true);
-    };
+  // Function to delete a service by ID
+  const deleteServiceId = async (serviceId) => {
+    await axios.delete(`http://localhost:4000/service/${serviceId}`);
+    getService();
+    document.getElementById("popUp").style.display = "none";
+    navigate("/service-dashboard");
+  };
 
   const handleDelete = (serviceId) => {
     deleteServiceId(serviceId);
@@ -83,7 +78,7 @@ function AdminServiceList() {
   };
 
   useEffect(() => {
-    getService()
+    getService();
     console.log(service);
   }, []);
 
@@ -97,74 +92,83 @@ function AdminServiceList() {
             <span className="p-3 font-normal">หมวดหมู่</span>
             <span className="text-grey700 mx-[15%]">สร้างเมื่อ</span>
             <span className="text-grey700 mx-[]">แก้ไขล่าสุด</span>
-            <span className="text-grey700 mx-[30%] mr-[2%]">{" "}Action</span>
+            <span className="text-grey700 mx-[30%] mr-[2%]"> Action</span>
           </li>
 
           <Droppable droppableId="service-list">
             {(provided) => (
               <ul {...provided.droppableProps} ref={provided.innerRef}>
-                  {service && service.data &&
-                    service.data.map((serviceItem, index) => (
-                      <Draggable
-                        key={serviceItem.service_id.toString()}
-                        draggableId={serviceItem.service_id.toString()}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <li
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className="flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
-                          >
-                            <div>
-                              <img src={drag} className="w-[30px]" />
-                            </div>
-                            <div className="service-detail cursor-pointer flex justify-between w-[100%] text-black">
-            <div
-              className={`w-[30%] ml-[2%] ${
-                // Optional chaining operator (?.) used here to check if category is not null or undefined
-                serviceItem.category?.category_name ? getCategoryColor(serviceItem.category.category_id) : ''
-              }`}
-            >
-              <span className="w-[20%]">{index + 1}</span>
-              <span className="w-[30%] ml-[2%]">{serviceItem.service_name}</span>
-              {/* Optional chaining operator (?.) used here to check if category is not null or undefined */}
-              {serviceItem.category?.category_name}
-            </div>
-                              <span className="-[50%] ml-[12%]">
-                                {dateFormat(serviceItem.service_created_date)}
+                {service &&
+                  service.data &&
+                  service.data.map((serviceItem, index) => (
+                    <Draggable
+                      key={serviceItem.service_id.toString()}
+                      draggableId={serviceItem.service_id.toString()}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
+                        >
+                          <div>
+                            <img src={drag} className="w-[30px]" />
+                          </div>
+                          <div className="service-detail cursor-pointer flex justify-between w-[100%] text-black">
+                            <div
+                              className={`w-[30%] ml-[2%] ${
+                                // Optional chaining operator (?.) used here to check if category is not null or undefined
+                                serviceItem.category?.category_name
+                                  ? getCategoryColor(
+                                      serviceItem.category.category_id
+                                    )
+                                  : ""
+                              }`}
+                            >
+                              <span className="w-[20%]">{index + 1}</span>
+                              <span className="w-[30%] ml-[2%]">
+                                {serviceItem.service_name}
                               </span>
-                              <span className="w-[50%] mr-[16%]">
-                                {dateFormat(serviceItem.service_edited_date)}
-                              </span>
+                              {/* Optional chaining operator (?.) used here to check if category is not null or undefined */}
+                              {serviceItem.category?.category_name}
                             </div>
+                            <span className="-[50%] ml-[12%]">
+                              {dateFormat(serviceItem.service_created_date)}
+                            </span>
+                            <span className="w-[50%] mr-[16%]">
+                              {dateFormat(serviceItem.service_edited_date)}
+                            </span>
+                          </div>
 
-                            {/* Delete AlertBox */}
-                            {serviceItem.service_id !== deleteServiceId && (
-                              <div className="pr-[5%] flex">
-                                <img
-                                  className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
-                                  alt="Delete"
-                                  src={image.trashIcon}
-                                  onClick={() => {
-                                    serviceDeleteAlert(serviceItem.service_id);
-                                  }}
-                                />
-                                <img
-                                  className="cursor-pointer w-[25px] h-[25px]"
-                                  alt="Edit"
-                                  src={image.editIcon}
-                                  onClick={() =>
-                                    navigate(`/service/edit/${serviceItem.service_id}`)
-                                  }
-                                />
-                              </div>
-                            )}
-                          </li>
-                        )}
-                      </Draggable>
-                    ))}
+                          {/* Delete AlertBox */}
+                          {serviceItem.service_id !== deleteServiceId && (
+                            <div className="pr-[5%] flex">
+                              <img
+                                className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
+                                alt="Delete"
+                                src={image.trashIcon}
+                                onClick={() => {
+                                  serviceDeleteAlert(serviceItem.service_id);
+                                }}
+                              />
+                              <img
+                                className="cursor-pointer w-[25px] h-[25px]"
+                                alt="Edit"
+                                src={image.editIcon}
+                                onClick={() =>
+                                  navigate(
+                                    `/service/edit/${serviceItem.service_id}`
+                                  )
+                                }
+                              />
+                            </div>
+                          )}
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
               </ul>
             )}
           </Droppable>
@@ -176,8 +180,9 @@ function AdminServiceList() {
           hideFunction={hide}
           textAlert="ยืนยันการลบรายการ"
           alertQuestion={`คุณต้องการลบรายการ '${
-            service.data.find((serviceItem) => serviceItem.service_id === service_Id)
-              ?.service_name
+            service.data.find(
+              (serviceItem) => serviceItem.service_id === service_Id
+            )?.service_name
           }' ใช่หรือไม่ ?`}
           primary="ลบรายการ"
           secondary="ยกเลิก"
