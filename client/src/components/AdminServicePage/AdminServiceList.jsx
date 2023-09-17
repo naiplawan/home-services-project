@@ -78,7 +78,7 @@ function AdminServiceList() {
   };
 
   useEffect(() => {
-    getService()
+    getService();
     console.log(service);
   }, []);
 
