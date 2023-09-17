@@ -2,14 +2,12 @@ import { Router } from "express";
 import supabase from "../utils/supabase.js";
 import multer from "multer";
 
-
 // import {protect} from "../middlewares/protects.js";
 // import { uploadFile } from "../utils/upload.js";
 
 // npm install form-data
 
 const serviceRouter = Router();
-
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -58,62 +56,22 @@ serviceRouter.get("/:id", async (req, res) => {
 
 serviceRouter.post("/", upload.single("file"), async (req, res) => {
   try {
-
     const file = req.file;
 
+    const newServiceItem = {
+      service_name: req.body.service_name,
+      category_id: req.body.category_id,
+      service_photo: file.originalname,
+      sub_service: req.body.sub_service,
+      service_created_date: new Date(),
+      service_edited_date: new Date(),
+    };
 
+    console.log(newServiceItem);
 
-    const newServiceItem = { service_name: req.body.service_name}
-    // {
-    //   service_name: req.body.service_name,
-    //   service_created_date: new Date(),
-    //   service_edited_date: new Date(),
-    // }
-
-    // const newServiceItem = service_name
-    // ,{
-    //   // service_name,
-    //   service_name: req.body.service_name,
-    //   // category_id: req.body.category_id,
-    // }
-      // service_created_date: new Date(),
-      // service_edited_date: new Date(),
-      // category_id: req.body.category_id, // this is the foreign key
-      // sub_service: {
-      //   sub_service_name: req.body.sub_service_name,
-      //   unit: req.body.unit,
-      //   price_per_unit: req.body.price_per_unit,
-      //   sub_service_quantity: req.body.sub_service_quantity
-      // },
-      // service_photo: `service_photo/${Date.now()}${file.originalname}`}
-
-
-    const serviceData = await supabase
-    .from('service')
-    .insert([newServiceItem], {})
-
-    console.log("Service Data upload", serviceData)
-
-   
-    // Insert data into 'service' table
-    // const { data: serviceData, error: serviceError } = await supabase
-    //   .from('service')
-    //   .insert([newServiceItem]); //insert new object into service table
-
-    // if (serviceError) {
-    //   throw serviceError;
-    // }
-
-    // console.log("Service Data upload", serviceData)
-    
-
-    // console.log("Service Data Inserted", serviceData);
-
-    if (!file && !newServiceItem) {
-      return res.status(400).json({ message: "No data uploaded" });
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
     }
-
-    console.log("File Object", req.file);
 
     const uploadResult = await supabase.storage
       .from("home_service")
@@ -123,13 +81,145 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
         contentType: file.mimetype,
       });
 
-    return res
-    .status(200)
-    .send("Data uploaded successfully");
+    const servicePhotourl = supabase.storage
+      .from("home_service")
+      .getPublicUrl(`service_photo/${Date.now()}${file.originalname}`);
+
+    newServiceItem["service_photo"] = servicePhotourl;
+
+    console.log(newServiceItem["service_photo"]);
+    console.log({ uploadResult: uploadResult });
+
+    const { data: serviceData, error: serviceError } = await supabase
+      .from("service")
+      .insert([newServiceItem]);
+
+    if (serviceError) {
+      console.error("Error inserting data to Supabase", serviceError);
+      return res.status(500).json({ message: "Error inserting data to Supabase" });
+    }
+
+    if (serviceData && serviceData.length > 0) {
+      const service_id = serviceData[0].service_id;
+
+      if (newServiceItem.sub_service) {
+        for (let r = 0; r <= newServiceItem.sub_service.length - 1; r++) {
+          const subServiceItem = {
+            service_id: service_id,
+            sub_service_name: newServiceItem.sub_service[r].sub_service_name,
+            unit: newServiceItem.sub_service[r].unit,
+            price_per_unit: newServiceItem.sub_service[r].price_per_unit,
+            sub_service_quantity: 0,
+          };
+      
+          const { data: insertedSubService, error: subServiceError } = await supabase
+            .from('sub_service')
+            .insert([subServiceItem]);
+
+          if (subServiceError) {
+            console.error("Error inserting sub_service data to Supabase", subServiceError);
+            return res.status(500).json({ message: "Error inserting sub_service data to Supabase" });
+          }
+        }
+      }
+    }
+    console.log( {data: insertedSubService})
+
+    return res.status(200).send("Service DATA uploaded successfully");
   } catch (error) {
     console.error("Error on service photo uploading", error);
-    return res.status(500).json({ message: "can't upload data to supabase" });
+    return res.status(500).json({ message: "Can't upload file to Supabase" });
   }
 });
+
+
+// serviceRouter.post("/", upload.single("file"), async (req, res) => {
+//   try {
+//     const file = req.file;
+
+//     const newServiceItem = {
+//       service_name: req.body.service_name,
+//       category_id: req.body.category_id,
+//       // category_name: req.body.category_name,
+//       service_photo: file.originalname,
+//       // sub_service: JSON.parse(req.body.sub_service),
+//       service_created_date: new Date(),
+//       service_edited_date: new Date(),
+//     };
+
+//     console.log(newServiceItem);
+
+//     if (!req.file) {
+//       return res.status(400).json({ message: "No file uploaded" });
+//     }
+
+//     // Use 'newServiceItem' as needed in your code...
+//     // filter category in different table to insert first ******
+//     const uploadResult = await supabase.storage
+//       .from("home_service")
+//       .upload(`service_photo/${Date.now()}${file.originalname}`, file.buffer, {
+//         cacheControl: "3600",
+//         upsert: false,
+//         contentType: file.mimetype,
+//       });
+
+//     const servicePhotourl = supabase.storage
+//       .from("home_service")
+//       .getPublicUrl(`service_photo/${Date.now()}${file.originalname}`);
+
+//     newServiceItem["service_photo"] = servicePhotourl;
+
+//     console.log(newServiceItem["service_photo"]);
+//     console.log({ uploadResult: uploadResult });
+
+//     // const { data: categoryData, error: categoryError } = await supabase
+//     //   .from("category")
+//     //   .select("category_id")
+//     //   .eq("category_name", newServiceItem.category_name)
+//     //   .single();
+
+//     //   console.log("categoryData", categoryData);
+
+//     //   if (categoryError || !categoryData) {
+//     //     return res.status(500).json({ message: "Error fetching category" });
+//     //   }
+
+//     // newServiceItem["category_name"] = categoryData.category_id;
+
+//     // console.log( newServiceItem["category_name"])
+
+      
+//     // newServiceItem["category_name"] = categoryData
+
+//     const { data: serviceData, error: serviceError } = await supabase
+//       .from("service")
+     
+//       .insert([
+//        newServiceItem
+//       ]);
+
+//       if (serviceError) {
+//         console.error("Error inserting data to Supabase", serviceError);
+//         return res
+//           .status(500)
+//           .json({ message: "Error inserting data to Supabase" });
+//       }
+      
+//       console.log("data before insert", serviceData);
+
+    
+   
+
+//     if (error) {
+//       return res
+//         .status(500)
+//         .json({ message: "Error inserting data to Supabase" });
+//     }
+//     return res.status(200).send("Service DATA uploaded successfully");
+//   } catch (error) {
+//     console.error("Error on service photo uploading", error);
+//     return res.status(500).json({ message: "Can't upload file to Supabase" });
+//   }
+// });
 
 export default serviceRouter;
