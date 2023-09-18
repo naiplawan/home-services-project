@@ -4,7 +4,7 @@ import AdminServiceList from "../components/AdminServicePage/AdminServiceList.js
 import AdminServiceHeader from "../components/AdminServicePage/AdminServiceHeader.jsx";
 import { useUtils }  from "../hooks/utils.js";
 
-function AdminServicePage(props) {
+function AdminServicePage() {
     const {
         searchService,
         setSearchService,
