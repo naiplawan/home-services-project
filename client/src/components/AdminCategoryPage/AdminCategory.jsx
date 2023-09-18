@@ -6,9 +6,8 @@ import trashIcon from "../../assets/AdminPhoto/trash-icon.png";
 import editIcon from "../../assets/AdminPhoto/edit-icon.png";
 import plusSign from "../../assets/AdminPhoto/plus-sign.svg";
 import AlertBoxDelete from "../AlertBox.jsx";
-import drag from "../../assets/AdminPhoto/drag.svg"
-import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
-
+import drag from "../../assets/AdminPhoto/drag.svg";
+import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 
 function AdminCategory() {
   const [keyword, setKeyword] = useState("");
@@ -26,6 +25,19 @@ function AdminCategory() {
       setError("เกิดข้อผิดพลาดในการเรียกข้อมูลหมวดหมู่");
     }
   };
+  // const getCategory = async () => {
+  //   try {
+  //     const result = await axios("http://localhost:4000/category");
+  //     const sortedData = result.data.data.sort((a, b) => {
+  //       const dateA = new Date(a.category_edited_date);
+  //       const dateB = new Date(b.category_edited_date);
+  //       return dateA - dateB;
+  //     });
+  //     setData(sortedData);
+  //   } catch (error) {
+  //     setError("เกิดข้อผิดพลาดในการเรียกข้อมูลหมวดหมู่");
+  //   }
+  // };
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -68,8 +80,10 @@ function AdminCategory() {
     const fetchData = async () => {
       try {
         setError(null);
-        const response = await axios.get(`http://localhost:4000/category?keyword=${keyword}`);
-  
+        const response = await axios.get(
+          `http://localhost:4000/category?keyword=${keyword}`
+        );
+
         if (response.data.error) {
           setError("เกิดข้อผิดพลาดในการค้นหา");
         } else {
@@ -79,11 +93,11 @@ function AdminCategory() {
         setError("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
       }
     };
-  
+
     fetchData();
   }, [keyword]);
 
-  console.log(data)
+  console.log(data);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -121,7 +135,10 @@ function AdminCategory() {
                 <ul>
                   <li className=" flex text-sm text-grey600 list-none p-[20px]  rounded-t-lg bg-grey200 border-[1px] border-grey300">
                     <span className=" text-grey700 mx-[7%]"> ลำดับ</span>
-                    <span className=" text-grey700 mx-[1%] "> ชื่อหมวดหมู่ </span>
+                    <span className=" text-grey700 mx-[1%] ">
+                      {" "}
+                      ชื่อหมวดหมู่{" "}
+                    </span>
                     <span className=" text-grey700 mx-[15%]"> สร้างเมื่อ</span>
                     <span className=" text-grey700 mx-[]"> แก้ไขล่าสุด</span>
                     <span className=" text-grey700 mx-[30%] mr-[2%]">
@@ -132,83 +149,83 @@ function AdminCategory() {
 
                   <Droppable droppableId="category-list">
                     {(provided) => (
-                      <ul
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                      >
-                        {data && data.data && data.data
-                          .filter((category) =>
-                            category.category_name.includes(keyword)
-                          )
-                          .map((category, index) => (
-                            <Draggable
-                              key={category.category_id.toString()}
-                              draggableId={category.category_id.toString()}
-                              index={index}
-                            >
-                              {(provided) => (
-                                <li
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  className=" flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
-                                >
-                                  <div>
-                                    <img src={drag} className="w-[30px]"/>
-                                  </div>
-                                  <div className="category-detail  cursor-pointer flex justify-between w-[100%] text-black ">
-                                    <div
-                                      onClick={() =>
-                                        navigate(
-                                          `/admin-category-detail/${category.category_id}`
-                                        )
-                                      }
-                                      className="flex w-[90%] pl-[6%] pt-[1%]"
-                                    >
-                                      <span className="w-[20%] ">
-                                        {index + 1}
-                                      </span>
-                                      <span className="w-[30%] ml-[2%]">
-                                        {category.category_name}
-                                      </span>
-                                      <span className="w-[50%] ml-[12%] ">
-                                        {dateFormat(
-                                          category.category_created_date
-                                        )}
-                                      </span>
-                                      <span className="w-[50%] mr-[16%]">
-                                        {dateFormat(
-                                          category.category_edited_date
-                                        )}
-                                      </span>
+                      <ul {...provided.droppableProps} ref={provided.innerRef}>
+                        {data &&
+                          data.data &&
+                          data.data
+                            .filter((category) =>
+                              category.category_name.includes(keyword)
+                            )
+                            .map((category, index) => (
+                              <Draggable
+                                key={category.category_id.toString()}
+                                draggableId={category.category_id.toString()}
+                                index={index}
+                              >
+                                {(provided) => (
+                                  <li
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    className=" flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
+                                  >
+                                    <div>
+                                      <img src={drag} className="w-[30px]" />
                                     </div>
-                                    {category.category_id !== deleteCategory && (
-                                      <div className="pr-[5%] flex ">
-                                        <img
-                                          className="cursor-pointer w-[25px] h-[25px] mr-[50%] "
-                                          src={trashIcon}
-                                          onClick={() =>
-                                            categoryDeleteAlert(
-                                              category.category_id
-                                            )
-                                          }
-                                        />
-                                        <img
-                                          src={editIcon}
-                                          className="cursor-pointer w-[25px] h-[25px]  "
-                                          onClick={() =>
-                                            navigate(
-                                              `/admin-category-edit/${category.category_id}`
-                                            )
-                                          }
-                                        />
+                                    <div className="category-detail  cursor-pointer flex justify-between w-[100%] text-black ">
+                                      <div
+                                        onClick={() =>
+                                          navigate(
+                                            `/admin-category-detail/${category.category_id}`
+                                          )
+                                        }
+                                        className="flex w-[90%] pl-[6%] pt-[1%]"
+                                      >
+                                        <span className="w-[20%] ">
+                                          {index + 1}
+                                        </span>
+                                        <span className="w-[30%] ml-[2%]">
+                                          {category.category_name}
+                                        </span>
+                                        <span className="w-[50%] ml-[12%] ">
+                                          {dateFormat(
+                                            category.category_created_date
+                                          )}
+                                        </span>
+                                        <span className="w-[50%] mr-[16%]">
+                                          {dateFormat(
+                                            category.category_edited_date
+                                          )}
+                                        </span>
                                       </div>
-                                    )}
-                                  </div>
-                                </li>
-                              )}
-                            </Draggable>
-                          ))}
+                                      {category.category_id !==
+                                        deleteCategory && (
+                                        <div className="pr-[5%] flex ">
+                                          <img
+                                            className="cursor-pointer w-[25px] h-[25px] mr-[50%] "
+                                            src={trashIcon}
+                                            onClick={() =>
+                                              categoryDeleteAlert(
+                                                category.category_id
+                                              )
+                                            }
+                                          />
+                                          <img
+                                            src={editIcon}
+                                            className="cursor-pointer w-[25px] h-[25px]  "
+                                            onClick={() =>
+                                              navigate(
+                                                `/admin-category-edit/${category.category_id}`
+                                              )
+                                            }
+                                          />
+                                        </div>
+                                      )}
+                                    </div>
+                                  </li>
+                                )}
+                              </Draggable>
+                            ))}
                         {provided.placeholder}
                       </ul>
                     )}
