@@ -1,5 +1,18 @@
-import { Form, Input, Upload, Select, message, InputNumber } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  Form,
+  Input,
+  Upload,
+  Select,
+  message,
+  InputNumber,
+  Image,
+  Button,
+} from "antd";
+import {
+  LoadingOutlined,
+  PlusOutlined,
+  InboxOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 // import  {useUtils}  from "../../hooks/utils";
 import { useState, useEffect } from "react";
@@ -13,9 +26,80 @@ function AddService() {
   const [data, setData] = useState([]);
   const [category, setCategory] = useState([]);
 
-  const [imageUrl, setImageUrl] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null); //manage the selected image
+
   const [selectedCategory, setSelectedCategory] = useState("เลือกหมวดหมู่");
+
+  const [fileList, setFileList] = useState([]);
+
+  const handleFileChange = (file) => {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      setSelectedImage(e.target.result);
+    };
+
+    reader.readAsDataURL(file);
+    return false;
+  };
+
+  const handleDeleteImage = () => {
+    setSelectedImage(null);
+  };
+
+  const handleSubmitService = async (values, file) => {
+    try {
+      console.log("values", values);
+      console.log("selectedCategory", selectedCategory);
+
+      const selectedCategoryId = category.data.find(
+        (category) => category.category_name === selectedCategory
+      )?.category_id;
+
+      const formData = new FormData();
+      formData.append("service_name", values.service_name);
+
+      formData.append("category_id", selectedCategoryId);
+
+      formData.append("file", fileList[0].originFileObj);
+
+      values.items.forEach((item, index) => {
+        formData.append(
+          "items",
+          JSON.stringify({
+            sub_service_name: item.name, // Change name to sub_service_name
+            unit: item.unit,
+            price_per_unit: item.cost, // Change cost to price_per_unit
+          })
+        );
+      });
+
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+
+      const response = await axios.post(
+        "http://localhost:4000/service",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      if (response.status === 200) {
+        message.success("Successfully create service");
+      } else {
+        message.error("Cannot create service");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("Error creating service");
+    }
+
+    // for () {
+    //   //
+    // } //servicephoto
+  };
 
   useEffect(() => {
     axios
@@ -23,7 +107,7 @@ function AddService() {
       .then((response) => {
         setData(response.data.data); // Store data in state
         setCategory(response.data.data);
-        console.log(response.data)
+        console.log(response.data);
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
@@ -31,27 +115,13 @@ function AddService() {
   console.log(data.data);
   console.log(category);
 
-  const handleChange = (info) => {
-    if (info.file.status === "uploading") {
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === "done") {
-      setLoading(false);
-      setImageUrl(info.file.response.url);
-    }
-    if (info.file.status === "error") {
-      setLoading(false);
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  };
-
-  const uploadButton = (
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
+  // const isImage = (file) => {
+  //   const acceptedImageTypes = ['image/jpeg', 'image/png'];
+  //   if (!acceptedImageTypes.includes(file.type)) {
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
   const labelStyle = {
     marginTop: "10px",
@@ -65,31 +135,33 @@ function AddService() {
 
   return (
     <>
-      <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
-        <div className="flex items-center h-20 px-10 justify-between border-b border-grey300 bg-white">
-          <h1 className="text-xl font-medium">เพิ่มบริการ</h1>
-          <div className="flex">
-            <button
-              className="btn-secondary flex items-center justify-center text-base font-medium w-28 h-11"
-              onClick={() => navigate("/admin-service")}
-            >
-              ยกเลิก
-            </button>
-            <button
-              className="btn-primary flex items-center justify-center ml-6 text-base font-medium w-28 h-11"
-              type="submit"
-            >
-              สร้าง
-            </button>
+      <Form
+        labelCol={{ span: 100 }}
+        wrapperCol={{ span: 24 }}
+        layout="horizontal"
+        onFinish={handleSubmitService}
+      >
+        <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
+          <div className="flex items-center h-20 px-10 justify-between border-b border-grey300 bg-white">
+            <h1 className="text-xl font-medium">เพิ่มบริการ</h1>
+            <div className="flex">
+              <button
+                className="btn-secondary flex items-center justify-center text-base font-medium w-28 h-11"
+                onClick={() => navigate("/admin-service")}
+              >
+                ยกเลิก
+              </button>
+              <button
+                className="btn-primary flex items-center justify-center ml-6 text-base font-medium w-28 h-11"
+                type="submit"
+              >
+                สร้าง
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="bg-white m-10 rounded p-4 w-full max-w-[1120px] mx-auto">
-          {/* flex flex-col items-start  */}
-          <Form
-            labelCol={{ span: 100 }}
-            wrapperCol={{ span: 24 }}
-            layout="horizontal"
-          >
+          <div className="bg-white m-10 rounded p-4 w-full max-w-[1120px] mx-auto">
+            {/* flex flex-col items-start  */}
+
             <Form.Item
               label={<span style={labelStyle}>ชื่อบริการ</span>}
               colon={false}
@@ -99,9 +171,11 @@ function AddService() {
                   message: "โปรดกรอกชื่อบริการ",
                 },
               ]}
+              name="service_name"
             >
-              <Input style={{ width: "50%" }} />
+              <Input style={{ width: "50%" }} required />
             </Form.Item>
+
             <Form.Item
               label={<span style={labelStyle}>หมวดหมู่</span>}
               colon={false}
@@ -111,46 +185,60 @@ function AddService() {
                 style={{ width: "50%" }}
                 onChange={(value) => setSelectedCategory(value)}
               >
-                  {data && data.data && data.data.map((categoryItem) => (
+                {data &&
+                  data.data &&
+                  data.data.map((categoryItem) => (
                     <Select.Option
                       key={categoryItem.category_id}
                       value={categoryItem.category_name}
                     >
                       {categoryItem.category_name}
                     </Select.Option>
-                  ))
-                }
+                  ))}
               </Select>
             </Form.Item>
-            <Form.Item
-              label={<span style={labelStyle}>รูปภาพ</span>}
-              colon={false}
-            >
-              <Dragger
-                style={{ width: "50%" }}
-                name="file"
-                multiple={false}
-                action="/your-upload-endpoint"
-                onChange={handleChange}
-                showUploadList={false}
-              >
-                {imageUrl ? (
-                  <img
-                    src={imageUrl}
-                    alt="Uploaded"
-                    style={{ width: "100%" }}
-                  />
-                ) : (
-                  uploadButton
-                )}
+            <div className="h-40 w-8/12 pr-16 mb-10 flex justify-between ">
+              <div className="text-grey700 w-52 text-base font-medium ">
+                รูปภาพ
+              </div>
 
-                <p className="ant-upload-drag-icon"></p>
-                <p className="ant-upload-text">
-                  <span>อัพโหลดรูปภาพ </span> <span>หรือ ลากและวางที่นี่</span>
-                </p>
-                <p className="ant-upload-hint">PNG, JPG ขนาดไม่เกิน 5MB</p>
-              </Dragger>
-            </Form.Item>
+              <div className="w-3/4 h-40 relative">
+                <Upload.Dragger
+                  name="servicePhoto"
+                  accept=".png,.jpg,.jpeg"
+                  beforeUpload={(file) => {
+                    setFileList([file]);
+                    handleFileChange(file);
+                    return false;
+                  }}
+                  maxFileSize={5000}
+                  showUploadList={false}
+                  className="relative"
+                >
+                  {selectedImage && (
+                    <div>
+                      <Image src={selectedImage} alt="uploaded" width={144} />
+                      <Button onClick={handleDeleteImage}>Delete</Button>
+                    </div>
+                  )}
+                  <div>
+                    {!selectedImage && (
+                      <>
+                        <InboxOutlined style={{ fontSize: "36px" }} />
+                        <p className="ant-upload-text">อัพโหลดรูปภาพ</p>
+                        <p className="ant-upload-hint">
+                          PNG, JPG ขนาดไม่เกิน 5MB
+                        </p>
+                      </>
+                    )}
+                  </div>
+                </Upload.Dragger>
+                <div className="text-grey700 text-xs z-0 mt-1">
+                  ขนาดภาพที่แนะนำ: 1440 x 225 PX
+                </div>
+              </div>
+            </div>
+
             <hr className="mb-10 text-grey300 "></hr>
 
             <div className="mb-10 text-grey700 text-base font-medium ">
@@ -179,7 +267,11 @@ function AddService() {
                             labelAlign="top"
                             labelCol={{ span: 24 }}
                           >
-                            <Input />
+                            <Input
+                              name="sub_service_name"
+                              // value={formData.sub_service_name}
+                              // onChange={handleChange}
+                            />
                           </Form.Item>
                         </div>
                         <div style={{ flex: "1" }}>
@@ -200,6 +292,14 @@ function AddService() {
                               parser={(value) =>
                                 value.replace(/฿\s?|(,*)/g, "")
                               }
+                              name="price_per_unit"
+                              // value={formData.price_per_unit}
+                              // onChange={(value) =>
+                              //   setFormData({
+                              //     ...formData,
+                              //     price_per_unit: value,
+                              //   })
+                              // }
                             />
                           </Form.Item>
                         </div>
@@ -211,7 +311,11 @@ function AddService() {
                             labelAlign="top"
                             labelCol={{ span: 24 }}
                           >
-                            <Input />
+                            <Input
+                              name="unit"
+                              // value={formData.unit}
+                              // onChange={handleChange}
+                            />
                           </Form.Item>
                         </div>
                         <div
@@ -236,7 +340,7 @@ function AddService() {
 
                     <button
                       className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
-                      type="submit"
+                      type="button"
                       onClick={() => add()}
                     >
                       + เพิ่มรายการ
@@ -245,9 +349,9 @@ function AddService() {
                 )}
               </Form.List>
             </DragDropContext>
-          </Form>
+          </div>
         </div>
-      </div>
+      </Form>
     </>
   );
 }
