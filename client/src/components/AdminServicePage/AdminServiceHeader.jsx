@@ -1,5 +1,5 @@
 import "../../styles/App.css";
-import { useEffect } from "react";
+import {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useUtils } from "../../hooks/utils.js";
@@ -8,10 +8,13 @@ import image from "../../assets/AdminPhoto/imageIndex";
 const AdminServiceHeader = () => {
     const navigate = useNavigate();
     const { searchService, setSearchService, setService } = useUtils;
+const AdminServiceHeader = () => {
+    const navigate = useNavigate();
+    const { searchService, setSearchService, setService } = useUtils;
 
     const searchServiceData = async () => {
       const results = await axios.get(
-        `http://localhost:4000/service?keywords=${searchService}&categoryFilter=${categoryFilter}&maxPriceFilter=${maxFilter}&minPriceFilter=${minFilter}`
+        `http://localhost:4000/service?keywords=${searchService}`
       );
       setService(results.data.data);
     };
@@ -24,16 +27,15 @@ const AdminServiceHeader = () => {
       };
     }, [searchService]);
 
-  return (
-    <header className="bg-bg h-[100%] pb-[4%] pl-60">
-      <div className="  flex flex-col items-center  ">
-      <div className="header-name justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300 ">
-        <h1 className="text-black   font-semibold text-xl">บริการ</h1>
+    return (
+      <header className="sticky top-0 bg-white">
+      <div className="pl-60 flex items-center h-20 pr-10 justify-between border-b border-grey300 ">
+        <h1 className="text-xl font-medium text-black pl-10">บริการ</h1>
         <div className="flex">
           <input
-            type="text"
             id="search-text"
             name="search-text"
+            type="text"
             placeholder="ค้นหาบริการ..."
             value={searchService}
             onChange={(event) => {
@@ -43,18 +45,15 @@ const AdminServiceHeader = () => {
           />
           <button
             className="btn-primary flex items-center ml-6"
-            onClick={() => navigate("/admin-service-create")}
+            onClick={() => navigate("/admin-create-service")}
           >
-            <p className="t pl-[15%]">เพิ่มบริการ</p>
-            <p className="pt-2 pl-[15%]">
-            <img src={image.plusSign} alt="Plus Symbol" className=" w-[10px] h-[10px] " />
-            </p>
+            <div className="text-base font-medium mr-3">เพิ่มบริการ</div>
+            <img src={image.plusSign} alt="Plus Symbol" />
           </button>
         </div>
-      </div>
       </div>
     </header>
   );
 };
 
-export default AdminServiceHeader;
+export default AdminServiceHeader
