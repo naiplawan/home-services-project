@@ -7,6 +7,7 @@ import AdminServicePage from "./AdminServicePage.jsx";
 import AdminCreateCategory from "./AdminCreateCategory.jsx";
 import AdminDetailCategory from "./AdminDetailCategory.jsx";
 import AdminEditCategory from "./AdminEditCategory.jsx";
+import AdminDetailService from "./AdminDetailService.jsx"
 
 import AdminCreateServicePage from "./AdminCreateServicePage.jsx";
 
@@ -34,6 +35,10 @@ function AuthenticatedApp() {
           <Route
             path="/admin-category-detail/:categoryId"
             element={<AdminDetailCategory />}
+          />
+          <Route
+            path="/admin-service-detail/:serviceId"
+            element={<AdminDetailService />}
           />
           <Route
             path="/admin-category-edit/:categoryId"

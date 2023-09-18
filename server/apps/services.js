@@ -12,6 +12,12 @@ const uploadRouter = Router()
 
 // API route to service listing page
 serviceRouter.get("/", async (req, res) => {
+  const keywords = req.query.keywords || "";
+  const categoryFilter = req.query.categoryFilter || "";
+  const maxPriceFilter = req.query.maxPriceFilter || Number.MAX_SAFE_INTEGER;
+  const minPriceFilter = req.query.minPriceFilter || 0;
+  const orderFilter = req.query.orderFilter || "";
+
   try {
     const data = await supabase.from("service").select("*, sub_service(*), category(*)");
     return res.json({

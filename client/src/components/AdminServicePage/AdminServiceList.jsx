@@ -41,7 +41,7 @@ function AdminServiceList() {
 
     setService({ data: reorderedServices });
 
-    // บันทึกข้อมูลลำดับใน localStorage
+    // Save the order in localStorage
     localStorage.setItem("serviceOrder", JSON.stringify(reorderedServices));
   };
 
@@ -61,7 +61,7 @@ function AdminServiceList() {
     }
   };
 
-  // Function to create a new service
+  // Function to fetch services
   const getService = async () => {
     try {
       const response = await axios.get("http://localhost:4000/service");
@@ -79,15 +79,14 @@ function AdminServiceList() {
 
   useEffect(() => {
     getService();
-    console.log(service);
   }, []);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="services-list mt-10  w-[100%]">
+      <div className="categories-data min-h-screen bg-bg p-[41px]">
         <ul>
           <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300">
-            <span className="text-grey700 mx-[7%] text-center">ลำดับ</span>
+            <span className="text-grey700 mx-[1%] text-center">ลำดับ</span>
             <span className="text-grey700 mx-[1%]">ชื่อบริการ</span>
             <span className="p-3 font-normal">หมวดหมู่</span>
             <span className="text-grey700 mx-[15%]">สร้างเมื่อ</span>
@@ -114,37 +113,41 @@ function AdminServiceList() {
                           className="flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
                         >
                           <div>
-                            <img src={drag} className="w-[30px]" />
+                            <img src={drag} className="w-[30px]" alt="Drag" />
                           </div>
-                          <div className="service-detail cursor-pointer flex justify-between w-[100%] text-black">
+                          <div className="service-detail cursor-pointer flex justify-between w-[100%] text-black h-[88px] items-center">
                             <div
-                              className={`w-[30%] ml-[2%] ${
-                                // Optional chaining operator (?.) used here to check if category is not null or undefined
+                              className={`w-[100%] ml-2% rounded-lg justify-center flex ${
                                 serviceItem.category?.category_name
                                   ? getCategoryColor(
                                       serviceItem.category.category_id
                                     )
                                   : ""
                               }`}
+                              onClick={() =>
+                                navigate(
+                                  `/admin-service-detail/${serviceItem.service_id}`
+                                )}
                             >
-                              <span className="w-[20%]">{index + 1}</span>
-                              <span className="w-[30%] ml-[2%]">
+                              <div className="w-[20%]">{index + 1}</div>
+                              <div className="w-[30%] ml-[2%] font-light">
                                 {serviceItem.service_name}
+                              </div>
+                              <span>
+                                {serviceItem.category?.category_name}
                               </span>
-                              {/* Optional chaining operator (?.) used here to check if category is not null or undefined */}
-                              {serviceItem.category?.category_name}
                             </div>
                             <span className="-[50%] ml-[12%]">
                               {dateFormat(serviceItem.service_created_date)}
                             </span>
-                            <span className="w-[50%] mr-[16%]">
+                            <span className="w-[50%] mr-[10%]">
                               {dateFormat(serviceItem.service_edited_date)}
                             </span>
                           </div>
 
-                          {/* Delete AlertBox */}
+                          {/* Delete */}
                           {serviceItem.service_id !== deleteServiceId && (
-                            <div className="pr-[5%] flex">
+                            <div className="pr-[5%] flex h-[88px] items-center justify-center">
                               <img
                                 className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
                                 alt="Delete"
@@ -160,8 +163,7 @@ function AdminServiceList() {
                                 onClick={() =>
                                   navigate(
                                     `/service/edit/${serviceItem.service_id}`
-                                  )
-                                }
+                                  )}
                               />
                             </div>
                           )}
