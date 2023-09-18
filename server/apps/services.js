@@ -58,26 +58,6 @@ serviceRouter.get("/:id", async (req, res) => {
 serviceRouter.post("/", upload.single("file"), async (req, res) => {
   try {
 
-    const subServiceItem = {
-      service_id: req.body.service_id,
-      sub_service_name: req.body.sub_service_name,
-      unit: req.body.unit,
-      price_per_unit: req.body.price_per_unit,
-      // sub_service_quantity: req.body.sub_service_quantity,
-    }
-
-    const { data: insertedSubserviceData, error: subServiceError } = await supabase
-      .from('sub_service')
-      .insert([subServiceItem]);
-
-      console.log(insertedSubserviceData)
-
-    if (subServiceError) {
-      console.error(
-        "Error inserting sub_service data to Supabase",
-        subServiceError
-      );
-
     const file = req.file;
 
     if (!file) {
@@ -121,6 +101,26 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
         .status(500)
         .json({ message: "Error inserting data to Supabase" });
     }
+
+    const subServiceItem = {
+      service_id: req.body.service_id,
+      sub_service_name: req.body.sub_service_name,
+      unit: req.body.unit,
+      price_per_unit: req.body.price_per_unit,
+      sub_service_quantity: req.body.sub_service_quantity,
+    }
+
+    const { data: insertedSubserviceData, error: subServiceError } = await supabase
+      .from('sub_service')
+      .insert([subServiceItem]);
+
+      console.log(insertedSubserviceData)
+
+    if (subServiceError) {
+      console.error(
+        "Error inserting sub_service data to Supabase",
+        subServiceError
+      );
 
       return res
         .status(500)
