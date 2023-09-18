@@ -44,6 +44,10 @@ function AuthenticatedApp() {
             element={<AdminDetailCategory />}
           />
           <Route
+            path="/admin-service-detail/:serviceId"
+            element={<AdminDetailService />}
+          />
+          <Route
             path="/admin-category-edit/:categoryId"
             element={<AdminEditCategory />}
           />
