@@ -33,6 +33,8 @@ function AddService() {
   const [fileList, setFileList] = useState([]);
 
   const handleFileChange = (file) => {
+
+    console.log('file', file)
     const reader = new FileReader();
 
     reader.onload = (e) => {
@@ -47,10 +49,13 @@ function AddService() {
     setSelectedImage(null);
   };
 
-  const handleSubmitService = async (values, file) => {
+  console.log('ฟายลิส', fileList)
+
+  const handleSubmitService = async (values) => {
     try {
       console.log("values", values);
       console.log("selectedCategory", selectedCategory);
+      console.log("fileList:", fileList);
 
       const selectedCategoryId = category.data.find(
         (category) => category.category_name === selectedCategory
@@ -61,7 +66,9 @@ function AddService() {
 
       formData.append("category_id", selectedCategoryId);
 
-      formData.append("file", fileList[0].originFileObj);
+      // formData.append("file", file)
+
+      formData.append("file", fileList[0]);
 
       values.items.forEach((item, index) => {
         formData.append(
@@ -95,10 +102,6 @@ function AddService() {
       console.error(error);
       message.error("Error creating service");
     }
-
-    // for () {
-    //   //
-    // } //servicephoto
   };
 
   useEffect(() => {
@@ -204,7 +207,7 @@ function AddService() {
 
               <div className="w-3/4 h-40 relative">
                 <Upload.Dragger
-                  name="servicePhoto"
+                  name="file"
                   accept=".png,.jpg,.jpeg"
                   beforeUpload={(file) => {
                     setFileList([file]);
