@@ -9,8 +9,7 @@ import AdminDetailCategory from "./AdminDetailCategory.jsx";
 import AdminEditCategory from "./AdminEditCategory.jsx";
 
 import AdminCreateServicePage from "./AdminCreateServicePage.jsx";
-
-
+import CustomerServiceListDisplay from "./CustomerServiceListDisplay.jsx";
 
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
@@ -45,6 +44,10 @@ function AuthenticatedApp() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="" element={<NotFoundPage />} />
+          <Route
+            path="/services-list"
+            element={<CustomerServiceListDisplay />}
+          />
         </Routes>
       )}
     </div>
