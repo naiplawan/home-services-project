@@ -1,13 +1,10 @@
 import SideBar from "../components/ServicePage/AdminSidebar.jsx";
-// import { useState, useEffect } from "react";
-// import axios from "axios";
 import "../styles/App.css";
 import AdminServiceList from "../components/AdminServicePage/AdminServiceList.jsx";
 import AdminServiceHeader from "../components/AdminServicePage/AdminServiceHeader.jsx";
 import { useUtils }  from "../hooks/utils.js";
-// import dateFormat from "../utils/dateFormat";
 
-function AdminServicePage(props) {
+function AdminServicePage() {
     const {
         searchService,
         setSearchService,
@@ -18,7 +15,7 @@ function AdminServicePage(props) {
         deleteService,
         service_Id,
         setDeleteService,
-      } = props;
+      } = useUtils;
 
     return (
         <div className="admin-service-page" >
