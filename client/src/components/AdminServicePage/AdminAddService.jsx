@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 // import  {useUtils}  from "../../hooks/utils";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 
 function AddService() {
   const { Dragger } = Upload;
@@ -14,19 +15,21 @@ function AddService() {
 
   const [imageUrl, setImageUrl] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("เลือกหมวดหมู่");
 
   useEffect(() => {
     axios
       .get("http://localhost:4000/category")
       .then((response) => {
-        setData(response.data); // Store data in state
-        setCategory(response.data);
+        setData(response.data.data); // Store data in state
+        setCategory(response.data.data);
+        console.log(response.data)
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  console.log(data);
-  console.log(setCategory);
+  console.log(data.data);
+  console.log(category);
 
   const handleChange = (info) => {
     if (info.file.status === "uploading") {
@@ -90,6 +93,12 @@ function AddService() {
             <Form.Item
               label={<span style={labelStyle}>ชื่อบริการ</span>}
               colon={false}
+              rules={[
+                {
+                  required: true,
+                  message: "โปรดกรอกชื่อบริการ",
+                },
+              ]}
             >
               <Input style={{ width: "50%" }} />
             </Form.Item>
@@ -98,34 +107,19 @@ function AddService() {
               colon={false}
             >
               <Select
-                defaultValue=""
+                value={selectedCategory}
                 style={{ width: "50%" }}
-                loading={loading}
+                onChange={(value) => setSelectedCategory(value)}
               >
-                {Array.isArray(category) && category.length > 0 ? (
-                  category.map((categoryItem) => (
+                  {data && data.data && data.data.map((categoryItem) => (
                     <Select.Option
-                      key={categoryItem.id}
-                      value={categoryItem.id}
+                      key={categoryItem.category_id}
+                      value={categoryItem.category_name}
                     >
-                      {categoryItem.name}
+                      {categoryItem.category_name}
                     </Select.Option>
                   ))
-                ) : (
-                  <Select.Option value="">Loading...</Select.Option>
-                )}
-                {/* {category.map(
-                  (
-                    categoryItem 
-                  ) => (
-                    <Select.Option
-                      key={categoryItem.id}
-                      value={categoryItem.id}
-                    >
-                      {categoryItem.name}
-                    </Select.Option>
-                  )
-                )} */}
+                }
               </Select>
             </Form.Item>
             <Form.Item
@@ -149,6 +143,7 @@ function AddService() {
                 ) : (
                   uploadButton
                 )}
+
                 <p className="ant-upload-drag-icon"></p>
                 <p className="ant-upload-text">
                   <span>อัพโหลดรูปภาพ </span> <span>หรือ ลากและวางที่นี่</span>
@@ -157,92 +152,99 @@ function AddService() {
               </Dragger>
             </Form.Item>
             <hr className="mb-10 text-grey300 "></hr>
+
             <div className="mb-10 text-grey700 text-base font-medium ">
               รายการบริการย่อย
             </div>
-
-            <Form.List name="items">
-              {(fields, { add, remove }) => (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "16px",
-                  }}
-                >
-                  {fields.map((field) => (
-                    <div
-                      key={field.key}
-                      style={{ display: "flex", gap: "16px" }}
-                    >
-                      <div style={{ flex: "1" }}>
-                        <Form.Item
-                          colon={false}
-                          label="ชื่อรายการ"
-                          name={[field.name, "name"]}
-                          labelAlign="top"
-                          labelCol={{ span: 24 }}
-                        >
-                          <Input />
-                        </Form.Item>
-                      </div>
-                      <div style={{ flex: "1" }}>
-                        <Form.Item
-                          colon={false}
-                          label="ค่าบริการ / 1 หน่วย"
-                          name={[field.name, "cost"]}
-                          labelAlign="top"
-                          labelCol={{ span: 24 }}
-                        >
-                          <InputNumber
-                            formatter={(value) =>
-                              `฿ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                            }
-                            parser={(value) => value.replace(/฿\s?|(,*)/g, "")}
-                          />
-                        </Form.Item>
-                      </div>
-                      <div style={{ flex: "1" }}>
-                        <Form.Item
-                          colon={false}
-                          label="หน่วยการบริการ"
-                          name={[field.name, "unit"]}
-                          labelAlign="top"
-                          labelCol={{ span: 24 }}
-                        >
-                          <Input />
-                        </Form.Item>
-                      </div>
-                      <div
-                        style={{
-                          flex: "1",
-                          display: "flex",
-                          alignItems: "flex-end",
-                        }}
-                      >
-                        <Form.Item colon={false} label="">
-                          <a
-                            onClick={() => {
-                              remove(field.name);
-                            }}
-                          >
-                            ลบรายการ
-                          </a>
-                        </Form.Item>
-                      </div>
-                    </div>
-                  ))}
-
-                  <button
-                    className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
-                    type="submit"
-                    onClick={() => add()}
+            <DragDropContext>
+              <Form.List name="items">
+                {(fields, { add, remove }) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "16px",
+                    }}
                   >
-                    + เพิ่มรายการ
-                  </button>
-                </div>
-              )}
-            </Form.List>
+                    {fields.map((field) => (
+                      <div
+                        key={field.key}
+                        style={{ display: "flex", gap: "16px" }}
+                      >
+                        <div style={{ flex: "1" }}>
+                          <Form.Item
+                            colon={false}
+                            label="ชื่อรายการ"
+                            name={[field.name, "name"]}
+                            labelAlign="top"
+                            labelCol={{ span: 24 }}
+                          >
+                            <Input />
+                          </Form.Item>
+                        </div>
+                        <div style={{ flex: "1" }}>
+                          <Form.Item
+                            colon={false}
+                            label="ค่าบริการ / 1 หน่วย"
+                            name={[field.name, "cost"]}
+                            labelAlign="top"
+                            labelCol={{ span: 24 }}
+                          >
+                            <InputNumber
+                              formatter={(value) =>
+                                `฿ ${value}`.replace(
+                                  /\B(?=(\d{3})+(?!\d))/g,
+                                  ","
+                                )
+                              }
+                              parser={(value) =>
+                                value.replace(/฿\s?|(,*)/g, "")
+                              }
+                            />
+                          </Form.Item>
+                        </div>
+                        <div style={{ flex: "1" }}>
+                          <Form.Item
+                            colon={false}
+                            label="หน่วยการบริการ"
+                            name={[field.name, "unit"]}
+                            labelAlign="top"
+                            labelCol={{ span: 24 }}
+                          >
+                            <Input />
+                          </Form.Item>
+                        </div>
+                        <div
+                          style={{
+                            flex: "1",
+                            display: "flex",
+                            alignItems: "flex-end",
+                          }}
+                        >
+                          <Form.Item colon={false} label="">
+                            <a
+                              onClick={() => {
+                                remove(field.name);
+                              }}
+                            >
+                              ลบรายการ
+                            </a>
+                          </Form.Item>
+                        </div>
+                      </div>
+                    ))}
+
+                    <button
+                      className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
+                      type="submit"
+                      onClick={() => add()}
+                    >
+                      + เพิ่มรายการ
+                    </button>
+                  </div>
+                )}
+              </Form.List>
+            </DragDropContext>
           </Form>
         </div>
       </div>

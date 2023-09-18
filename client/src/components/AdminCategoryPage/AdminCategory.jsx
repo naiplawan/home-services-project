@@ -83,6 +83,8 @@ function AdminCategory() {
     fetchData();
   }, [keyword]);
 
+  console.log(data)
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="bg-bg h-[100%] pb-[4%] pl-60 ">
