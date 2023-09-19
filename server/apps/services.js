@@ -1,8 +1,11 @@
 import { Router } from "express";
 import supabase from "../utils/supabase.js";
 import multer from "multer";
+//import { protect } from "../middlewares/protects.js";
 
 const serviceRouter = Router();
+// comment ออก เพราะว่า user ที่ไม่ได้ login สามารถดูรายการ services ได้ด้วย
+//serviceRouter.use(protect);
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
