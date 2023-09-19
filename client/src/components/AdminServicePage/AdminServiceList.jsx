@@ -162,7 +162,7 @@ function AdminServiceList() {
                                 src={image.editIcon}
                                 onClick={() =>
                                   navigate(
-                                    `/service/edit/${serviceItem.service_id}`
+                                    `/admin-service-edit/${serviceItem.service_id}`
                                   )}
                               />
                             </div>

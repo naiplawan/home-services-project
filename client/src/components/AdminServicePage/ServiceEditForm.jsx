@@ -19,7 +19,7 @@ import {
   import axios from "axios";
   import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
   
-  function EditService() {
+  function ServiceEditForm() {
     const { Dragger } = Upload;
     const navigate = useNavigate();
   
@@ -150,7 +150,14 @@ import {
         >
           <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
             <div className="flex items-center h-20 px-10 justify-between border-b border-grey300 bg-white">
-              <h1 className="text-xl font-medium">เพิ่มบริการ</h1>
+            <div className="Header-name">
+              <p className="service-text text-xs">บริการ</p>
+              <h1
+                className="text-black   font-semibold text-xl"
+              >
+                ล้างแอร์
+              </h1>
+            </div>
               <div className="flex">
                 <button
                   className="btn-secondary flex items-center justify-center text-base font-medium w-28 h-11"
@@ -162,7 +169,7 @@ import {
                   className="btn-primary flex items-center justify-center ml-6 text-base font-medium w-28 h-11"
                   type="submit"
                 >
-                  สร้าง
+                  ยืนยัน
                 </button>
               </div>
             </div>
@@ -225,7 +232,6 @@ import {
                     {selectedImage && (
                       <div>
                         <Image src={selectedImage} alt="uploaded" width={144} />
-                        <Button onClick={handleDeleteImage}>Delete</Button>
                       </div>
                     )}
                     <div>
@@ -240,8 +246,9 @@ import {
                       )}
                     </div>
                   </Upload.Dragger>
-                  <div className="text-grey700 text-xs z-0 mt-1">
-                    ขนาดภาพที่แนะนำ: 1440 x 225 PX
+                  <div className="flex justify-between text-grey700 text-xs z-0 mt-1">
+                    <span className="pt-0.5">ขนาดภาพที่แนะนำ: 1440 x 225 PX</span>
+                    <button onClick={handleDeleteImage} className="border-none cursor-pointer font-semibold text-sm underline text-blue600 hover:text-blue400 active:text-blue800">ลบรูปภาพ</button>
                   </div>
                 </div>
               </div>
@@ -363,5 +370,5 @@ import {
     );
   }
   
-  export default EditService;
+  export default ServiceEditForm;
   
