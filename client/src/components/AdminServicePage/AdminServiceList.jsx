@@ -1,29 +1,48 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
 import image from "../../assets/AdminPhoto/imageIndex.js";
+import { useUtils } from "../../hooks/utils.js";
+import axios from "axios";
+import drag from "../../assets/AdminPhoto/drag.svg";
+import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 
-function AdminServiceList(props) {
-  const {
-    service,
-    serviceDeleteAlert,
-    deleteService,
-    deleteServiceId,
-    service_Id,
-    setDeleteService,
-  } = props;
-  
+function AdminServiceList() {
+  const [service, setService] = useState([]);
+  const [service_Id, setService_Id] = useState();
+  const { setDeleteService, deleteService } = useUtils();
   const navigate = useNavigate();
 
   const hide = () => {
-    document.getElementById("popUp").style.display = "none";
     setDeleteService(false);
   };
 
-  const handleDelete = () => {
-    deleteServiceId(service_Id);
+  // Function to delete a service by ID
+  const deleteServiceId = async (serviceId) => {
+    await axios.delete(`http://localhost:4000/service/${serviceId}`);
+    getService();
+    document.getElementById("popUp").style.display = "none";
+    navigate("/service-dashboard");
+  };
+
+  const handleDelete = (serviceId) => {
+    deleteServiceId(serviceId);
     setDeleteService(false);
+  };
+
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+
+    // Modified this section to correctly update the 'service' state
+    const reorderedServices = [...service.data];
+    const [movedService] = reorderedServices.splice(result.source.index, 1);
+    reorderedServices.splice(result.destination.index, 0, movedService);
+
+    setService({ data: reorderedServices });
+
+    // Save the order in localStorage
+    localStorage.setItem("serviceOrder", JSON.stringify(reorderedServices));
   };
 
   // Function to map category IDs to background colors
@@ -42,83 +61,136 @@ function AdminServiceList(props) {
     }
   };
 
+  // Function to fetch services
+  const getService = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/service");
+      setService(response.data.data);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
+
+  // Function to set service delete alert
+  const serviceDeleteAlert = async (serviceId) => {
+    setService_Id(serviceId);
+    setDeleteService(true);
+  };
+
   useEffect(() => {
-    // Call getService when the component mounts
     getService();
-  }, [getService]); // Ensure it only runs when getService changes
+  }, []);
 
   return (
-    <div className="categories-data min-h-screen bg-bg p-[41px]">
-      <div className="ml-60 rounded-[5px] border border-grey200 ">
-        <table className="table-fixed w-full text-left">
-          <thead className="bg-grey100 text-grey700 text-sm">
-            <tr>
-              <th className="py-3 font-normal text-center">ลำดับ</th>
-              <th className="py-3 font-normal">ชื่อบริการ</th>
-              <th className="p-3 font-normal">หมวดหมู่</th>
-              <th className="py-3 font-normal">สร้างเมื่อ</th>
-              <th className="py-3 font-normal">แก้ไขล่าสุด</th>
-              <th className="py-3 font-normal text-center">Action</th>
-            </tr>
-          </thead>
-        </table>
-        <table className="bg-white rounded-b-[5px] table-fixed w-full">
-          {service.length !== 0 && service[0].service_name !== "" && (
-            <tbody className="text-left">
-              {service.map((data, index) => (
-                <tr className="border-t border-grey200 " key={index}>
-                  <td className="font-light text-center">{index + 1}</td>
-                  <td className="font-light">{data.service_name}</td>
-                  <td className="px-3">
-                    <td
-                      className={`px-2.5 py-1 rounded-lg text-xs ${getCategoryColor(
-                        data.category_id
-                      )}`}
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div className="categories-data min-h-screen bg-bg p-[41px]">
+        <ul>
+          <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300">
+            <span className="text-grey700 mx-[1%] text-center">ลำดับ</span>
+            <span className="text-grey700 mx-[1%]">ชื่อบริการ</span>
+            <span className="p-3 font-normal">หมวดหมู่</span>
+            <span className="text-grey700 mx-[15%]">สร้างเมื่อ</span>
+            <span className="text-grey700 mx-[]">แก้ไขล่าสุด</span>
+            <span className="text-grey700 mx-[30%] mr-[2%]"> Action</span>
+          </li>
+
+          <Droppable droppableId="service-list">
+            {(provided) => (
+              <ul {...provided.droppableProps} ref={provided.innerRef}>
+                {service &&
+                  service.data &&
+                  service.data.map((serviceItem, index) => (
+                    <Draggable
+                      key={serviceItem.service_id.toString()}
+                      draggableId={serviceItem.service_id.toString()}
+                      index={index}
                     >
-                      {data.category_name}
-                    </td>
-                  </td>
-                  <td className="font-light">
-                    {dateFormat(data.service_created_date)} น.
-                  </td>
-                  <td className="font-light">
-                    {dateFormat(data.service_created_date)} น.
-                  </td>
-                  <td className="h-[88px] flex items-center justify-center">
-                  <img
-                        className="w-6 h-6 cursor-pointer mx-2"
-                        alt="Delete"
-                        src={image.trashIcon}
-                        onClick={() => {
-                          serviceDeleteAlert(data.service_id);
-                        }}
-                      />
-                      <img
-                        className="w-6 h-6 cursor-pointer mx-2"
-                        alt="Edit"
-                        src={image.editIcon}
-                        onClick={() =>
-                          navigate(`/service/edit/${data.service_id}`)
-                        }
-                      />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          )}
-          {deleteService ? (
-            <AlertBoxDelete
-              deleteFunction={handleDelete}
-              hideFunction={hide}
-              textAlert="ยืนยันการลบรายการ"
-              alertQuestion="คุณต้องการลบรายการ ใช่หรือไม่ ?"
-              primary="ลบรายการ"
-              secondary="ยกเลิก"
-            />
-          ) : null}
-        </table>
+                      {(provided) => (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
+                        >
+                          <div>
+                            <img src={drag} className="w-[30px]" alt="Drag" />
+                          </div>
+                          <div className="service-detail cursor-pointer flex justify-between w-[100%] text-black h-[88px] items-center">
+                            <div
+                              className={`w-[100%] ml-2% rounded-lg justify-center flex ${
+                                serviceItem.category?.category_name
+                                  ? getCategoryColor(
+                                      serviceItem.category.category_id
+                                    )
+                                  : ""
+                              }`}
+                              onClick={() =>
+                                navigate(
+                                  `/admin-service-detail/${serviceItem.service_id}`
+                                )}
+                            >
+                              <div className="w-[20%]">{index + 1}</div>
+                              <div className="w-[30%] ml-[2%] font-light">
+                                {serviceItem.service_name}
+                              </div>
+                              <span>
+                                {serviceItem.category?.category_name}
+                              </span>
+                            </div>
+                            <span className="-[50%] ml-[12%]">
+                              {dateFormat(serviceItem.service_created_date)}
+                            </span>
+                            <span className="w-[50%] mr-[10%]">
+                              {dateFormat(serviceItem.service_edited_date)}
+                            </span>
+                          </div>
+
+                          {/* Delete */}
+                          {serviceItem.service_id !== deleteServiceId && (
+                            <div className="pr-[5%] flex h-[88px] items-center justify-center">
+                              <img
+                                className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
+                                alt="Delete"
+                                src={image.trashIcon}
+                                onClick={() => {
+                                  serviceDeleteAlert(serviceItem.service_id);
+                                }}
+                              />
+                              <img
+                                className="cursor-pointer w-[25px] h-[25px]"
+                                alt="Edit"
+                                src={image.editIcon}
+                                onClick={() =>
+                                  navigate(
+                                    `/service/edit/${serviceItem.service_id}`
+                                  )}
+                              />
+                            </div>
+                          )}
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+              </ul>
+            )}
+          </Droppable>
+        </ul>
       </div>
-    </div>
+      {deleteService && (
+        <AlertBoxDelete
+          deleteFunction={handleDelete}
+          hideFunction={hide}
+          textAlert="ยืนยันการลบรายการ"
+          alertQuestion={`คุณต้องการลบรายการ '${
+            service.data.find(
+              (serviceItem) => serviceItem.service_id === service_Id
+            )?.service_name
+          }' ใช่หรือไม่ ?`}
+          primary="ลบรายการ"
+          secondary="ยกเลิก"
+        />
+      )}
+    </DragDropContext>
   );
 }
 
