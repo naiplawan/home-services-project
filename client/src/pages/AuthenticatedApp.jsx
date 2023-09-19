@@ -10,6 +10,7 @@ import AdminEditCategory from "./AdminEditCategory.jsx";
 
 import AdminCreateServicePage from "./AdminCreateServicePage.jsx";
 import CustomerServiceListDisplay from "./CustomerServiceListDisplay.jsx";
+import FirstStep from "../components/ServicePage/FirstStep.jsx"
 
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
@@ -39,6 +40,7 @@ function AuthenticatedApp() {
             element={<AdminEditCategory />}
           />
           <Route path="" element={<NotFoundPage />} />
+          <Route path="/admin-service-detail/:serviceId" element={<FirstStep />} />
         </Routes>
       ) : (
         <Routes>
