@@ -98,11 +98,15 @@ function AddService() {
       } else {
         message.error("Cannot create service");
       }
+      navigate("/admin-service")
+
     } catch (error) {
       console.error(error);
       message.error("Error creating service");
     }
   };
+
+  // เพิ่ม ถ้าสร้างเสร็จให้ navigate ไปหน้า admin dashboard
 
   useEffect(() => {
     axios
