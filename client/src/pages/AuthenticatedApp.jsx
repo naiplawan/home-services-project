@@ -7,7 +7,7 @@ import AdminServicePage from "./AdminServicePage.jsx";
 import AdminCreateCategory from "./AdminCreateCategory.jsx";
 import AdminDetailCategory from "./AdminDetailCategory.jsx";
 import AdminEditCategory from "./AdminEditCategory.jsx";
-
+import ServiceDetailAddOnlist from "../components/CustomerPage/ServiceDetailAddOnList.jsx"
 import AdminCreateServicePage from "./AdminCreateServicePage.jsx";
 import CustomerServiceListDisplay from "./CustomerServiceListDisplay.jsx";
 
@@ -39,6 +39,7 @@ function AuthenticatedApp() {
             element={<AdminEditCategory />}
           />
           <Route path="" element={<NotFoundPage />} />
+          <Route path="/admin-service-detail/:serviceId" element={<ServiceDetailAddOnlist />} />
         </Routes>
       ) : (
         <Routes>
