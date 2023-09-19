@@ -20,7 +20,14 @@ serviceRouter.get("/", async (req, res) => {
   const minPriceFilter = req.query.minPriceFilter || 0;
   const orderFilter = req.query.orderFilter || "";
 
+  const keywords = req.query.keywords || "";
+  const categoryFilter = req.query.categoryFilter || "";
+  const maxPriceFilter = req.query.maxPriceFilter || Number.MAX_SAFE_INTEGER;
+  const minPriceFilter = req.query.minPriceFilter || 0;
+  const orderFilter = req.query.orderFilter || "";
+
   try {
+    const data = await supabase.from("service").select("*, sub_service(*), category(*)");
     const data = await supabase.from("service").select("*, sub_service(*), category(*)");
     return res.json({
       data,
@@ -142,7 +149,34 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
   }
 });
 
+//API ROUTE to delete exisitng service item
+serviceRouter.delete("/:id", async (req, res) => {
 
+  try {
+    const serviceId = req.params.id;
+
+    const { data, error } = await supabase
+      .from("service")
+      .delete()
+      .eq("service_id", serviceId);
+
+    if (error) {
+      return res.status(500).json({ error: "ไม่สามารถลบได้" });
+    }
+
+    if (data && data.length === 0) {
+      return res
+        .status(404)
+        .json({ error: `ไม่พบรายการที่ตรงกับ ${serviceId}` });
+    }
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "ไม่สามารถลบได้" });
+  }
+});
+
+export default serviceRouter;
 
 
 export default serviceRouter;
