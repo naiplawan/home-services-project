@@ -58,12 +58,8 @@ serviceRouter.get("/:id", async (req, res) => {
 
 serviceRouter.post("/", upload.single("file"), async (req, res) => {
   try {
-    console.log(req.body);
 
     const file = req.file;
-    const requestBody = req.body;
-
-    console.log("photo", req.file);
 
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
@@ -77,24 +73,8 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
       service_edited_date: new Date(),
     };
 
-    console.log("main service", newServiceItem);
+    console.log(newServiceItem);
 
-    const items = JSON.parse(requestBody.items);
-
-    console.log(items);
-
-    const subServiceItems = [
-      {
-        sub_service_name: items.sub_service_name,
-        unit: items.unit,
-        price_per_unit: items.price_per_unit,
-        sub_service_quantity: 1,
-      },
-    ];
-
-    console.log("sub service data", subServiceItems);
-
-    // Upload file to Supabase storage
     const uploadResult = await supabase.storage
       .from("home_service")
       .upload(`service_photo/${Date.now()}${file.originalname}`, file.buffer, {
@@ -117,7 +97,9 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
         return res.status(500).json({ message: "Error uploading file to Supabase storage" });
       }
 
-    // Insert new service item
+    console.log(newServiceItem["service_photo"]);
+    console.log({ uploadResult: uploadResult });
+
     const { data: serviceData, error: serviceError } = await supabase
       .from("service")
       .insert([newServiceItem]);
@@ -157,9 +139,12 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
         "Error inserting sub_service data to Supabase",
         subServiceError
       );
-      return res.status(500).json({
-        message: "Error inserting sub_service data to Supabase",
-      });
+
+      return res
+        .status(500)
+        .json({
+          message: "Error inserting sub_service data to Supabase",
+        });
     }
 
     return res.status(200).send("Service DATA uploaded successfully");
