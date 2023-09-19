@@ -10,6 +10,9 @@ import AdminEditCategory from "./AdminEditCategory.jsx";
 
 import AdminCreateServicePage from "./AdminCreateServicePage.jsx";
 import CustomerServiceListDisplay from "./CustomerServiceListDisplay.jsx";
+import AllStepCheckOutForm from "./AllStepCheckOutForm.jsx";
+import CustomerServiceListPage from "./CustomerServiceList.jsx";
+import CustomerServiceHistory from "./CustomerServiceHistory.jsx";
 
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
@@ -47,6 +50,19 @@ function AuthenticatedApp() {
           <Route
             path="/services-list"
             element={<CustomerServiceListDisplay />}
+          />
+          <Route
+            path="/checkout/:serviceId"
+            element={<AllStepCheckOutForm />}
+          />
+          <Route
+            path="/customer-services-list/:serviceId"
+            element={<CustomerServiceListPage />}
+          />
+
+          <Route
+            path="/customer-services-history/:serviceId"
+            element={<CustomerServiceHistory />}
           />
         </Routes>
       )}
