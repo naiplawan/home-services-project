@@ -42,7 +42,7 @@ const AdminServiceHeader = () => {
           />
           <button
             className="btn-primary flex items-center ml-6"
-            onClick={() => navigate("/admin-create-service")}
+            onClick={() => navigate("/admin-service-create")}
           >
             <div className="text-base font-medium mr-3">เพิ่มบริการ</div>
             <img src={image.plusSign} alt="Plus Symbol" />

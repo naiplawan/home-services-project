@@ -81,6 +81,16 @@ export function useUtils() {
   const [serviceId, setServiceId] = useState();
   const [categoryId, setCategoryId] = useState();
 
+  const getService = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/service");
+      setService(response.data.data);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
+
+
   // Function to get service data by ID
   const getServiceById = async (serviceId) => {
     const result = await axios.get(
