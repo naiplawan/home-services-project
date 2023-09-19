@@ -28,12 +28,35 @@ import {
     const [selectedImage, setSelectedImage] = useState(null); //manage the selected image
     const [selectedCategory, setSelectedCategory] = useState("เลือกหมวดหมู่");
     const [fileList, setFileList] = useState([]);
+    const [form] =  Form.useForm();
     
     const [currentData, setCurrentData] = useState({
       service_name: "",
       category_id: "",
       items: [],
     });
+
+    useEffect(() => {
+      getServiceId(serviceId);
+    }, [serviceId]);
+
+    useEffect(() => {
+      if (currentData) {
+        form.setFieldValue(currentData);
+      }
+    }, [currentData]);
+
+    const getServiceId = async (serviceId) => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/service/${serviceId}`
+        );
+        setData(response.data.data);
+        setCurrentData(response.data.data[0]);
+      } catch (error) {
+        console.error("เกิดข้อผิดพลาดในการเรียกข้อมูลหมวดหมู่:", error);
+      }
+    };
   
     const handleFileChange = (file) => {
       const reader = new FileReader();
@@ -73,7 +96,7 @@ import {
         // for (const [key, value] of formData.entries()) {
         //   console.log(`${key}: ${value}`);
         // }
-  
+
         const response = await axios.put(
           `http://localhost:4000/service/${serviceId}`,
           formData,
@@ -91,7 +114,7 @@ import {
   
       } catch (error) {
         console.error(error);
-        message.error("Error updateing service");
+        message.error("Error updating service");
       }
     };
   
@@ -101,12 +124,12 @@ import {
       axios
         .get(`http://localhost:4000/category`)
         .then((response) => {
-          const currentService = response.data.data
-          setCurrentData(currentService);
+          setData(response.data.data); // Store data in state
+          setCategory(response.data.data);
           console.log(response.data);
         })
         .catch((error) => console.error("Error fetching data:", error));
-    }, [serviceId]);
+    }, []);
   
     console.log(data.data);
     console.log(category);
