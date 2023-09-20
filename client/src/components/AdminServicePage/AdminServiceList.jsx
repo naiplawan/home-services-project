@@ -5,7 +5,7 @@ import AlertBoxDelete from "../AlertBox.jsx";
 import image from "../../assets/AdminPhoto/imageIndex.js";
 import { useUtils } from "../../hooks/utils.js";
 import axios from "axios";
-import drag from "../../assets/AdminPhoto/drag.svg"
+import drag from "../../assets/AdminPhoto/drag.svg";
 import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 
 function AdminServiceList() {

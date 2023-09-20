@@ -16,7 +16,15 @@ serviceRouter.get("/", async (req, res) => {
   const minPriceFilter = req.query.minPriceFilter || 0;
   const orderFilter = req.query.orderFilter || "";
 
+  
+  const keywords = req.query.keywords || "";
+  const categoryFilter = req.query.categoryFilter || "";
+  const maxPriceFilter = req.query.maxPriceFilter || Number.MAX_SAFE_INTEGER;
+  const minPriceFilter = req.query.minPriceFilter || 0;
+  const orderFilter = req.query.orderFilter || "";
+
   try {
+    const data = await supabase.from("service").select("*, sub_service(*), category(*)");
     const data = await supabase.from("service").select("*, sub_service(*), category(*)");
     return res.json({
       data,
@@ -100,6 +108,9 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
     console.log(newServiceItem["service_photo"]);
     console.log({ uploadResult: uploadResult });
 
+    console.log(newServiceItem["service_photo"]);
+    console.log({ uploadResult: uploadResult });
+
     const { data: serviceData, error: serviceError } = await supabase
       .from("service")
       .insert([newServiceItem]);
@@ -149,7 +160,7 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
 
     return res.status(200).send("Service DATA uploaded successfully");
   } catch (error) {
-    console.error("Error on DATA uploading", error);
+    console.error("Error on service photo uploading", error);
     return res.status(500).json({ message: "Can't upload file to Supabase" });
   }
 });
