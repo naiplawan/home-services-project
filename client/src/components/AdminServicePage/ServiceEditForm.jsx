@@ -6,41 +6,63 @@ import {
     message,
     InputNumber,
     Image,
-    Button,
   } from "antd";
   import {
-    LoadingOutlined,
-    PlusOutlined,
     InboxOutlined,
   } from "@ant-design/icons";
   import { useNavigate } from "react-router-dom";
   // import  {useUtils}  from "../../hooks/utils";
   import { useState, useEffect } from "react";
   import axios from "axios";
+  import { useParams } from "react-router-dom";
   import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
   
-  function EditService() {
+  function ServiceEditForm() {
     const { Dragger } = Upload;
     const navigate = useNavigate();
+    const { serviceId } = useParams();
   
     const [data, setData] = useState([]);
     const [category, setCategory] = useState([]);
   
     const [selectedImage, setSelectedImage] = useState(null); //manage the selected image
-  
     const [selectedCategory, setSelectedCategory] = useState("เลือกหมวดหมู่");
-  
     const [fileList, setFileList] = useState([]);
+    const [form] =  Form.useForm();
+    
+    const [currentData, setCurrentData] = useState({
+      service_name: "",
+      category_id: "",
+      items: [],
+    });
+
+    useEffect(() => {
+      getServiceId(serviceId);
+    }, [serviceId]);
+
+    useEffect(() => {
+      if (currentData) {
+        form.setFieldValue(currentData);
+      }
+    }, [currentData]);
+
+    const getServiceId = async (serviceId) => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/service/${serviceId}`
+        );
+        setData(response.data.data);
+        setCurrentData(response.data.data[0]);
+      } catch (error) {
+        console.error("เกิดข้อผิดพลาดในการเรียกข้อมูลหมวดหมู่:", error);
+      }
+    };
   
     const handleFileChange = (file) => {
-  
-      console.log('file', file)
       const reader = new FileReader();
-  
       reader.onload = (e) => {
         setSelectedImage(e.target.result);
       };
-  
       reader.readAsDataURL(file);
       return false;
     };
@@ -49,44 +71,34 @@ import {
       setSelectedImage(null);
     };
   
-    console.log('ฟายลิส', fileList)
-  
     const handleSubmitService = async (values) => {
       try {
-        console.log("values", values);
-        console.log("selectedCategory", selectedCategory);
-        console.log("fileList:", fileList);
-  
         const selectedCategoryId = category.data.find(
           (category) => category.category_name === selectedCategory
         )?.category_id;
   
         const formData = new FormData();
         formData.append("service_name", values.service_name);
-  
         formData.append("category_id", selectedCategoryId);
-  
-        // formData.append("file", file)
-  
         formData.append("file", fileList[0]);
   
         values.items.forEach((item, index) => {
           formData.append(
             "items",
             JSON.stringify({
-              sub_service_name: item.name, // Change name to sub_service_name
+              sub_service_name: item.name, 
               unit: item.unit,
               price_per_unit: item.cost, // Change cost to price_per_unit
             })
           );
         });
   
-        for (const [key, value] of formData.entries()) {
-          console.log(`${key}: ${value}`);
-        }
-  
-        const response = await axios.post(
-          "http://localhost:4000/service",
+        // for (const [key, value] of formData.entries()) {
+        //   console.log(`${key}: ${value}`);
+        // }
+
+        const response = await axios.put(
+          `http://localhost:4000/service/${serviceId}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -94,15 +106,15 @@ import {
         );
   
         if (response.status === 200) {
-          message.success("Successfully create service");
+          message.success("Successfully update service");
         } else {
-          message.error("Cannot create service");
+          message.error("Cannot update service");
         }
         navigate("/admin-service")
   
       } catch (error) {
         console.error(error);
-        message.error("Error creating service");
+        message.error("Error updating service");
       }
     };
   
@@ -110,7 +122,7 @@ import {
   
     useEffect(() => {
       axios
-        .get("http://localhost:4000/category")
+        .get(`http://localhost:4000/category`)
         .then((response) => {
           setData(response.data.data); // Store data in state
           setCategory(response.data.data);
@@ -147,10 +159,18 @@ import {
           wrapperCol={{ span: 24 }}
           layout="horizontal"
           onFinish={handleSubmitService}
+          initialValues={currentData} // add initial values
         >
           <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
             <div className="flex items-center h-20 px-10 justify-between border-b border-grey300 bg-white">
-              <h1 className="text-xl font-medium">เพิ่มบริการ</h1>
+            <div className="Header-name">
+              <p className="service-text text-xs">บริการ</p>
+              <h1
+                className="text-black   font-semibold text-xl"
+              >
+                ล้างแอร์
+              </h1>
+            </div>
               <div className="flex">
                 <button
                   className="btn-secondary flex items-center justify-center text-base font-medium w-28 h-11"
@@ -162,7 +182,7 @@ import {
                   className="btn-primary flex items-center justify-center ml-6 text-base font-medium w-28 h-11"
                   type="submit"
                 >
-                  สร้าง
+                  ยืนยัน
                 </button>
               </div>
             </div>
@@ -225,7 +245,6 @@ import {
                     {selectedImage && (
                       <div>
                         <Image src={selectedImage} alt="uploaded" width={144} />
-                        <Button onClick={handleDeleteImage}>Delete</Button>
                       </div>
                     )}
                     <div>
@@ -240,8 +259,9 @@ import {
                       )}
                     </div>
                   </Upload.Dragger>
-                  <div className="text-grey700 text-xs z-0 mt-1">
-                    ขนาดภาพที่แนะนำ: 1440 x 225 PX
+                  <div className="flex justify-between text-grey700 text-xs z-0 mt-1">
+                    <span className="pt-0.5">ขนาดภาพที่แนะนำ: 1440 x 225 PX</span>
+                    <button onClick={handleDeleteImage} className="border-none cursor-pointer font-semibold text-sm underline text-blue600 hover:text-blue400 active:text-blue800">ลบรูปภาพ</button>
                   </div>
                 </div>
               </div>
@@ -363,5 +383,5 @@ import {
     );
   }
   
-  export default EditService;
+  export default ServiceEditForm;
   

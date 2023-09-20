@@ -169,32 +169,101 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
   }
 });
 
-//API ROUTE to delete exisitng service item
-serviceRouter.delete("/:id", async (req, res) => {
-
+//API ROUTE to update service
+serviceRouter.put("/:id", async (req, res) => {
   try {
-    const serviceId = req.params.id;
+    const serviceId = req.params.id; 
+    const file = req.file;
 
-    const { data, error } = await supabase
+    // if (!file) {
+    //   return res.status(400).json({ message: "No file uploaded" });
+    // }
+    
+    const updatedServiceItem = {
+      service_name: req.body.service_name,
+      category_id: req.body.category_id,
+      // service_photo: req.file,
+      service_edited_date: new Date(),
+    };
+
+    const items = JSON.parse(requestBody.items);
+
+    const updatedSubServiceItems = {
+      sub_service_name: items.sub_service_name,
+      unit: items.unit,
+      price_per_unit: items.price_per_unit,
+    };
+    
+    if (file) {
+      const updateResult = await supabase.storage
+        .from("home_service")
+        .update(`service_photo/${Date.now()}${file.originalname}`, file.buffer, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: file.mimetype,
+        });
+
+        const servicePhotoUrl = supabase.storage
+          .from("home_service")
+          .getPublicUrl(`service_photo/${Date.now()}${file.originalname}`);
+
+        updatedServiceItem["service_photo"] = servicePhotoUrl;
+    }   
+
+    console.log(updatedServiceItem);
+
+    const { data: updatedServiceData, error: updatedServiceError } = await supabase
       .from("service")
-      .delete()
+      .update(updatedServiceItem)
       .eq("service_id", serviceId);
-
-    if (error) {
-      return res.status(500).json({ error: "ไม่สามารถลบได้" });
+    
+    if (updatedServiceError) {
+      console.error("Error updating service data", updatedServiceError);
+      return res.status(500).json({ message: "Error updating data in supabase" });
     }
 
-    if (data && data.length === 0) {
+    const { data: latestService } = await supabase
+      .from("service")
+      .select("service_id")
+      .order("service_id", { ascending: false })
+      .limit(1);
+
+    const service_id = latestService[0].service_id;
+
+    for (const subServiceItem of updatedSubServiceItems) {
+      subServiceItem.service_id = service_id; // Add service_id to each subServiceItem
+    }
+
+    if (!service_id) {
+      console.error("Failed to retrieve service_id from database");
       return res
-        .status(404)
-        .json({ error: `ไม่พบรายการที่ตรงกับ ${serviceId}` });
+        .status(500)
+        .json({ message: "Failed to retrieve service_id from database" });
     }
 
-    return res.status(200).json({ success: true });
+    // แก้ไขรายการบริการย่อย (sub_service)
+    const { data: updatedSubServiceData, error: updatedSubServiceError } = await supabase
+      .from("sub_service")
+      .update(updatedSubServiceItems)
+      .eq("service_id", serviceId)
+    
+    if (serviceError || subServiceError) {
+      console.error('เกิดข้อผิดพลาดในการอัพเดทข้อมูล:', serviceError || subServiceError);
+      res.status(500).json({ error: 'เกิดข้อผิดพลาดในการอัพเดทข้อมูล' });
+    } else {
+      res.status(200).json({ message: 'อัพเดทข้อมูลเรียบร้อย' });
+    }
+
+    return res.status(200).send("Service DATA updated successfully");
   } catch (error) {
-    res.status(500).json({ success: false, error: "ไม่สามารถลบได้" });
+    res.status(500).json({
+      message: "Can't update service data in supabase",
+    });
   }
 });
+
+
+
 
 
 export default serviceRouter;

@@ -10,7 +10,7 @@ import AdminEditCategory from "./AdminEditCategory.jsx";
 import AdminDetailServicePage from "../components/AdminServicePage/AdminDetailServicePage.jsx";
 import AdminCreateServicePage from "./AdminCreateServicePage.jsx";
 import CustomerServiceListDisplay from "./CustomerServiceListDisplay.jsx";
-import EditService from "../components/AdminServicePage/AdminEditService.jsx";
+import AdminEditServicePage from "./AdminEditServicePage.jsx";
 
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
@@ -31,10 +31,10 @@ function AuthenticatedApp() {
             path="/admin-service-create"
             element={<AdminCreateServicePage />}
           />
-           {/* <Route
-            path="/service/edit/:serviceId"
-            element={<EditService />}
-          /> */}
+           <Route
+            path="/admin-service-edit/:serviceId"
+            element={<AdminEditServicePage />}
+          />
            <Route
             path="/admin-service-detail/:serviceId"
             element={<AdminDetailServicePage />}
