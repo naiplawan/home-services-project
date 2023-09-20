@@ -83,15 +83,15 @@ function AdminServiceList() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="categories-data min-h-screen bg-bg p-[41px]">
-        <ul>
-          <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300">
+      <div className="categories-data min-h-screen bg-bg p-[41px] ml-60">
+        <ul className="flex-row justify-center items-center">
+          <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300 gap-x-3 py-[10px]">
             <span className="text-grey700 mx-[1%] text-center">ลำดับ</span>
             <span className="text-grey700 mx-[1%]">ชื่อบริการ</span>
             <span className="p-3 font-normal">หมวดหมู่</span>
             <span className="text-grey700 mx-[15%]">สร้างเมื่อ</span>
-            <span className="text-grey700 mx-[]">แก้ไขล่าสุด</span>
-            <span className="text-grey700 mx-[30%] mr-[2%]"> Action</span>
+            <span className="text-grey700 ml-[]">แก้ไขล่าสุด</span>
+            <span className="text-grey700 mx-[27%] mt-3 mr-[2%]"> Action</span>
           </li>
 
           <Droppable droppableId="service-list">
@@ -162,7 +162,7 @@ function AdminServiceList() {
                                 src={image.editIcon}
                                 onClick={() =>
                                   navigate(
-                                    `/service/edit/${serviceItem.service_id}`
+                                    `/admin-service-edit/${serviceItem.service_id}`
                                   )}
                               />
                             </div>

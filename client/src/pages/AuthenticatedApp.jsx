@@ -7,9 +7,10 @@ import AdminServicePage from "./AdminServicePage.jsx";
 import AdminCreateCategory from "./AdminCreateCategory.jsx";
 import AdminDetailCategory from "./AdminDetailCategory.jsx";
 import AdminEditCategory from "./AdminEditCategory.jsx";
-
+import AdminDetailServicePage from "../components/AdminServicePage/AdminDetailServicePage.jsx";
 import AdminCreateServicePage from "./AdminCreateServicePage.jsx";
 import CustomerServiceListDisplay from "./CustomerServiceListDisplay.jsx";
+import AdminEditServicePage from "./AdminEditServicePage.jsx";
 
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
@@ -29,6 +30,14 @@ function AuthenticatedApp() {
           <Route
             path="/admin-service-create"
             element={<AdminCreateServicePage />}
+          />
+           <Route
+            path="/admin-service-edit/:serviceId"
+            element={<AdminEditServicePage />}
+          />
+           <Route
+            path="/admin-service-detail/:serviceId"
+            element={<AdminDetailServicePage />}
           />
           <Route
             path="/admin-category-detail/:categoryId"
