@@ -61,7 +61,12 @@ function AddService() {
         (category) => category.category_name === selectedCategory
       )?.category_id;
 
+      const user_id = localStorage.getItem('user_id');
+
+      console.log('ก่อนส่ง',user_id)
+
       const formData = new FormData();
+      formData.append('user_id', user_id);
       formData.append("service_name", values.service_name);
 
       formData.append("category_id", selectedCategoryId);

@@ -64,12 +64,16 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
     const requestBody = req.body;
 
     console.log("photo", req.file);
+    const user_id = req.body.user_id;
+
+    console.log("photo", req.file);
 
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
     const newServiceItem = {
+      user_id: user_id,
       service_name: req.body.service_name,
       category_id: req.body.category_id,
       service_photo: file.originalname,
