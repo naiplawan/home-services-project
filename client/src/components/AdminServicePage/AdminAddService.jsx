@@ -70,6 +70,10 @@ function AddService() {
 
       console.log('ก่อนส่ง',user_id)
 
+      const user_id = localStorage.getItem('user_id');
+
+      console.log('ก่อนส่ง',user_id)
+
       const formData = new FormData();
       formData.append('user_id', user_id);
 
