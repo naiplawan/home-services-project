@@ -12,7 +12,7 @@ import AdminCreateServicePage from "./AdminCreateServicePage.jsx";
 import CustomerServiceListDisplay from "./CustomerServiceListDisplay.jsx";
 import AllStepCheckOutForm from "./AllStepCheckOutForm.jsx";
 import CustomerServiceListPage from "./CustomerServiceList.jsx";
-import CustomerServiceHistory from "./CustomerServiceHistory.jsx";
+import CustomerServiceHistoryPage from "./CustomerServiceHistory.jsx";
 
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
@@ -62,7 +62,7 @@ function AuthenticatedApp() {
 
           <Route
             path="/customer-services-history/:serviceId"
-            element={<CustomerServiceHistory />}
+            element={<CustomerServiceHistoryPage />}
           />
         </Routes>
       )}
