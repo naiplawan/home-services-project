@@ -56,6 +56,7 @@ serviceRouter.get("/:id", async (req, res) => {
   }
 });
 
+
 serviceRouter.post("/", upload.single("file"), async (req, res) => {
   try {
     console.log(req.body);
@@ -64,12 +65,16 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
     const requestBody = req.body;
 
     console.log("photo", req.file);
+    const user_id = req.body.user_id;
+
+    console.log("photo", req.file);
 
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
     const newServiceItem = {
+      user_id: user_id,
       service_name: req.body.service_name,
       category_id: req.body.category_id,
       service_photo: file.originalname,
@@ -77,24 +82,15 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
       service_edited_date: new Date(),
     };
 
+    // item: req.body.json
+
     console.log("main service", newServiceItem);
 
-    const items = JSON.parse(requestBody.items);
-
-    console.log(items);
-
-    const subServiceItems = [
-      {
-        sub_service_name: items.sub_service_name,
-        unit: items.unit,
-        price_per_unit: items.price_per_unit,
-        sub_service_quantity: 1,
-      },
-    ];
+    const subServiceItems = req.body.items.map(item => JSON.parse(item));
 
     console.log("sub service data", subServiceItems);
 
-    // Upload file to Supabase storage
+        // Upload file to Supabase storage
     const uploadResult = await supabase.storage
       .from("home_service")
       .upload(`service_photo/${Date.now()}${file.originalname}`, file.buffer, {
@@ -161,7 +157,7 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
         message: "Error inserting sub_service data to Supabase",
       });
     }
-
+    
     return res.status(200).send("Service DATA uploaded successfully");
   } catch (error) {
     console.error("Error on DATA uploading", error);
@@ -169,7 +165,6 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
   }
 });
 
-//API ROUTE to update service
 serviceRouter.put("/:id", async (req, res) => {
   try {
     const serviceId = req.params.id; 
@@ -261,7 +256,6 @@ serviceRouter.put("/:id", async (req, res) => {
     });
   }
 });
-
 
 
 
