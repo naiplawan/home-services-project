@@ -1,11 +1,8 @@
 import { Router } from "express";
 import supabase from "../utils/supabase.js";
 import multer from "multer";
-//import { protect } from "../middlewares/protects.js";
 
 const serviceRouter = Router();
-// comment ออก เพราะว่า user ที่ไม่ได้ login สามารถดูรายการ services ได้ด้วย
-//serviceRouter.use(protect);
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -105,13 +102,20 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
         upsert: false,
         contentType: file.mimetype,
       });
+      console.log('uploadresult', uploadResult)
 
-    // Get public URL for the uploaded file
-    const servicePhotourl = supabase.storage
-      .from("home_service")
-      .getPublicUrl(`service_photo/${Date.now()}${file.originalname}`);
+      if (!uploadResult.error) {
+        // Get public URL for the uploaded file
+        const servicePhotourl =  `https://tqjclbmprqjrgdrvylqd.supabase.co/storage/v1/object/public/home_service/${uploadResult.data.path}`;
+        console.log(uploadResult.data.path);
 
-    newServiceItem["service_photo"] = servicePhotourl;
+      
+        // Assign the URL directly to service_photo
+        newServiceItem["service_photo"] = servicePhotourl;
+      } else {
+        console.error("Error uploading file to Supabase storage", uploadResult.error);
+        return res.status(500).json({ message: "Error uploading file to Supabase storage" });
+      }
 
     // Insert new service item
     const { data: serviceData, error: serviceError } = await supabase
