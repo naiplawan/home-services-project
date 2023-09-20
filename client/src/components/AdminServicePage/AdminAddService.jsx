@@ -19,6 +19,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 
+
 function AddService() {
   const { Dragger } = Upload;
   const navigate = useNavigate();
@@ -65,8 +66,13 @@ function AddService() {
 
       console.log('ก่อนส่ง',user_id)
 
+      const user_id = localStorage.getItem('user_id');
+
+      console.log('ก่อนส่ง',user_id)
+
       const formData = new FormData();
       formData.append('user_id', user_id);
+
       formData.append("service_name", values.service_name);
 
       formData.append("category_id", selectedCategoryId);
@@ -223,7 +229,7 @@ function AddService() {
                     handleFileChange(file);
                     return false;
                   }}
-                  maxFileSize={5000}
+                  maxFileSize={5 * 1024 * 1024}
                   showUploadList={false}
                   className="relative"
                 >
