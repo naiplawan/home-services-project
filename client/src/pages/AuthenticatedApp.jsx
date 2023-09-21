@@ -67,12 +67,12 @@ function AuthenticatedApp() {
             element={<AllStepCheckOutForm />}
           />
           <Route
-            path="/customer-services-list/:serviceId"
+            path="/customer-services-list/:userId"
             element={<CustomerServiceListPage />}
           />
 
           <Route
-            path="/customer-services-history/:serviceId"
+            path="/customer-services-history/:userId"
             element={<CustomerServiceHistoryPage />}
           />
         </Routes>
