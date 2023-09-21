@@ -122,7 +122,11 @@ function AdminServiceList() {
               >
                 <p className="pl-[15%]">เพิ่มบริการ</p>
                 <p className="pt-2 pl-[15%]">
-                  <img src={image.plusSign} alt="Plus Symbol" className="w-[10px] h-[10px]" />
+                  <img
+                    src={image.plusSign}
+                    alt="Plus Symbol"
+                    className="w-[10px] h-[10px]"
+                  />
                 </p>
               </button>
             </div>
@@ -134,8 +138,10 @@ function AdminServiceList() {
         {service.length === 0 ? (
           <p>Loading...</p>
         ) : (
-          <div className="category-li
-         st w-[100%]">
+          <div
+            className="category-li
+         st w-[100%]"
+          >
             <ul>
               <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300">
                 <span className="text-grey700 mx-[7%]">ลำดับ</span>
@@ -152,79 +158,94 @@ function AdminServiceList() {
                     {service &&
                       service.data &&
                       service.data
-                      .filter((serviceItem) =>
-                        serviceItem.service_name.includes(keyword)
-                      )
-                      .map((serviceItem, index) => (
-                        <Draggable
-                          key={serviceItem.service_id.toString()}
-                          draggableId={serviceItem.service_id.toString()}
-                          index={index}
-                        >
-                          {(provided) => (
-                            <li
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              className="flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
-                            >
-                              <div>
-                                <img src={drag} className="w-[30px]" alt="Drag" />
-                              </div>
-                              <div className="service-detail cursor-pointer flex justify-between w-[100%] text-black h-[88px] items-center">
-                                <div
-                                  className={`w-[100%] ml-2% rounded-lg justify-center flex ${
-                                    serviceItem.category?.category_name
-                                      ? getCategoryColor(
-                                          serviceItem.category.category_id
-                                        )
-                                      : ""
-                                  }`}
-                                  onClick={() =>
-                                    navigate(
-                                      `/admin-service-detail/${serviceItem.service_id}`
-                                    )
-                                  }
-                                >
-                                  <div className="w-[20%]">{index + 1}</div>
-                                  <div className="w-[30%] ml-[2%] font-light">
-                                    {serviceItem.service_name}
-                                  </div>
-                                  <span>{serviceItem.category?.category_name}</span>
-                                </div>
-                                <span className="-[50%] ml-[12%]">
-                                  {dateFormat(serviceItem.service_created_date)}
-                                </span>
-                                <span className="w-[50%] mr-[10%]">
-                                  {dateFormat(serviceItem.service_edited_date)}
-                                </span>
-                              </div>
-
-                              {/* Delete */}
-                              {serviceItem.service_id !== serviceIdToDelete && (
-                                <div className="pr-[5%] flex h-[88px] items-center justify-center">
+                        .filter((serviceItem) =>
+                          serviceItem.service_name.includes(keyword)
+                        )
+                        .map((serviceItem, index) => (
+                          <Draggable
+                            key={serviceItem.service_id.toString()}
+                            draggableId={serviceItem.service_id.toString()}
+                            index={index}
+                          >
+                            {(provided) => (
+                              <li
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className="flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
+                              >
+                                <div>
                                   <img
-                                    className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
-                                    alt="Delete"
-                                    src={image.trashIcon}
-                                    onClick={() => {
-                                      showDeleteServiceAlert(serviceItem.service_id);
-                                    }}
+                                    src={drag}
+                                    className="w-[30px]"
+                                    alt="Drag"
                                   />
-                                  <img
-                                    className="cursor-pointer w-[25px] h-[25px]"
-                                    alt="Edit"
-                                    src={image.editIcon}
+                                </div>
+                                <div className="service-detail cursor-pointer flex justify-between w-[100%] text-black h-[88px] items-center">
+                                  <div
+                                    className={`w-[100%] ml-2% rounded-lg justify-center flex ${
+                                      serviceItem.category?.category_name
+                                        ? getCategoryColor(
+                                            serviceItem.category.category_id
+                                          )
+                                        : ""
+                                    }`}
                                     onClick={() =>
-                                      navigate('/admin-service-edit/:serviceId')
+                                      navigate(
+                                        `/admin-service-detail/${serviceItem.service_id}`
+                                      )
                                     }
-                                  />
+                                  >
+                                    <div className="w-[20%]">{index + 1}</div>
+                                    <div className="w-[30%] ml-[2%] font-light">
+                                      {serviceItem.service_name}
+                                    </div>
+                                    <span>
+                                      {serviceItem.category?.category_name}
+                                    </span>
+                                  </div>
+                                  <span className="-[50%] ml-[12%]">
+                                    {dateFormat(
+                                      serviceItem.service_created_date
+                                    )}
+                                  </span>
+                                  <span className="w-[50%] mr-[10%]">
+                                    {dateFormat(
+                                      serviceItem.service_edited_date
+                                    )}
+                                  </span>
                                 </div>
-                              )}
-                            </li>
-                          )}
-                        </Draggable>
-                      ))}
+
+                                {/* Delete */}
+                                {serviceItem.service_id !==
+                                  serviceIdToDelete && (
+                                  <div className="pr-[5%] flex h-[88px] items-center justify-center">
+                                    <img
+                                      className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
+                                      alt="Delete"
+                                      src={image.trashIcon}
+                                      onClick={() => {
+                                        showDeleteServiceAlert(
+                                          serviceItem.service_id
+                                        );
+                                      }}
+                                    />
+                                    <img
+                                      className="cursor-pointer w-[25px] h-[25px]"
+                                      alt="Edit"
+                                      src={image.editIcon}
+                                      onClick={() =>
+                                        navigate(
+                                          "/admin-service-edit/:serviceId"
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                )}
+                              </li>
+                            )}
+                          </Draggable>
+                        ))}
                   </ul>
                 )}
               </Droppable>
@@ -237,7 +258,9 @@ function AdminServiceList() {
             hideFunction={hideDeleteServiceAlert}
             textAlert="ยืนยันการลบรายการ"
             alertQuestion={`คุณต้องการลบรายการ '${
-              service.find((serviceItem) => serviceItem.service_id === serviceIdToDelete)?.service_name
+              service.find(
+                (serviceItem) => serviceItem.service_id === serviceIdToDelete
+              )?.service_name
             }' ใช่หรือไม่ ?`}
             primary="ลบรายการ"
             secondary="ยกเลิก"
