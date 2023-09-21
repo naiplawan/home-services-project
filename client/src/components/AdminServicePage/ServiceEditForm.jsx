@@ -7,7 +7,7 @@ import {
   InputNumber,
   Image,
   Button,
-  Modal
+  Modal,
 } from "antd";
 import {
   LoadingOutlined,
@@ -50,19 +50,20 @@ function ServiceEditForm() {
    //state for sub_service
    const [subService, setSubService] = useState([])
 
-   console.log('อันนี้คือซับ', subService)
+  
 
-    //state for image
+
+   console.log('อันนี้คือซับ', subService)
+   console.log('อันนี้คือซับ', service.sub_service.sub_service_name)
+
+  //state for image
   const [selectedImage, setSelectedImage] = useState(null);
   const [fileList, setFileList] = useState([]);
-  const [currentImage, setCurrentImage] = useState("")
+  const [currentImage, setCurrentImage] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
 
- 
-
   const handleFileChange = (file) => {
-
-    console.log('file', file)
+    console.log("file", file);
     const reader = new FileReader();
 
     reader.onload = (e) => {
@@ -75,17 +76,16 @@ function ServiceEditForm() {
 
   const handleDeleteImage = () => {
     setSelectedImage(null);
-    setCurrentImage(null)
+    setCurrentImage(null);
   };
 
   const handleOk = () => {
     setIsModalVisible(false);
- };
+  };
 
- const handleCancel = () => {
+  const handleCancel = () => {
     setIsModalVisible(false);
- };
-
+  };
 
   // const handleInputChange = (e) => {
   //   const { key, value } = e.target;
@@ -132,7 +132,7 @@ function ServiceEditForm() {
     }
   };
 
-  console.log(currentImage)
+  console.log(currentImage);
 
   // put data API area
   const handleSubmitEdit = async (values) => {
@@ -177,8 +177,6 @@ function ServiceEditForm() {
     }
   };
 
- 
-
   // use effect
   // get category to map
   useEffect(() => {
@@ -196,7 +194,7 @@ function ServiceEditForm() {
     getService(params.serviceId);
   }, [params.serviceId]);
 
-  console.log('all data', data)
+  console.log("all data", data);
 
   return (
     <>
@@ -284,47 +282,57 @@ function ServiceEditForm() {
                 <div className="text-grey700 w-52 text-base font-medium ">
                   รูปภาพ
                 </div>
-               
+
                 <div className="w-3/4 h-40 relative">
-                <img src={currentImage}/>
-                  <Upload.Dragger
-                    name="file"
-                    accept=".png,.jpg,.jpeg"
-                    beforeUpload={(file) => {
-                      setFileList([file]);
-                      handleFileChange(file);
-                      return false;
-                    }}
-                    maxFileSize={5 * 1024 * 1024}
-                    showUploadList={false}
-                    className="relative"
-                    // disabled={selectedImage===null}
-                  >
+                  {currentImage && (
+                    <div>
+                      <img src={currentImage} />
+                    </div>
+                  )}
+
+                  {!currentImage && (
+                    <Upload.Dragger
+                      name="file"
+                      accept=".png,.jpg,.jpeg"
+                      beforeUpload={(file) => {
+                        setFileList([file]);
+                        handleFileChange(file);
+                        return false;
+                      }}
+                      maxFileSize={5 * 1024 * 1024}
+                      showUploadList={false}
+                      className="relative"
+                    >
+                       {selectedImage && (
+                    <div>
+                      <Image src={selectedImage} alt="uploaded" width={144} />
                     
-                    {selectedImage && (
+                    </div>
+                  )}
+                  <div>
+                   
+                  </div>
                       <div>
-                        <Image src={service.service_photo} alt="uploaded" width={144} />
+                        <InboxOutlined style={{ fontSize: "36px" }} />
+                        <p className="ant-upload-text">อัพโหลดรูปภาพ</p>
+                        <p className="ant-upload-hint">
+                          PNG, JPG ขนาดไม่เกิน 5MB
+                        </p>
+                      </div>
+                      <div className="text-grey700 text-xs z-0 mt-1">
+                        ขนาดภาพที่แนะนำ: 1440 x 225 PX
                        
                       </div>
-                    )}
-                    <div>
-                      {!selectedImage && (
-                        <>
-                          <InboxOutlined style={{ fontSize: "36px" }} />
-                          <p className="ant-upload-text">อัพโหลดรูปภาพ</p>
-                          <p className="ant-upload-hint">
-                            PNG, JPG ขนาดไม่เกิน 5MB
-                          </p>
-                        </>
-                      )}
-                    </div>
-                  </Upload.Dragger>
+                    </Upload.Dragger>
+                  )}
                   <div className="text-grey700 text-xs z-0 mt-1">
                     ขนาดภาพที่แนะนำ: 1440 x 225 PX
-                    <span> <Button onClick={handleDeleteImage}>Delete</Button></span>
+                    <span>
+                      {" "}
+                      <Button onClick={handleDeleteImage}>Delete</Button>
+                    </span>
                   </div>
                 </div>
-                
               </div>
 
               <hr className="mb-10 text-grey300 "></hr>
