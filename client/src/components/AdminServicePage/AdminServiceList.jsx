@@ -23,6 +23,8 @@ function AdminServiceList() {
     }
   };
 
+  console.log(service)
+
   useEffect(() => {
     getServices();
   }, []);

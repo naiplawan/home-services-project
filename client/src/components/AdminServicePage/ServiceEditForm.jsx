@@ -27,8 +27,14 @@ function ServiceEditForm() {
 
   //state for category
   const [category, setCategory] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("เลือกหมวดหมู่");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [currentCategory, setCurrentCategory] = useState([])
 
+  const categoryName = currentCategory.category_name
+
+  console.log(categoryName)
+
+  console.log('อันนี้แคท', currentCategory)
 
   //state for all
   const [data, setData] = useState([]);
@@ -42,7 +48,9 @@ function ServiceEditForm() {
   );
 
    //state for sub_service
-   const [subService, serSubService] = useState([])
+   const [subService, setSubService] = useState([])
+
+   console.log('อันนี้คือซับ', subService)
 
     //state for image
   const [selectedImage, setSelectedImage] = useState(null);
@@ -106,8 +114,9 @@ function ServiceEditForm() {
       );
       setService(response.data.data);
       setEditableServiceName(response.data.data.service_name);
-      setData(response.data.data)
       setCurrentImage(response.data.data.service_photo)
+      setCurrentCategory(response.data.data.category)
+      setSubService(response.data.data.sub_service)
       console.log('what is this', response.data.data);
       // setSelectedImage(response.data.image_url);
       // setFileList([
@@ -255,9 +264,7 @@ function ServiceEditForm() {
 
               <Form.Item label={<span>หมวดหมู่</span>} colon={false}>
                 <Select
-                 value={
-                 selectedCategory
-                }
+                  value={categoryName}
                   style={{ width: "50%" }}
                   onChange={(value) => setSelectedCategory(value)}
                 >

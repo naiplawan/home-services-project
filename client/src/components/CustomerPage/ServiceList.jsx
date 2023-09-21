@@ -94,7 +94,7 @@ function ServiceList() {
         const data = response.data.data;
         setServices(data); // นำข้อมูลที่ได้มาเก็บใน state
         setLoading(false);
-        console.log(data);
+        console.log('service', data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -102,6 +102,7 @@ function ServiceList() {
 
     fetchData();
   }, []);
+  
   return (
     <>
       <div className="Header relative">
