@@ -18,13 +18,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import arrow from "../../assets/AdminPhoto/arrow.png";
+import arrow from "../../assets/AdminPhoto/arrow.png";
 
 function ServiceEditForm() {
+  //render component and package area
+  const navigate = useNavigate();
   //render component and package area
   const navigate = useNavigate();
   const params = useParams();
   const { Dragger } = Upload;
 
+  //state for category
   //state for category
   const [category, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -66,9 +70,11 @@ function ServiceEditForm() {
     console.log("file", file);
     const reader = new FileReader();
 
+
     reader.onload = (e) => {
       setSelectedImage(e.target.result);
     };
+
 
     reader.readAsDataURL(file);
     return false;
@@ -139,6 +145,8 @@ function ServiceEditForm() {
     try {
       const selectedCategoryId = category.find(
         (categoryItem) => categoryItem.category_name === selectedCategory
+      const selectedCategoryId = category.find(
+        (categoryItem) => categoryItem.category_name === selectedCategory
       )?.category_id;
 
       const formData = new FormData();
@@ -153,11 +161,13 @@ function ServiceEditForm() {
             sub_service_name: item.name,
             unit: item.unit,
             price_per_unit: item.cost,
+            price_per_unit: item.cost,
           })
         );
       });
 
       const response = await axios.put(
+        `http://localhost:4000/service/${params.serviceId}`,
         `http://localhost:4000/service/${params.serviceId}`,
         formData,
         {
@@ -181,6 +191,7 @@ function ServiceEditForm() {
   // get category to map
   useEffect(() => {
     axios
+      .get("http://localhost:4000/category")
       .get("http://localhost:4000/category")
       .then((response) => {
         setData(response.data.data); // Store data in state
