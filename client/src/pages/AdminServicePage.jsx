@@ -20,10 +20,6 @@ function AdminServicePage() {
     return (
         <div className="admin-service-page" >
             <SideBar />
-            <AdminServiceHeader 
-            setService={setService}
-            searchService={searchService}
-            setSearchService={setSearchService} />    
             <AdminServiceList
                   service={service}
                   deleteServiceId={deleteServiceId}
