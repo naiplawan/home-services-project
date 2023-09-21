@@ -90,14 +90,22 @@ function FilterBar({ onFilterChange }) {
                 <option value="All">บริการทั้งหมด</option>
                 {services &&
                   services.data &&
-                  services.data.map((service) => (
-                    <option
-                      key={service.service_id}
-                      value={service.category.category_name}
-                    >
-                      {service.category.category_name}
-                    </option>
-                  ))}
+                  services.data
+                    .reduce((uniqueCategories, service) => {
+                      if (
+                        !uniqueCategories.includes(
+                          service.category.category_name
+                        )
+                      ) {
+                        uniqueCategories.push(service.category.category_name);
+                      }
+                      return uniqueCategories;
+                    }, [])
+                    .map((categoryName, index) => (
+                      <option key={index} value={categoryName}>
+                        {categoryName}
+                      </option>
+                    ))}
               </select>
             </div>
             <div className="border-[#CCD0D7] border-l border-[1px] h-[44px] "></div>{" "}
