@@ -77,9 +77,9 @@ function RepairList () {
                                         </div>
                                     </div>
                                     <div className="text-base font-normal leading-normal text-grey700">
-                                        รายการ: {data.users.service[0].service_name}
+                                        รายการ: {data.users.service[index].service_name}
                                         <ul className="flex flex-col list-disc ml-3">
-                                            {data.users.service[0].sub_service.map((subService, index) => {
+                                            {data.users.service[index].sub_service.map((subService, index) => {
                                                 return (
                                                     <li
                                                         key={index}
@@ -114,7 +114,7 @@ function RepairList () {
                                         <div className="text-grey700 font-normal text-sm leading-normal flex gap-x-5 justify-end items-center">
                                             ราคารวม:
                                             <div className="text-lg text-black font-medium leading-normal">
-                                                {parseFloat(data.users.service[0].sub_service[0].checkout_quantity[0].checkout.total_price)
+                                                {parseFloat(data.users.service[1].sub_service[0].checkout_quantity[0].checkout.total_price)
                                                     .toFixed(2)}{" "}
                                                     ฿
                                             </div>

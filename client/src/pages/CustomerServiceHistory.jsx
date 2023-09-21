@@ -9,7 +9,7 @@ function CustomerServiceHistoryPage() {
     <>
       <Navbar />
       <Title title="ประวัติการซ่อม" />
-      <div className="flex justify-between px-[15vw] py-[2vw] bg-[#f0f0f0]">
+      <div className="flex justify-between px-[15vw] py-[6vh] bg-[#f0f0f0]">
         <SideNavbar />
         <ListHistory />
       </div>
