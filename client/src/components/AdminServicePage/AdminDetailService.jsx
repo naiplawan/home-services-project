@@ -38,6 +38,8 @@ function AdminDetailService() {
 
       console.log(serviceData)
 
+      console.log(serviceData)
+
       if (serviceData) {
         setService(serviceData);
       } else {
@@ -50,6 +52,8 @@ function AdminDetailService() {
       console.error("Error fetching service data:", error);
     }
   };
+
+  
 
   useEffect(() => {
     axios
