@@ -3,8 +3,10 @@ import Cleaning from "../../assets/homepagePhoto/Cleaning.png";
 import Air from "../../assets/homepagePhoto/Air.png";
 import Washing from "../../assets/homepagePhoto/Washing.png";
 import SellBlack from "../../assets/homepagePhoto/sellBlack.jsx";
+import { useNavigate } from "react-router-dom";
 
 function TopServices() {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col justify-center items-center top-20 h-full bg-[#f0f0f0]">
       <div className="pt-20">
