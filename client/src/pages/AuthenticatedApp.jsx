@@ -15,6 +15,8 @@ import AllStepCheckOutForm from "./AllStepCheckOutForm.jsx";
 import CustomerServiceListPage from "./CustomerServiceList.jsx";
 import CustomerServiceHistoryPage from "./CustomerServiceHistory.jsx";
 
+import AdminEditServicePage from "./AdminEditServicePage.jsx";
+
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
 
@@ -36,7 +38,7 @@ function AuthenticatedApp() {
           />
            <Route
             path="/admin-service-edit/:serviceId"
-            element={<AdminDetailServicePage />}
+            element={<AdminEditServicePage />}
           />
            <Route
             path="/admin-service-detail/:serviceId"
