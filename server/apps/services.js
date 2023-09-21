@@ -35,7 +35,7 @@ serviceRouter.get("/:id", async (req, res) => {
   try {
     const { data, error } = await supabase
       .from("service")
-      .select("*")
+      .select("*, sub_service(*), category(*)")
       .eq("service_id", serviceId);
 
     if (error) {
