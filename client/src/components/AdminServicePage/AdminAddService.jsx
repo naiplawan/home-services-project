@@ -177,7 +177,7 @@ function AddService() {
               </button>
             </div>
           </div>
-          <div className="bg-white m-10 rounded p-4 w-full max-w-[1120px] mx-auto">
+          <div  className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
             {/* flex flex-col items-start  */}
 
             <Form.Item
