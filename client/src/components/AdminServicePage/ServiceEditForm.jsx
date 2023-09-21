@@ -1,100 +1,47 @@
-import { Form, Input, Upload, Select, message, InputNumber, Image } from "antd";
-import { InboxOutlined } from "@ant-design/icons";
+import { Form, Input, Upload, Select, message, InputNumber, Image, Result } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
-// import  {useUtils}  from "../../hooks/utils";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
-import AdminEditedHeader from "../ServicePage/AdminEditHeader";
+import arrow from "../../assets/AdminPhoto/arrow.png";
 
 function ServiceEditForm() {
 
-  const params = useParams();
-  
-  const { Dragger } = Upload;
+  const [service, setService] = useState({});
   const navigate = useNavigate();
-  const { serviceId } = useParams();
+  const params = useParams();
 
-  const [editHeader, setEditHeader] = useState("");
+  // const { Dragger } = Upload;
+  // const navigate = useNavigate(); //ใช้
+  // // const { serviceId } = useParams(); //ใช้
 
-  const [data, setData] = useState([]);
-  const [category, setCategory] = useState([]);
+  // const [service, setService] = useState({}); //ใช้
 
-  const [selectedImage, setSelectedImage] = useState(null); //manage the selected image
-  const [selectedCategory, setSelectedCategory] = useState("เลือกหมวดหมู่");
-  const [fileList, setFileList] = useState([]);
-  const [form] = Form.useForm();
 
-  const [currentData, setCurrentData] = useState({
-    service_name: "",
-    category_id: "",
-    items: [],
-  });
+  // const [data, setData] = useState([]);
+  // const [category, setCategory] = useState([]);
 
-  useEffect(() => {
-    getServiceId(serviceId);
-  }, [serviceId]);
+  // const [selectedImage, setSelectedImage] = useState(null); //manage the selected image
+  // const [selectedCategory, setSelectedCategory] = useState("เลือกหมวดหมู่");
+  // const [fileList, setFileList] = useState([]);
+  // const [form] = Form.useForm();
 
-  useEffect(() => {
-    if (currentData) {
-      form.setFieldValue(currentData);
-    }
-  }, [currentData]);
+  // const [currentData, setCurrentData] = useState({
+  //   service_name: "",
+  //   category_id: "",
+  //   items: [],
+  // });
 
-  const getServiceId = async (serviceId) => {
+  // useEffect(() => {
+  //   if (currentData) {
+  //     form.setFieldValue(currentData);
+  //   }
+  // }, [currentData]);
+
+  const handleSubmitEdit = async (event) => {
+    event.preventDefault();
     try {
-      const response = await axios.get(
-        `http://localhost:4000/service/${serviceId}`
-      );
-      setData(response.data.data);
-      setCurrentData(response.data.data[0]);
-    } catch (error) {
-      console.error("เกิดข้อผิดพลาดในการเรียกข้อมูลหมวดหมู่:", error);
-    }
-  };
-
-  const handleFileChange = (file) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setSelectedImage(e.target.result);
-    };
-    reader.readAsDataURL(file);
-    return false;
-  };
-
-  const handleDeleteImage = () => {
-    setSelectedImage(null);
-  };
-
-  const handleSubmitEdit = async (values) => {
-    try {
-      const selectedCategoryId = category.data.find(
-        (category) => category.category_name === selectedCategory
-      )?.category_id;
-
-      const formData = new FormData();
-      formData.append("service_name", values.service_name);
-      formData.append("category_id", selectedCategoryId);
-      formData.append("file", fileList[0]);
-
-      values.items.forEach((item, index) => {
-        formData.append(
-          "items",
-          JSON.stringify({
-            sub_service_name: item.name,
-            unit: item.unit,
-            price_per_unit: item.cost, // Change cost to price_per_unit
-          })
-        );
-      });
-
-      // for (const [key, value] of formData.entries()) {
-      //   console.log(`${key}: ${value}`);
-      // }
-
       const response = await axios.put(
         `http://localhost:4000/service/${serviceId}`,
-        formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
@@ -112,51 +59,38 @@ function ServiceEditForm() {
     }
   };
 
-  const getServiceById = async (serviceId) => {
-    const result = await axios.get(
-      `http://localhost:4000/service/${serviceId}`
-    );
-    // setService(result.data.data);
-    setEditHeader(result.data.data[0].service_name);
+  const getService = async (serviceId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/service/${serviceId}`
+      );
+      const serviceData = response.data.data;
+
+      if (serviceData) {
+        setService(serviceData);
+      } else {
+        // Handle the case where the data is not valid
+        console.error("Service data is not valid:", serviceData);
+      }
+    } catch (error) {
+      console.error("Error fetching service data:", error);
+    }
   };
 
   useEffect(() => {
-    getServiceById(params.serviceId);
-  }, []);
+    getService(params.serviceId);
+  }, [params.serviceId]);
 
-  
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:4000/category`)
-      .then((response) => {
-        setData(response.data.data); // Store data in state
-        setCategory(response.data.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
-
-  console.log(data.data);
-  console.log(category);
-
-  // const isImage = (file) => {
-  //   const acceptedImageTypes = ['image/jpeg', 'image/png'];
-  //   if (!acceptedImageTypes.includes(file.type)) {
-  //     return false;
-  //   }
-  //   return true;
+  // const labelStyle = {
+  //   marginTop: "10px",
+  //   color: "var(--gray-900, #323640)",
+  //   fontFamily: "Prompt",
+  //   fontSize: "16px",
+  //   fontStyle: "normal",
+  //   fontWeight: 500,
+  //   lineHeight: "150%", // 24px
   // };
-
-  const labelStyle = {
-    marginTop: "10px",
-    color: "var(--gray-900, #323640)",
-    fontFamily: "Prompt",
-    fontSize: "16px",
-    fontStyle: "normal",
-    fontWeight: 500,
-    lineHeight: "150%", // 24px
-  };
 
   return (
     <>
@@ -165,28 +99,47 @@ function ServiceEditForm() {
         wrapperCol={{ span: 24 }}
         layout="horizontal"
         onFinish={handleSubmitEdit}
-        initialValues={currentData} // add initial values
+        // initialValues={currentData} // add initial values
       >
         <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
-          <AdminEditedHeader
-          title="บริการ"
-          name={editHeader}
-          back={() => navigate("/admin-service")}>
-            <button
-              className="btn-secondary w-28 h-11 "
-              type="button"
-              onClick={() => navigate("/admin-service")}
-            >
-              ยกเลิก
-            </button>
-            <button
-              className="btn-primary w-28 h-11"
-            >
-              ยืนยัน
-            </button>
-          </AdminEditedHeader>
-          <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
-
+          {/* header */}
+          <div key={service.service_id}>
+            <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
+              <div className="flex gap-[14px] h-12 w-fit">
+                <img
+                  src={arrow}
+                  className=" h-[40px] w-[40px] cursor-pointer hover:scale-110 transition"
+                  onClick={() => navigate("/admin-service")}
+                />
+                <div className="Header-name">
+                  <p className="service-text text-xs">บริการ</p>
+                  <h1
+                    name={service.serviceDetail}
+                    className="text-black   font-semibold text-xl"
+                  >
+                    {service.service_name}
+                  </h1>
+                </div>
+              </div>
+              <div className="flex">
+                <button
+                  className="btn-secondary flex items-center justify-center text-base font-medium w-28 h-11"
+                  onClick={() => navigate("/admin-service")}
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  className="btn-primary flex items-center justify-center ml-6 text-base font-medium w-28 h-11"
+                  type="submit"
+                >
+                  ยืนยัน
+                </button>
+              </div>
+            </div>
+            {/* content */}
+            <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
+              
+            </div>
           </div>
         </div>
       </Form>
