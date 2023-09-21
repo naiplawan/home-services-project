@@ -244,31 +244,36 @@ function AdminServiceList() {
                                   </span>
                                 </div>
 
-                              {/* Delete */}
-                              {serviceItem.service_id !== serviceIdToDelete && (
-                                <div className="pr-[5%] flex h-[88px] items-center justify-center">
-                                  <img
-                                    className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
-                                    alt="Delete"
-                                    src={image.trashIcon}
-                                    onClick={() => {
-                                      showDeleteServiceAlert(serviceItem.service_id);
-                                    }}
-                                  />
-                                  <img
-                                    className="cursor-pointer w-[25px] h-[25px]"
-                                    alt="Edit"
-                                    src={image.editIcon}
-                                    onClick={() =>
-                                      navigate(`/admin-service-edit/${serviceItem.service_id}`)
-                                    }
-                                  />
-                                </div>
-                              )}
-                            </li>
-                          )}
-                        </Draggable>
-                      ))}
+                                {/* Delete */}
+                                {serviceItem.service_id !==
+                                  deleteConfirmation && (
+                                  <div className="pr-[5%] flex h-[88px] items-center justify-center">
+                                    <img
+                                      className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
+                                      alt="Delete"
+                                      src={image.trashIcon}
+                                      onClick={() =>
+                                        showDeleteConfirmation(
+                                          serviceItem.service_id
+                                        )
+                                      }
+                                    />
+                                    <img
+                                      className="cursor-pointer w-[25px] h-[25px]"
+                                      alt="Edit"
+                                      src={image.editIcon}
+                                      onClick={() =>
+                                        navigate(
+                                          `/admin-service-edit/${serviceItem.service_id}`
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                )}
+                              </li>
+                            )}
+                          </Draggable>
+                        ))}
                   </ul>
                 )}
               </Droppable>

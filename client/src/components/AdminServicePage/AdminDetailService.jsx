@@ -16,6 +16,8 @@ function AdminDetailService() {
       );
       const serviceData = response.data.data;
 
+      console.log(serviceData)
+
       if (serviceData) {
         setService(serviceData);
       } else {
@@ -26,6 +28,8 @@ function AdminDetailService() {
       console.error("Error fetching service data:", error);
     }
   };
+
+  
 
   useEffect(() => {
     getService(params.serviceId);
