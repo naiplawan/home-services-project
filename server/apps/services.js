@@ -61,8 +61,10 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
   try {
     console.log(req.body);
 
+
     const file = req.file;
     const requestBody = req.body;
+
 
     console.log("photo", req.file);
     const user_id = req.body.user_id;
