@@ -42,7 +42,7 @@ function AuthenticatedApp() {
           />
           <Route
             path="/admin-service-detail/:serviceId"
-            element={<AdminDetailService />}
+            element={<AdminDetailServicePage />}
           />
           <Route
             path="/admin-category-detail/:categoryId"
