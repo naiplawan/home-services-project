@@ -171,13 +171,13 @@ function AdminServiceList() {
          st w-[100%]"
           >
             <ul>
-              <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300">
-                <span className="text-grey700 mx-[7%]">ลำดับ</span>
-                <span className="text-grey700 mx-[1%]">ชื่อหมวดบริการ</span>
-                <span className="p-3 font-normal">หมวดหมู่</span>
-                <span className="text-grey700 mx-[15%]">สร้างเมื่อ</span>
-                <span className="text-grey700 mx-[]">แก้ไขล่าสุด</span>
-                <span className="text-grey700 mx-[30%] mr-[2%]">Action</span>
+              <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300 gap-[120px]">
+                <span className="text-grey700 pl-32">ลำดับ</span>
+                <span className="text-grey700 pl-10">ชื่อหมวดบริการ</span>
+                <span className="text-grey700 pl-[110px]">หมวดหมู่</span>
+                <span className="text-grey700 pl-32">สร้างเมื่อ</span>
+                <span className="text-grey700 pl-20">แก้ไขล่าสุด</span>
+                <span className="text-grey700 pl-10">Action</span>
               </li>
 
               <Droppable droppableId="service-list">
@@ -202,16 +202,16 @@ function AdminServiceList() {
                                 {...provided.dragHandleProps}
                                 className="flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
                               >
-                                <div>
+                                <div className="w-20 flex justify-start items-center">
                                   <img
                                     src={drag}
-                                    className="w-[30px]"
+                                    className="w-72]"
                                     alt="Drag"
                                   />
                                 </div>
                                 <div className="service-detail cursor-pointer flex justify-between w-[100%] text-black h-[88px] items-center">
                                   <div
-                                    className={`w-[100%] ml-2% rounded-lg justify-center flex ${
+                                    className={`w-[150%] rounded-lg justify-center flex ${
                                       serviceItem.category?.category_name
                                         ? getCategoryColor(
                                             serviceItem.category.category_id
@@ -224,20 +224,20 @@ function AdminServiceList() {
                                       )
                                     }
                                   >
-                                    <div className="w-[20%]">{index + 1}</div>
-                                    <div className="w-[30%] ml-[2%] font-light">
+                                    <div className="w-[5%]">{index + 1}</div>
+                                    <div className="w-[30%] ml-32 font-light">
                                       {serviceItem.service_name}
                                     </div>
-                                    <span>
+                                    <span className="w-[20%] ml-[10%]">
                                       {serviceItem.category?.category_name}
                                     </span>
                                   </div>
-                                  <span className="-[50%] ml-[12%]">
+                                  <span className="w-[50%] ml-[3%]">
                                     {dateFormat(
                                       serviceItem.service_created_date
                                     )}
                                   </span>
-                                  <span className="w-[50%] mr-[10%]">
+                                  <span className="w-[50%]">
                                     {dateFormat(
                                       serviceItem.service_edited_date
                                     )}
