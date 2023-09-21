@@ -19,6 +19,7 @@ import name from "./icons/CustomerName.svg";
 import email from "./icons/email.svg";
 import arrowBlue from "./icons/arrow-blue.svg";
 import arrowWhite from "./icons/arrow-white.svg";
+import Header from "./icons/Header-service.jpg";
 
 const image = {
   orderIcon,
@@ -42,6 +43,7 @@ const image = {
   email,
   arrowBlue,
   arrowWhite,
+  Header,
 };
 
 export default image;
