@@ -10,8 +10,7 @@ import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 function AdminServiceList() {
   const [keyword, setKeyword] = useState("");
   const [service, setServices] = useState([]);
-  const [serviceIdToDelete, setServiceIdToDelete] = useState(null);
-  const [deleteService, setDeleteService] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -62,27 +61,56 @@ function AdminServiceList() {
     localStorage.setItem("serviceOrder", JSON.stringify(reorderedServices));
   };
 
-  const hideDeleteServiceAlert = () => {
-    setDeleteService(false);
-  };
+  // const hideDeleteServiceAlert = () => {
+  //   setDeleteService(false);
+  // };
 
-  const deleteServiceById = async (serviceId) => {
+  // const deleteServiceById = async (serviceId) => {
+  //   try {
+  //     await axios.delete(`http://localhost:4000/service/${serviceId}`);
+  //     getServices();
+  //     hideDeleteServiceAlert();
+  //   } catch (error) {
+  //     setError("เกิดข้อผิดพลาดในการลบบริการ");
+  //   }
+  // };
+
+  // const showDeleteServiceAlert = (serviceId) => {
+  //   setServiceIdToDelete(serviceId);
+  //   setDeleteService(true);
+  // };
+
+  // const handleDelete = () => {
+  //   setDeleteService(false);
+  // };
+  const [service_Id, setService_Id] = useState();
+
+  const deleteCategoryById = async (serviceId) => {
     try {
       await axios.delete(`http://localhost:4000/service/${serviceId}`);
       getServices();
-      hideDeleteServiceAlert();
+      hide();
     } catch (error) {
-      setError("เกิดข้อผิดพลาดในการลบบริการ");
+      console.error("เกิดข้อผิดพลาดในการลบหมวดหมู่:", error);
     }
   };
 
-  const showDeleteServiceAlert = (serviceId) => {
-    setServiceIdToDelete(serviceId);
-    setDeleteService(true);
+  const hide = () => {
+    setDeleteConfirmation(false);
   };
 
   const handleDelete = () => {
-    deleteServiceById(serviceIdToDelete);
+    deleteCategoryById(service_Id);
+    setDeleteConfirmation(false);
+  };
+
+  const showDeleteConfirmation = (serviceId) => {
+    setService_Id(serviceId);
+    setDeleteConfirmation(true);
+  };
+
+  const hideDeleteConfirmation = () => {
+    setDeleteConfirmation(false);
   };
 
   const getCategoryColor = (categoryId) => {
@@ -218,17 +246,17 @@ function AdminServiceList() {
 
                                 {/* Delete */}
                                 {serviceItem.service_id !==
-                                  serviceIdToDelete && (
+                                  deleteConfirmation && (
                                   <div className="pr-[5%] flex h-[88px] items-center justify-center">
                                     <img
                                       className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
                                       alt="Delete"
                                       src={image.trashIcon}
-                                      onClick={() => {
-                                        showDeleteServiceAlert(
+                                      onClick={() =>
+                                        showDeleteConfirmation(
                                           serviceItem.service_id
-                                        );
-                                      }}
+                                        )
+                                      }
                                     />
                                     <img
                                       className="cursor-pointer w-[25px] h-[25px]"
@@ -252,14 +280,14 @@ function AdminServiceList() {
             </ul>
           </div>
         )}
-        {deleteService && (
+        {deleteConfirmation && (
           <AlertBoxDelete
             deleteFunction={handleDelete}
-            hideFunction={hideDeleteServiceAlert}
+            hideFunction={hideDeleteConfirmation}
             textAlert="ยืนยันการลบรายการ"
             alertQuestion={`คุณต้องการลบรายการ '${
-              service.find(
-                (serviceItem) => serviceItem.service_id === serviceIdToDelete
+              service.data.find(
+                (serviceItem) => serviceItem.service_id === service_Id
               )?.service_name
             }' ใช่หรือไม่ ?`}
             primary="ลบรายการ"
