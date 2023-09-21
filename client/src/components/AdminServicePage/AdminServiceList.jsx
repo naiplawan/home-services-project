@@ -171,13 +171,13 @@ function AdminServiceList() {
          st w-[100%]"
           >
             <ul>
-              <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300 gap-[120px]">
-                <span className="text-grey700 pl-32">ลำดับ</span>
-                <span className="text-grey700 pl-10">ชื่อหมวดบริการ</span>
-                <span className="text-grey700 pl-[110px]">หมวดหมู่</span>
-                <span className="text-grey700 pl-32">สร้างเมื่อ</span>
-                <span className="text-grey700 pl-20">แก้ไขล่าสุด</span>
-                <span className="text-grey700 pl-10">Action</span>
+              <li className="flex w-[100%] text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300 gap-[20px]">
+                <span className="text-grey700 pl-[6%]">ลำดับ</span>
+                <span className="text-grey700 pl-[5%]">ชื่อหมวดบริการ</span>
+                <span className="text-grey700 pl-[9%]">หมวดหมู่</span>
+                <span className="text-grey700 pl-[12%]">สร้างเมื่อ</span>
+                <span className="text-grey700 pl-[13%]">แก้ไขล่าสุด</span>
+                <span className="text-grey700 pl-[9%]">Action</span>
               </li>
 
               <Droppable droppableId="service-list">
@@ -211,7 +211,7 @@ function AdminServiceList() {
                                 </div>
                                 <div className="service-detail cursor-pointer flex justify-between w-[100%] text-black h-[88px] items-center">
                                   <div
-                                    className={`w-[150%] rounded-lg justify-center flex ${
+                                    className={`w-[100%] rounded-lg justify-center flex ${
                                       serviceItem.category?.category_name
                                         ? getCategoryColor(
                                             serviceItem.category.category_id
@@ -225,10 +225,10 @@ function AdminServiceList() {
                                     }
                                   >
                                     <div className="w-[5%]">{index + 1}</div>
-                                    <div className="w-[30%] ml-32 font-light">
+                                    <div className="w-[40%] ml-16 font-light">
                                       {serviceItem.service_name}
                                     </div>
-                                    <span className="w-[20%] ml-[10%]">
+                                    <span className="w-[30%] ml-[5%]">
                                       {serviceItem.category?.category_name}
                                     </span>
                                   </div>
@@ -264,7 +264,7 @@ function AdminServiceList() {
                                       src={image.editIcon}
                                       onClick={() =>
                                         navigate(
-                                          "/admin-service-edit/:serviceId"
+                                          `/admin-service-edit/${serviceItem.service_id}`
                                         )
                                       }
                                     />

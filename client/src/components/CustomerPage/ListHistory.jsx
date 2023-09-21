@@ -78,9 +78,9 @@ function ListHistory () {
                                         </div>
                                     </div>
                                     <div className="text-base font-normal leading-normal text-grey700">
-                                        รายการ: {data.users.service[0].service_name}
+                                        รายการ: {data.users.service[index].service_name}
                                         <ul className="flex flex-col list-disc ml-3">
-                                            {data.users.service[0].sub_service.map((subService, index) => {
+                                            {data.users.service[index].sub_service.map((subService, index) => {
                                                 return (
                                                     <li
                                                         key={index}
@@ -114,9 +114,6 @@ function ListHistory () {
                                             </div>
                                         </div>
                                     </div>
-                                    <button className="btn-primary w-34">
-                                        ดูรายละเอียด      
-                                    </button>
                                 </div>
                             </div>
                         );

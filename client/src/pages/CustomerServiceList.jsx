@@ -9,7 +9,7 @@ function CustomerServiceListPage() {
     <>
       <Navbar />
       <Title title="รายการคำสั่งซ่อม" />
-      <div className="flex justify-between px-[15vw] py-[2vw] bg-[#f0f0f0]">
+      <div className="h-[100%] flex justify-between px-[15vw] py-[6vh] bg-[#f0f0f0]">
         <SideNavbar />
         <RepairList />
       </div>
