@@ -102,7 +102,7 @@ function AdminServiceList() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <header className="bg-bg h-[100%] pb-[4%] pl-60">
+      <header className="bg-bg h-[100%] pl-60">
         <div className="flex flex-col items-center">
           <div className="header-name justify-between flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white text-grey600 pb-[20px] border-b border-grey300">
             <h1 className="text-black font-semibold text-xl">บริการ</h1>
@@ -130,12 +130,12 @@ function AdminServiceList() {
         </div>
       </header>
       {error && <p className="text-red-500 mb-4">{error}</p>}
-      <div className="results w-[95%]">
+      <div className="categories-data min-h-screen bg-bg p-[41px] ml-60">
         {service.length === 0 ? (
           <p>Loading...</p>
         ) : (
           <div className="category-li
-         st mt-10 w-[100%]">
+         st w-[100%]">
             <ul>
               <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300">
                 <span className="text-grey700 mx-[7%]">ลำดับ</span>
