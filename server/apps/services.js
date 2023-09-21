@@ -259,6 +259,33 @@ serviceRouter.put("/:id", async (req, res) => {
   }
 });
 
+//API ROUTE to delete exisitng service item
+serviceRouter.delete("/:id", async (req, res) => {
+
+  try {
+    const serviceId = req.params.id;
+
+    const { data, error } = await supabase
+      .from("service")
+      .delete()
+      .eq("service_id", serviceId);
+
+    if (error) {
+      return res.status(500).json({ error: "ไม่สามารถลบได้" });
+    }
+
+    if (data && data.length === 0) {
+      return res
+        .status(404)
+        .json({ error: `ไม่พบรายการที่ตรงกับ ${serviceId}` });
+    }
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "ไม่สามารถลบได้" });
+  }
+});
+
 
 
 
