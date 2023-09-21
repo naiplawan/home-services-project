@@ -6,6 +6,8 @@ import AdminCategoryPage from "./AdminCategoryPage.jsx";
 import AdminServicePage from "./AdminServicePage.jsx";
 import AdminCreateCategory from "./AdminCreateCategory.jsx";
 import AdminDetailCategory from "./AdminDetailCategory.jsx";
+import AdminEditServicePage from "./AdminEditServicePage.jsx";
+import AdminDetailService from "./AdminDetailServicePage.jsx";
 import AdminDetailServicePage from "./AdminDetailServicePage.jsx";
 import AdminEditCategory from "./AdminEditCategory.jsx";
 
@@ -14,8 +16,6 @@ import CustomerServiceListDisplay from "./CustomerServiceListDisplay.jsx";
 import AllStepCheckOutForm from "./AllStepCheckOutForm.jsx";
 import CustomerServiceListPage from "./CustomerServiceList.jsx";
 import CustomerServiceHistoryPage from "./CustomerServiceHistory.jsx";
-
-import AdminEditServicePage from "./AdminEditServicePage.jsx";
 
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
