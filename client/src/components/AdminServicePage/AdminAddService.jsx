@@ -62,8 +62,6 @@ function AddService() {
         (category) => category.category_name === selectedCategory
       )?.category_id;
 
-   
-
       console.log('ก่อนส่ง',user_id)
 
       const user_id = localStorage.getItem('user_id');
@@ -236,7 +234,7 @@ function AddService() {
                   {selectedImage && (
                     <div>
                       <Image src={selectedImage} alt="uploaded" width={144} />
-                      <Button onClick={handleDeleteImage}>Delete</Button>
+                    
                     </div>
                   )}
                   <div>
@@ -253,6 +251,7 @@ function AddService() {
                 </Upload.Dragger>
                 <div className="text-grey700 text-xs z-0 mt-1">
                   ขนาดภาพที่แนะนำ: 1440 x 225 PX
+                  <span> <Button onClick={handleDeleteImage}>Delete</Button></span>
                 </div>
               </div>
             </div>
