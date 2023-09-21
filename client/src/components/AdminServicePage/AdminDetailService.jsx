@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import dateFormat from "../../utils/dateFormat.js";
 import arrow from "../../assets/AdminPhoto/arrow.png";
 
-function AdminDetailServicePage() {
+function AdminDetailService() {
   const [service, setService] = useState({});
   const navigate = useNavigate();
   const params = useParams();
@@ -88,4 +88,4 @@ function AdminDetailServicePage() {
   );
 }
 
-export default AdminDetailServicePage;
+export default AdminDetailService;
