@@ -50,11 +50,7 @@ function ServiceEditForm() {
    //state for sub_service
    const [subService, setSubService] = useState([])
 
-  
-
-
    console.log('อันนี้คือซับ', subService)
-    
 
   //state for image
   const [selectedImage, setSelectedImage] = useState(null);
