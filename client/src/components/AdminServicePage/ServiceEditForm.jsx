@@ -8,6 +8,7 @@ import {
   Image,
   Button,
   Modal,
+  Space,
 } from "antd";
 import {
   LoadingOutlined,
@@ -247,6 +248,7 @@ function ServiceEditForm() {
         wrapperCol={{ span: 24 }}
         layout="horizontal"
         onFinish={handleSubmitEdit}
+        initialValues={service}
       >
         <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
           {/* header */}
@@ -384,104 +386,99 @@ function ServiceEditForm() {
               <div className="mb-10 text-grey700 text-base font-medium ">
                 รายการบริการย่อย
               </div>
-              <Form.List name="items">
-                {(service, { add, remove }) => (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "16px",
-                    }}
-                  >
-                    {service.sub_service &&
-                      service.sub_service.map((subService, index) => (
-                        <div key={subService.key} style={{ display: "flex", gap: "16px" }}>
-                        <div style={{ flex: "1" }}>
-                          <Form.Item
-                            colon={false}
-                            label="ชื่อรายการ"
-                            labelAlign="top"
-                            labelCol={{ span: 24 }}
-                          >
-                            <Input
-                              name={`items[${index}].sub_service_name`} // Use the correct name
-                              value={subService.sub_service_name}
-                              onChange={(e) => handleInputChange(index, "sub_service_name", e)} // Handle input change
-                            />
-                          </Form.Item>
-                        </div>
-                          <div style={{ flex: "1" }}>
-                            <Form.Item
-                              colon={false}
-                              label="ค่าบริการ / 1 หน่วย"
-                              name={[field.name, "cost"]}
-                              labelAlign="top"
-                              labelCol={{ span: 24 }}
-                            >
-                              <InputNumber
-                                formatter={(value) =>
-                                  `฿ ${value}`.replace(
-                                    /\B(?=(\d{3})+(?!\d))/g,
-                                    ","
-                                  )
-                                }
-                                parser={(value) =>
-                                  value.replace(/฿\s?|(,*)/g, "")
-                                }
-                                name="price_per_unit"
-                                // value={formData.price_per_unit}
-                                // onChange={(value) =>
-                                //   setFormData({
-                                //     ...formData,
-                                //     price_per_unit: value,
-                                //   })
-                                // }
-                              />
-                            </Form.Item>
-                          </div>
-                          <div style={{ flex: "1" }}>
-                            <Form.Item
-                              colon={false}
-                              label="หน่วยการบริการ"
-                              name={[field.name, "unit"]}
-                              labelAlign="top"
-                              labelCol={{ span: 24 }}
-                            >
-                              <Input
-                                name="unit"
-                                // value={formData.unit}
-                                // onChange={handleChange}
-                              />
-                            </Form.Item>
-                          </div>
-                          <div
-                            style={{
-                              flex: "1",
-                              display: "flex",
-                              alignItems: "flex-end",
+              <Form.List name="service">
+                {(fields, { add, remove }) => (
+                  <>
+                    <div className="mb-10 text-grey700 text-base font-medium">
+                      รายการบริการย่อย
+                    </div>
+                    {fields.map(({ key, name, fieldKey, ...restField }) => (
+                      <Space
+                        key={key}
+                        style={{ display: "flex", marginBottom: 8 }}
+                        align="baseline"
+                      >
+                        <Form.Item
+                          {...restField}
+                          name={[name, "sub_service_name"]}
+                          label="ชื่อรายการ"
+                          fieldKey={[fieldKey, "sub_service_name"]}
+                          rules={[
+                            { required: true, message: "กรุณากรอกชื่อรายการ" },
+                          ]}
+                        >
+                          <Input
+                            className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                            placeholder="ชื่อรายการ"
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "price_per_unit"]}
+                          label="ค่าบริการ / 1 หน่วย"
+                          fieldKey={[fieldKey, "price_per_unit"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "กรุณากรอกค่าบริการ / 1 หน่วย",
+                            },
+                            { type: "number", message: "กรุณากรอกตัวเลข" },
+                          ]}
+                        >
+                          <InputNumber
+                            formatter={(value) =>
+                              `฿ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                            }
+                            parser={(value) => value.replace(/฿\s?|(,*)/g, "")}
+                            name="price_per_unit"
+                            type="number"
+                            min="0"
+                            max="20000"
+                            step="any"
+                            className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                            placeholder="ค่าบริการ / 1 หน่วย"
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "unit"]}
+                          label="หน่วยการบริการ"
+                          fieldKey={[fieldKey, "unit"]}
+                          rules={[
+                            {
+                              required: true,
+                              message: "กรุณากรอกหน่วยการบริการ",
+                            },
+                          ]}
+                        >
+                          <Input
+                            className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
+                            placeholder="หน่วยการบริการ"
+                          />
+                        </Form.Item>
+                        {fields.length > 1 && (
+                          <Button
+                            type="dashed"
+                            danger
+                            onClick={() => {
+                              remove(name);
                             }}
                           >
-                            <Form.Item colon={false} label="">
-                              <a
-                                onClick={() => {
-                                  remove(field.name);
-                                }}
-                              >
-                                ลบรายการ
-                              </a>
-                            </Form.Item>
-                          </div>
-                        </div>
-                      ))}
-
-                    <button
-                      className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
-                      type="button"
-                      onClick={() => add()}
+                            ลบรายการ
+                          </Button>
+                        )}
+                      </Space>
+                    ))}
+                    <Button
+                      type="dashed"
+                      onClick={() => {
+                        add();
+                      }}
+                      style={{ width: "48%", marginTop: 10 }}
                     >
-                      + เพิ่มรายการ
-                    </button>
-                  </div>
+                      เพิ่มรายการ +
+                    </Button>
+                  </>
                 )}
               </Form.List>
               <hr className="mt-10 mb-10 text-grey300 "></hr>
