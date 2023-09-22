@@ -15,6 +15,7 @@ function AllStepCheckOutForm() {
   const [current, setCurrent] = useState(0);
   const [selectedSubService, setSelectedSubService] = useState([]);
   const { TextArea } = Input;
+  const [formData, setFormData] = useState({});
   const navigate = useNavigate();
 
   console.log("params.serviceId:", params.serviceId);
@@ -102,6 +103,10 @@ function AllStepCheckOutForm() {
 
   const calculateTotalPrice = () => {
     return selectedSubService;
+  };
+
+  const handleFormChange = (changedValues) => {
+    setFormData({ ...formData, ...changedValues });
   };
 
   const handleFormSubmit = (formValues) => {
@@ -213,7 +218,7 @@ function AllStepCheckOutForm() {
             
             <div className="flex my-8 lg:mx-[12rem] md:mx-10 justify-between min-h-screen w-[80%]">
               <div className="h-full w-[687px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border border-grey300 rounded-lg mt-20 ">
-                <Form
+              <Form
                   labelCol={{ span: 5 }}
                   wrapperCol={{ span: 19 }}
                   form={form}
@@ -236,6 +241,8 @@ function AllStepCheckOutForm() {
                       format="DD/MM/YYYY"
                       placeholder="กรุณาเลือกวันที่"
                       className="w-[22.5vw] h-[44px] px-4 py-2.5"
+                      value={formData.date} 
+    onChange={(date) => handleFormChange({ date })}
                     />
                   </Form.Item>
 
@@ -248,6 +255,8 @@ function AllStepCheckOutForm() {
                       format="HH:mm"
                       placeholder="กรุณาเลือกเวลา"
                       className="w-[22.5vw] h-[44px] px-4 py-2.5"
+                      value={formData.time} 
+    onChange={(time) => handleFormChange({ time })}
                     />
                   </Form.Item>
 
@@ -256,7 +265,9 @@ function AllStepCheckOutForm() {
                     className="font-medium text-grey900"
                     name="address"
                   >
-                    <Input placeholder="กรุณากรอกที่อยู่" allowClear />
+                    <Input placeholder="กรุณากรอกที่อยู่" allowClear 
+                    value={formData.address} 
+                    onChange={(e) => handleFormChange({ address: e.target.value })}/>
                   </Form.Item>
 
                   <div className="w-full flex justify-between mt-4">
@@ -265,14 +276,18 @@ function AllStepCheckOutForm() {
                       className="font-medium text-grey900"
                       name="subdistrict"
                     >
-                      <Input placeholder="กรุณากรอกแขวง / ตำบล" allowClear />
+                      <Input placeholder="กรุณากรอกแขวง / ตำบล" allowClear 
+                      value={formData.subdistrict} 
+                      onChange={(e) => handleFormChange({ subdistrict: e.target.value})}/>
                     </Form.Item>
                     <Form.Item
                       label="เขต / อำเภอ"
                       className="font-medium text-grey900"
                       name="district"
                     >
-                      <Input placeholder="กรุณากรอกเขต / อำเภอ" allowClear />
+                      <Input placeholder="กรุณากรอกเขต / อำเภอ" allowClear 
+                      value={formData.district} 
+                      onChange={(e) => handleFormChange({ district: e.target.value })}/>
                     </Form.Item>
                   </div>
 
@@ -282,14 +297,18 @@ function AllStepCheckOutForm() {
                       className="font-medium text-grey900"
                       name="province"
                     >
-                      <Input placeholder="กรุณากรอกจังหวัด" allowClear />
+                      <Input placeholder="กรุณากรอกจังหวัด" allowClear 
+                      value={formData.province} 
+                      onChange={(e) => handleFormChange({ province: e.target.value })}/>
                     </Form.Item>
                     <Form.Item
                       label="รหัสไปรษณีย์"
                       className="font-medium text-grey900"
                       name="zipcode"
                     >
-                      <Input placeholder="กรุณากรอกรหัสไปรษณีย์" allowClear />
+                      <Input placeholder="กรุณากรอกรหัสไปรษณีย์" allowClear 
+                      value={formData.zipcode} 
+                      onChange={(e) => handleFormChange({ zipcode: e.target.value })}/>
                     </Form.Item>
                   </div>
 
@@ -301,6 +320,8 @@ function AllStepCheckOutForm() {
                     <TextArea
                       placeholder="กรุณาระบุข้อมูลเพิ่มเติม"
                       autoSize={{ minRows: 3 }}
+                      value={formData.additionalInfo} 
+    onChange={(e) => handleFormChange({ additionalInfo: e.target.value })}
                     />
                   </Form.Item>
                 </Form>
@@ -332,8 +353,30 @@ function AllStepCheckOutForm() {
               </li>
             ))}
           </ul>
-          <div className="w-[301]px h-[1px] border border-[#CCD0D7]"></div>
-          <div className="flex justify-between pt-3">
+          <div className="w-[301]px h-[1px] border border-[#CCD0D7] mt-3"></div>
+          <div className="pt-10"><div> {current === 1 || current === 2 ? (
+      <div>
+        <div className="flex justify-between">
+          <div className="text-[#646C80]">วันที่:</div>
+          <div>{formData.date ? formData.date.format('DD/MM/YYYY') : ''}</div>
+        </div>
+        <div className="flex justify-between">
+          <div className="text-[#646C80]">เวลา:</div>
+          <div>{formData.time ? formData.time.format('HH:mm') : ''}</div>
+        </div>
+        <div className="flex justify-between">
+          <div className="text-[#646C80]">สถานที่:</div>
+          <div>{formData.address} {formData.subdistrict} {formData.district} {formData.province} {formData.zipcode}</div>
+        </div>
+        <div className="flex justify-between">
+          <div className="text-[#646C80]">ข้อมูลเพิ่มเติม:</div>
+          <div>{formData.additionalInfo}</div>
+        </div>
+      </div>
+    ) : null}</div>
+  </div>
+          <div className="flex justify-between pt-5 mb-2">
+
             <div className="text-[16px] text-[#646C80]">รวม</div>
             <div>
               {calculateTotalPrice().reduce(
