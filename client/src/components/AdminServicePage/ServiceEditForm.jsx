@@ -18,12 +18,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import arrow from "../../assets/AdminPhoto/arrow.png";
+import dateFormat from "../../utils/dateFormat.js";
+import AlertBoxDelete from "../AlertBox.jsx";
+import image from "../../assets/AdminPhoto/imageIndex.js";
 
 function ServiceEditForm() {
   //render component and package area
   const navigate = useNavigate();
   const params = useParams();
   const { Dragger } = Upload;
+
+  //delete state
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   //state for category
   const [category, setCategory] = useState([]);
@@ -52,15 +58,15 @@ function ServiceEditForm() {
 
   const subServiceArray = service.sub_service;
 
-  subServiceArray.forEach((subService) => {
-    const pricePerUnit = subService.price_per_unit;
-    const subServiceName = subService.sub_service_name;
-    const unit = subService.unit;
+  // subServiceArray.forEach((subService) => {
+  //   const pricePerUnit = subService.price_per_unit;
+  //   const subServiceName = subService.sub_service_name;
+  //   const unit = subService.unit;
 
-    console.log(`Price per unit: ${pricePerUnit}`);
-    console.log(`Sub service name: ${subServiceName}`);
-    console.log(`Unit: ${unit}`);
-  });
+  //   console.log(`Price per unit: ${pricePerUnit}`);
+  //   console.log(`Sub service name: ${subServiceName}`);
+  //   console.log(`Unit: ${unit}`);
+  // });
 
   console.log("อันนี้คือซับ", subService);
 
@@ -93,6 +99,36 @@ function ServiceEditForm() {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+  };
+
+  //delete
+
+  const deleteCategoryById = async (serviceId) => {
+    try {
+      await axios.delete(`http://localhost:4000/service/${serviceId}`);
+      getServices();
+      hide();
+    } catch (error) {
+      console.error("เกิดข้อผิดพลาดในการลบหมวดหมู่:", error);
+    }
+  };
+
+  const hide = () => {
+    setDeleteConfirmation(false);
+  };
+
+  const handleDelete = () => {
+    deleteCategoryById(service_Id);
+    setDeleteConfirmation(false);
+  };
+
+  const showDeleteConfirmation = (serviceId) => {
+    setService_Id(serviceId);
+    setDeleteConfirmation(true);
+  };
+
+  const hideDeleteConfirmation = () => {
+    setDeleteConfirmation(false);
   };
 
   // const handleInputChange = (e) => {
@@ -349,7 +385,7 @@ function ServiceEditForm() {
                 รายการบริการย่อย
               </div>
               <Form.List name="items">
-                {(fields, { add, remove }) => (
+                {(service, { add, remove }) => (
                   <div
                     style={{
                       display: "flex",
@@ -357,90 +393,86 @@ function ServiceEditForm() {
                       gap: "16px",
                     }}
                   >
-                    {fields.map((field) => (
-                      <div
-                        key={field.key}
-                        style={{ display: "flex", gap: "16px" }}
-                      >
+                    {service.sub_service &&
+                      service.sub_service.map((subService, index) => (
+                        <div key={subService.key} style={{ display: "flex", gap: "16px" }}>
                         <div style={{ flex: "1" }}>
                           <Form.Item
                             colon={false}
                             label="ชื่อรายการ"
-                            name={[field.name, "name"]}
                             labelAlign="top"
                             labelCol={{ span: 24 }}
                           >
                             <Input
-                              name="sub_service_name"
-
-                              // value={formData.sub_service_name}
-                              // onChange={handleChange}
+                              name={`items[${index}].sub_service_name`} // Use the correct name
+                              value={subService.sub_service_name}
+                              onChange={(e) => handleInputChange(index, "sub_service_name", e)} // Handle input change
                             />
                           </Form.Item>
                         </div>
-                        <div style={{ flex: "1" }}>
-                          <Form.Item
-                            colon={false}
-                            label="ค่าบริการ / 1 หน่วย"
-                            name={[field.name, "cost"]}
-                            labelAlign="top"
-                            labelCol={{ span: 24 }}
-                          >
-                            <InputNumber
-                              formatter={(value) =>
-                                `฿ ${value}`.replace(
-                                  /\B(?=(\d{3})+(?!\d))/g,
-                                  ","
-                                )
-                              }
-                              parser={(value) =>
-                                value.replace(/฿\s?|(,*)/g, "")
-                              }
-                              name="price_per_unit"
-                              // value={formData.price_per_unit}
-                              // onChange={(value) =>
-                              //   setFormData({
-                              //     ...formData,
-                              //     price_per_unit: value,
-                              //   })
-                              // }
-                            />
-                          </Form.Item>
-                        </div>
-                        <div style={{ flex: "1" }}>
-                          <Form.Item
-                            colon={false}
-                            label="หน่วยการบริการ"
-                            name={[field.name, "unit"]}
-                            labelAlign="top"
-                            labelCol={{ span: 24 }}
-                          >
-                            <Input
-                              name="unit"
-                              // value={formData.unit}
-                              // onChange={handleChange}
-                            />
-                          </Form.Item>
-                        </div>
-                        <div
-                          style={{
-                            flex: "1",
-                            display: "flex",
-                            alignItems: "flex-end",
-                          }}
-                        >
-                          <Form.Item colon={false} label="">
-                            <a
-                              onClick={() => {
-                                remove(field.name);
-                              }}
+                          <div style={{ flex: "1" }}>
+                            <Form.Item
+                              colon={false}
+                              label="ค่าบริการ / 1 หน่วย"
+                              name={[field.name, "cost"]}
+                              labelAlign="top"
+                              labelCol={{ span: 24 }}
                             >
-                              ลบรายการ
-                            </a>
-                          </Form.Item>
+                              <InputNumber
+                                formatter={(value) =>
+                                  `฿ ${value}`.replace(
+                                    /\B(?=(\d{3})+(?!\d))/g,
+                                    ","
+                                  )
+                                }
+                                parser={(value) =>
+                                  value.replace(/฿\s?|(,*)/g, "")
+                                }
+                                name="price_per_unit"
+                                // value={formData.price_per_unit}
+                                // onChange={(value) =>
+                                //   setFormData({
+                                //     ...formData,
+                                //     price_per_unit: value,
+                                //   })
+                                // }
+                              />
+                            </Form.Item>
+                          </div>
+                          <div style={{ flex: "1" }}>
+                            <Form.Item
+                              colon={false}
+                              label="หน่วยการบริการ"
+                              name={[field.name, "unit"]}
+                              labelAlign="top"
+                              labelCol={{ span: 24 }}
+                            >
+                              <Input
+                                name="unit"
+                                // value={formData.unit}
+                                // onChange={handleChange}
+                              />
+                            </Form.Item>
+                          </div>
+                          <div
+                            style={{
+                              flex: "1",
+                              display: "flex",
+                              alignItems: "flex-end",
+                            }}
+                          >
+                            <Form.Item colon={false} label="">
+                              <a
+                                onClick={() => {
+                                  remove(field.name);
+                                }}
+                              >
+                                ลบรายการ
+                              </a>
+                            </Form.Item>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
 
                     <button
                       className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
@@ -452,7 +484,29 @@ function ServiceEditForm() {
                   </div>
                 )}
               </Form.List>
+              <hr className="mt-10 mb-10 text-grey300 "></hr>
+              <p className="pb-[25px] ">
+                <span className="text-grey700">สร้างเมื่อ</span>
+                <span className="px-[200px] text-black ">
+                  {dateFormat(service.service_created_date)}
+                </span>
+              </p>
+              <p className="pb-[40px] ">
+                <span className="text-grey700">แก้ไขล่าสุด</span>
+                <span className="px-[190px] text-black ">
+                  {dateFormat(service.service_edited_date)}
+                </span>
+              </p>
             </div>
+          </div>
+          <div className="ml-0">
+            <img
+              className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
+              alt="Delete"
+              src={image.trashIcon}
+              onClick={() => showDeleteConfirmation(service.service_id)}
+            />
+            ลบบริการ
           </div>
         </div>
       </Form>

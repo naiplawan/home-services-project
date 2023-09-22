@@ -38,28 +38,6 @@ function AdminDetailService() {
 
   // console.log(subServicesInfo);
 
-  // subServicesInfo.forEach(subService => {
-  //   console.log(`Price per unit: ${subService.pricePerUnit}`);
-  //   console.log(`Sub service name: ${subService.subServiceName}`);
-  //   console.log(`Unit: ${subService.unit}`);
-  // });
-
-  // const subServiceElements = [];
-
-  //   service.sub_service.forEach((subService, index) => {
-  //       subServiceElements.push(
-  //           <div key={index}>
-  //               <p>Price per unit: {subService.price_per_unit}</p>
-  //               <p>Sub service name: {subService.sub_service_name}</p>
-  //               <p>Unit: {subService.unit}</p>
-  //           </div>
-  //       );
-  //   });
-
-  // use forEach // อันนี้ใช้ได้ แต่รีเฟรชละหาย
-  // const subServiceArray = service.sub_service;
-
-
   const subServiceArray = service.sub_service;
   // for (let i = 0; i < subServiceArray.length; i++) {
   //     const subService = subServiceArray[i];
@@ -87,25 +65,15 @@ function AdminDetailService() {
       const response = await axios.get(
         `http://localhost:4000/service/${serviceId}`
       );
-      const serviceData = response.data.data;
-      console.log("serviceData", serviceData);
+      setService(response.data.data);
+      console.log(response.data.data);
       setCurrentCategory(response.data.data.category);
       setSubService(response.data.data.sub_service);
-
-      if (serviceData) {
-        setService(serviceData);
-      } else {
-        // Handle the case where the data is not valid
-        console.error("Service data is not valid:", serviceData);
-      }
-
       console.log("data by id", response.data.data);
     } catch (error) {
       console.error("Error fetching service data:", error);
     }
   };
-
-  // console.log("อันนี้ซับ", subService);
 
   useEffect(() => {
     axios
@@ -120,17 +88,6 @@ function AdminDetailService() {
   useEffect(() => {
     getService(params.serviceId);
   }, [params.serviceId]);
-
-  // let hasMatchingValue = false;
-
-  // for (const obj of service) {
-  //   for (const key in obj) {
-  //     if (obj[key] === category.category_id) {
-  //       hasMatchingValue = true;
-  //       break;
-  //     }
-  //   }
-  // }
 
   return (
     <div className="bg-grey100 h-[100%] pb-[4%] pl-60 ">
@@ -176,7 +133,10 @@ function AdminDetailService() {
             <p className="pb-[40px] pt-[20px] ">
               <span className="text-grey700">รูปภาพ</span>
               <span className="px-[182px] text-black ">
-                <img src={service.service_photo} />
+                <img
+                  className="px-[182px] text-black"
+                  src={service.service_photo}
+                />
               </span>
             </p>
             <hr className="py-[20px]" />
@@ -185,23 +145,30 @@ function AdminDetailService() {
             </div>
 
             <div>
-              {service.sub_service.map((subService, index) => (
-                <div className="flex justify-between items-center gap-6" key={index}>
-                  <div className="self-stretch text-grey700 text-base">
-                    ชื่อรายการ: 
-                    <div className="text-black">{subService.sub_service_name}</div>
+              {service.sub_service &&
+                service.sub_service.map((subService, index) => (
+                  <div
+                    className="flex justify-between items-center gap-6"
+                    key={index}
+                  >
+                    <div className="self-stretch text-grey700 text-base">
+                      ชื่อรายการ:
+                      <div className="text-black">
+                        {subService.sub_service_name}
+                      </div>
+                    </div>
+                    <div className="self-stretch text-grey700 text-base">
+                      หน่วยการบริการ:
+                      <div className="text-black">{subService.unit}</div>
+                    </div>
+                    <div className="self-stretch text-grey700 text-base">
+                      ค่าบริการ / 1 หน่วย:
+                      <div className="text-black">
+                        {subService.price_per_unit}
+                      </div>
+                    </div>
                   </div>
-                  <div className="self-stretch text-grey700 text-base">
-                    หน่วยการบริการ: 
-                    <div  className="text-black">{subService.unit}</div>
-                  </div>
-                  <div className="self-stretch text-grey700 text-base">
-                    ค่าบริการ / 1 หน่วย:
-                    <div
-                    className="text-black">{subService.price_per_unit}</div>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
 
             <p className="pb-[25px] ">
