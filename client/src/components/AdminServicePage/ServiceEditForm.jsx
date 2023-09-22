@@ -28,13 +28,13 @@ function ServiceEditForm() {
   //state for category
   const [category, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [currentCategory, setCurrentCategory] = useState([])
+  const [currentCategory, setCurrentCategory] = useState([]);
 
-  const categoryName = currentCategory.category_name
+  const categoryName = currentCategory.category_name;
 
-  console.log(categoryName)
+  console.log(categoryName);
 
-  console.log('อันนี้แคท', currentCategory)
+  console.log("อันนี้แคท", currentCategory);
 
   //state for all
   const [data, setData] = useState([]);
@@ -47,10 +47,22 @@ function ServiceEditForm() {
     service.service_name
   );
 
-   //state for sub_service
-   const [subService, setSubService] = useState([])
+  //state for sub_service
+  const [subService, setSubService] = useState([]);
 
-   console.log('อันนี้คือซับ', subService)
+  const subServiceArray = service.sub_service;
+
+  subServiceArray.forEach((subService) => {
+    const pricePerUnit = subService.price_per_unit;
+    const subServiceName = subService.sub_service_name;
+    const unit = subService.unit;
+
+    console.log(`Price per unit: ${pricePerUnit}`);
+    console.log(`Sub service name: ${subServiceName}`);
+    console.log(`Unit: ${unit}`);
+  });
+
+  console.log("อันนี้คือซับ", subService);
 
   //state for image
   const [selectedImage, setSelectedImage] = useState(null);
@@ -110,10 +122,10 @@ function ServiceEditForm() {
       );
       setService(response.data.data);
       setEditableServiceName(response.data.data.service_name);
-      setCurrentImage(response.data.data.service_photo)
-      setCurrentCategory(response.data.data.category)
-      setSubService(response.data.data.sub_service)
-      console.log('what is this', response.data.data);
+      setCurrentImage(response.data.data.service_photo);
+      setCurrentCategory(response.data.data.category);
+      setSubService(response.data.data.sub_service);
+      console.log("what is this", response.data.data);
       // setSelectedImage(response.data.image_url);
       // setFileList([
       //   {
@@ -299,15 +311,16 @@ function ServiceEditForm() {
                       showUploadList={false}
                       className="relative"
                     >
-                       {selectedImage && (
-                    <div>
-                      <Image src={selectedImage} alt="uploaded" width={144} />
-                    
-                    </div>
-                  )}
-                  <div>
-                   
-                  </div>
+                      {selectedImage && (
+                        <div>
+                          <Image
+                            src={selectedImage}
+                            alt="uploaded"
+                            width={144}
+                          />
+                        </div>
+                      )}
+                      <div></div>
                       <div>
                         <InboxOutlined style={{ fontSize: "36px" }} />
                         <p className="ant-upload-text">อัพโหลดรูปภาพ</p>
@@ -317,7 +330,6 @@ function ServiceEditForm() {
                       </div>
                       <div className="text-grey700 text-xs z-0 mt-1">
                         ขนาดภาพที่แนะนำ: 1440 x 225 PX
-                       
                       </div>
                     </Upload.Dragger>
                   )}

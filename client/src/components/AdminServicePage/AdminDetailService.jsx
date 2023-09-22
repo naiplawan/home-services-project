@@ -12,20 +12,75 @@ function AdminDetailService() {
 
   const [category, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [currentCategory, setCurrentCategory] = useState([])
+  const [currentCategory, setCurrentCategory] = useState([]);
 
-    //state for sub_service
-  const [subService, setSubService] = useState([])
+  //state for sub_service
+  const [subService, setSubService] = useState([]);
 
-  console.log('อันนี้ซับ', subService)
+  const categoryName = currentCategory.category_name;
 
-  const categoryName = currentCategory.category_name
+  console.log(categoryName);
 
-  console.log(categoryName)
+  //access sub service on service to get subservice
+  // const subServiceArray = service.sub_service;
 
-  
+  //   const subServicesInfo = subServiceArray.map(subService => {
+  //     const pricePerUnit = subService.price_per_unit;
+  //     const subServiceName = subService.sub_service_name;
+  //     const unit = subService.unit;
 
- 
+  //     return {
+  //         pricePerUnit,
+  //         subServiceName,
+  //         unit
+  //     };
+  // });
+
+  // console.log(subServicesInfo);
+
+  // subServicesInfo.forEach(subService => {
+  //   console.log(`Price per unit: ${subService.pricePerUnit}`);
+  //   console.log(`Sub service name: ${subService.subServiceName}`);
+  //   console.log(`Unit: ${subService.unit}`);
+  // });
+
+  // const subServiceElements = [];
+
+  //   service.sub_service.forEach((subService, index) => {
+  //       subServiceElements.push(
+  //           <div key={index}>
+  //               <p>Price per unit: {subService.price_per_unit}</p>
+  //               <p>Sub service name: {subService.sub_service_name}</p>
+  //               <p>Unit: {subService.unit}</p>
+  //           </div>
+  //       );
+  //   });
+
+  // use forEach // อันนี้ใช้ได้ แต่รีเฟรชละหาย
+  // const subServiceArray = service.sub_service;
+
+
+  const subServiceArray = service.sub_service;
+  // for (let i = 0; i < subServiceArray.length; i++) {
+  //     const subService = subServiceArray[i];
+  //     const pricePerUnit = subService.price_per_unit;
+  //     const subServiceName = subService.sub_service_name;
+  //     const unit = subService.unit;
+
+  //     console.log(`Price per unit: ${pricePerUnit}`);
+  //     console.log(`Sub service name: ${subServiceName}`);
+  //     console.log(`Unit: ${unit}`);
+  // }
+
+  // subServiceArray.forEach(subService => {
+  //     const pricePerUnit = subService.price_per_unit;
+  //     const subServiceName = subService.sub_service_name;
+  //     const unit = subService.unit;
+
+  //     console.log(`Price per unit: ${pricePerUnit}`);
+  //     console.log(`Sub service name: ${subServiceName}`);
+  //     console.log(`Unit: ${unit}`);
+  // });
 
   const getService = async (serviceId) => {
     try {
@@ -33,12 +88,9 @@ function AdminDetailService() {
         `http://localhost:4000/service/${serviceId}`
       );
       const serviceData = response.data.data;
-      setCurrentCategory(response.data.data.category)
-      setSubService(response.data.data.sub_service)
-
-      console.log(serviceData)
-
-      console.log(serviceData)
+      console.log("serviceData", serviceData);
+      setCurrentCategory(response.data.data.category);
+      setSubService(response.data.data.sub_service);
 
       if (serviceData) {
         setService(serviceData);
@@ -47,13 +99,13 @@ function AdminDetailService() {
         console.error("Service data is not valid:", serviceData);
       }
 
-      console.log('data by id', response.data.data)
+      console.log("data by id", response.data.data);
     } catch (error) {
       console.error("Error fetching service data:", error);
     }
   };
 
-  
+  // console.log("อันนี้ซับ", subService);
 
   useEffect(() => {
     axios
@@ -64,8 +116,6 @@ function AdminDetailService() {
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
-
-  
 
   useEffect(() => {
     getService(params.serviceId);
@@ -121,15 +171,12 @@ function AdminDetailService() {
             </p>
             <p className="pb-[40px] pt-[20px] ">
               <span className="text-grey700">หมวดหมู่</span>
-              <span className="px-[182px] text-black"
-            >
-               {categoryName}
-              </span>
+              <span className="px-[182px] text-black">{categoryName}</span>
             </p>
             <p className="pb-[40px] pt-[20px] ">
               <span className="text-grey700">รูปภาพ</span>
               <span className="px-[182px] text-black ">
-               <img src={service.service_photo} />
+                <img src={service.service_photo} />
               </span>
             </p>
             <hr className="py-[20px]" />
@@ -137,23 +184,25 @@ function AdminDetailService() {
               รายการบริการย่อย
             </div>
 
-            <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-            }}>
-              <p>
-              <span>ชื่อรายการ</span>
-              <span>หน่วยการบริการ</span>
-              <span>ค่าบริการ / 1 หน่วย</span>
-              </p>
-
+            <div>
+              {service.sub_service.map((subService, index) => (
+                <div className="flex justify-between items-center gap-6" key={index}>
+                  <div className="self-stretch text-grey700 text-base">
+                    ชื่อรายการ: 
+                    <div className="text-black">{subService.sub_service_name}</div>
+                  </div>
+                  <div className="self-stretch text-grey700 text-base">
+                    หน่วยการบริการ: 
+                    <div  className="text-black">{subService.unit}</div>
+                  </div>
+                  <div className="self-stretch text-grey700 text-base">
+                    ค่าบริการ / 1 หน่วย:
+                    <div
+                    className="text-black">{subService.price_per_unit}</div>
+                  </div>
+                </div>
+              ))}
             </div>
-           
-
-           
-             
 
             <p className="pb-[25px] ">
               <span className="text-grey700">สร้างเมื่อ</span>
