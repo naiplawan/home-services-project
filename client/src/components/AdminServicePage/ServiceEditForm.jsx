@@ -54,7 +54,7 @@ function ServiceEditForm() {
 
 
    console.log('อันนี้คือซับ', subService)
-   console.log('อันนี้คือซับ', service.sub_service.sub_service_name)
+    
 
   //state for image
   const [selectedImage, setSelectedImage] = useState(null);
