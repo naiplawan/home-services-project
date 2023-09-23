@@ -22,12 +22,14 @@ import arrow from "../../assets/AdminPhoto/arrow.png";
 import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
 import image from "../../assets/AdminPhoto/imageIndex.js";
+import { v4 as uuidv4 } from "uuid";
 
 function ServiceEditForm() {
   //render component and package area
   const navigate = useNavigate();
   const params = useParams();
   const { Dragger } = Upload;
+  uuidv4();
 
   //delete state
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
@@ -383,104 +385,110 @@ function ServiceEditForm() {
 
               <hr className="mb-10 text-grey300 "></hr>
 
-              <div className="mb-10 text-grey700 text-base font-medium ">
-                รายการบริการย่อย
-              </div>
-              <Form.List name="service">
-                {(fields, { add, remove }) => (
+              <Form.List name="service.sub_service">
+                {(subServices, { add, remove }) => (
                   <>
                     <div className="mb-10 text-grey700 text-base font-medium">
                       รายการบริการย่อย
                     </div>
-                    {fields.map(({ key, name, fieldKey, ...restField }) => (
-                      <Space
-                        key={key}
-                        style={{ display: "flex", marginBottom: 8 }}
-                        align="baseline"
-                      >
-                        <Form.Item
-                          {...restField}
-                          name={[name, "sub_service_name"]}
-                          label="ชื่อรายการ"
-                          fieldKey={[fieldKey, "sub_service_name"]}
-                          rules={[
-                            { required: true, message: "กรุณากรอกชื่อรายการ" },
-                          ]}
+                    {service.sub_service &&
+                      service.sub_service.map((subService, index) => (
+                        <Space
+                          key={subService.uniqueKey} // Set a unique key for each subService
+                          style={{ display: "flex", marginBottom: 8 }}
+                          align="baseline"
                         >
-                          <Input
-                            className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
-                            placeholder="ชื่อรายการ"
-                          />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "price_per_unit"]}
-                          label="ค่าบริการ / 1 หน่วย"
-                          fieldKey={[fieldKey, "price_per_unit"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "กรุณากรอกค่าบริการ / 1 หน่วย",
-                            },
-                            { type: "number", message: "กรุณากรอกตัวเลข" },
-                          ]}
-                        >
-                          <InputNumber
-                            formatter={(value) =>
-                              `฿ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                            }
-                            parser={(value) => value.replace(/฿\s?|(,*)/g, "")}
-                            name="price_per_unit"
-                            type="number"
-                            min="0"
-                            max="20000"
-                            step="any"
-                            className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
-                            placeholder="ค่าบริการ / 1 หน่วย"
-                          />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "unit"]}
-                          label="หน่วยการบริการ"
-                          fieldKey={[fieldKey, "unit"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "กรุณากรอกหน่วยการบริการ",
-                            },
-                          ]}
-                        >
-                          <Input
-                            className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
-                            placeholder="หน่วยการบริการ"
-                          />
-                        </Form.Item>
-                        {fields.length > 1 && (
-                          <Button
-                            type="dashed"
-                            danger
-                            onClick={() => {
-                              remove(name);
-                            }}
+                          <Form.Item
+                            name={[subService.name, "sub_service_name"]}
+                            label="ชื่อรายการ"
+                            rules={[
+                              {
+                                required: true,
+                                message: "กรุณากรอกชื่อรายการ",
+                              },
+                            ]}
                           >
-                            ลบรายการ
-                          </Button>
-                        )}
-                      </Space>
-                    ))}
-                    <Button
-                      type="dashed"
-                      onClick={() => {
-                        add();
-                      }}
-                      style={{ width: "48%", marginTop: 10 }}
+                            <Input
+                              className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                              placeholder="ชื่อรายการ"
+                              defaultValue={subService.sub_service_name}
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            name={[subService.name, "price_per_unit"]}
+                            label="ค่าบริการ / 1 หน่วย"
+                            rules={[
+                              {
+                                required: true,
+                                message: "กรุณากรอกค่าบริการ / 1 หน่วย",
+                              },
+                              { type: "number", message: "กรุณากรอกตัวเลข" },
+                            ]}
+                          >
+                            <Input
+                                 value={` ${subService.price_per_unit || ''}฿`}
+                                 onChange={(e) => {
+                                   const value = e.target.value.replace(/[^\d]/g, ''); // Remove non-numeric characters
+                                   // Handle the value as needed
+                                 }}
+                              name="price_per_unit"
+                              type="number"
+                              min="0"
+                              max="20000"
+                              step="any"
+                              className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                              placeholder="ค่าบริการ / 1 หน่วย"
+                              defaultValue={subService.price_per_unit}
+                            /> 
+                            {/* the input doesn't display the Thai baht currency  */}
+                          </Form.Item>
+                          <Form.Item
+                            name={[subService.name, "unit"]}
+                            label="หน่วยการบริการ"
+                            rules={[
+                              {
+                                required: true,
+                                message: "กรุณากรอกหน่วยการบริการ",
+                              },
+                            ]}
+                          >
+                            <Input
+                              className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
+                              placeholder="หน่วยการบริการ"
+                              defaultValue={subService.unit}
+                            />
+                          </Form.Item>
+                          <div
+                          style={{
+                            flex: "1",
+                            display: "flex",
+                            alignItems: "flex-end",
+                          }}
+                        >
+                          <Form.Item colon={false} label="">
+                            <a
+                              className=" text-blue600 text-base not-italic font-semibold underline"
+                              onClick={() => {
+                                remove(subServices);
+                              }}
+                            >
+                              ลบรายการ
+                            </a>
+                          </Form.Item>
+                        </div>
+                        </Space>
+                      ))}
+                   <button
+                      className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
+                      type="button"
+                      onClick={() => add()}
                     >
-                      เพิ่มรายการ +
-                    </Button>
+                      + เพิ่มรายการ
+                    </button>
                   </>
                 )}
               </Form.List>
+
               <hr className="mt-10 mb-10 text-grey300 "></hr>
               <p className="pb-[25px] ">
                 <span className="text-grey700">สร้างเมื่อ</span>

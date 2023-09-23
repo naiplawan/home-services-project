@@ -151,17 +151,17 @@ function AdminDetailService() {
                     className="flex justify-between items-center gap-6"
                     key={index}
                   >
-                    <div className="self-stretch text-grey700 text-base">
+                    <div className="subServiceName self-stretch text-grey700 text-base">
                       ชื่อรายการ:
                       <div className="text-black">
                         {subService.sub_service_name}
                       </div>
                     </div>
-                    <div className="self-stretch text-grey700 text-base">
+                    <div className="subServiceName self-stretch text-grey700 text-base">
                       หน่วยการบริการ:
                       <div className="text-black">{subService.unit}</div>
                     </div>
-                    <div className="self-stretch text-grey700 text-base">
+                    <div className="subServiceName self-stretch text-grey700 text-base">
                       ค่าบริการ / 1 หน่วย:
                       <div className="text-black">
                         {subService.price_per_unit}
