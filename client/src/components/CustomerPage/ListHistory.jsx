@@ -74,13 +74,13 @@ function ListHistory () {
                                                 src={image.personIcon2}
                                                 alt="Person Icon" 
                                             />
-                                            <div>พนักงาน: สตีฟ จ็อบ</div>
+                                            <div>พนักงาน: {data.serviceman_detail.serviceman_name}</div>
                                         </div>
                                     </div>
                                     <div className="text-base font-normal leading-normal text-grey700">
-                                        รายการ: {data.users.service[index].service_name}
+                                        รายการ: {data.service.service_name}
                                         <ul className="flex flex-col list-disc ml-3">
-                                            {data.users.service[index].sub_service.map((subService, index) => {
+                                            {data.service.sub_service.map((subService, index) => {
                                                 return (
                                                     <li
                                                         key={index}
@@ -108,7 +108,7 @@ function ListHistory () {
                                         <div className="text-grey700 font-normal text-sm leading-normal flex gap-x-5 justify-end items-center">
                                             ราคารวม:
                                             <div className="text-lg text-black font-medium leading-normal">
-                                                {parseFloat(data.users.service[0].sub_service[0].checkout_quantity[0].checkout.total_price)
+                                                {parseFloat(data.checkout.total_price)
                                                     .toFixed(2)}{" "}
                                                     ฿
                                             </div>
