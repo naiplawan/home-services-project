@@ -88,7 +88,19 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
 
     console.log("main service", newServiceItem);
 
-    const subServiceItems = req.body.items.map(item => JSON.parse(item));
+    let subServiceItems;
+
+    try {
+      subServiceItems = JSON.parse(req.body.items);
+      if (!Array.isArray(subServiceItems)) {
+        subServiceItems = [subServiceItems];
+      }
+    } catch (error) {
+      console.error("Error parsing subServiceItems:", error);
+      return res
+        .status(400)
+        .json({ message: "Invalid format for subServiceItems" });
+    }
 
     console.log("sub service data", subServiceItems);
 

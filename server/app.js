@@ -15,12 +15,12 @@ async function init() {
 
   const app = express();
   const port = 4000;
-  const upload = multer();
+  // const upload = multer();
 
   app.use(cors());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(upload.none());
+  // app.use(upload.none());
 
 
   app.use("/auth", authRouter);
