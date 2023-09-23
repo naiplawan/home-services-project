@@ -39,6 +39,7 @@ function ServiceEditForm() {
   const [category, setCategory] = useState([]); //use to map data on category
   const [selectedCategory, setSelectedCategory] = useState(""); //this state store the select category
   const [currentCategory, setCurrentCategory] = useState([]); // the category from serviceID(the data before editng)
+  console.log('เปลี่ยนแคท', currentCategory, typeof currentCategory)
 
   //state for category to map
   const [data, setData] = useState([]); //use to map category
@@ -51,6 +52,7 @@ function ServiceEditForm() {
     service.service_name
   );
 
+  console.log('เปลี่ยนชื่อ', editableServiceName, typeof editableServiceName)
   //state for sub_service
 
 
@@ -60,7 +62,7 @@ function ServiceEditForm() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [fileList, setFileList] = useState([]);
   const [currentImage, setCurrentImage] = useState("");
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleFileChange = (file) => {
     console.log("file", file);
@@ -155,17 +157,17 @@ function ServiceEditForm() {
       console.log('ทั้งหมด',values)
 
 
-      const user_id = localStorage.getItem('user_id');
+      // const user_id = localStorage.getItem('user_id');
 
       const selectedCategoryId = category.data.find(
         (category) => category.category_name === currentCategory
       )?.category_id;
 
-      console.log(user_id)
+      
       const formData = new FormData();
-      formData.append('user_id', user_id);
-      formData.append("service_name", values.service_name);
-      formData.append("category_id", selectedCategory);
+      // formData.append('user_id', user_id);
+      formData.append("service_name", editableServiceName);
+      formData.append("category_id", selectedCategoryId);
       formData.append("file", fileList[0]);
 
       // values.items.forEach((item) => {

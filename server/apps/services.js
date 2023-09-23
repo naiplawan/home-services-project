@@ -184,7 +184,7 @@ serviceRouter.put("/:id", async (req, res) => {
     const serviceId = req.params.id; 
     const file = req.file;
 
-    const user_id = req.body.user_id;
+    // const user_id = req.body.user_id;
 
 
     // if (!file) {
@@ -192,7 +192,7 @@ serviceRouter.put("/:id", async (req, res) => {
     // }
     
     const updatedServiceItem = {
-      user_id: user_id,
+      // user_id: user_id,
       service_name: req.body.service_name,
       category_id: req.body.category_id,
       // service_photo: req.file,
