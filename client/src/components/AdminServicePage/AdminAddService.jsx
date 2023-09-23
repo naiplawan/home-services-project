@@ -262,7 +262,7 @@ function AddService() {
               รายการบริการย่อย
             </div>
             <DragDropContext>
-              <Form.List name="items">
+              <Form.List name="items" initialValue={[{}]}>
                 {(fields, { add, remove }) => (
                   <div
                     style={{
@@ -342,15 +342,17 @@ function AddService() {
                             alignItems: "flex-end",
                           }}
                         >
-                          <Form.Item colon={false} label="">
-                            <a
-                              onClick={() => {
-                                remove(field.name);
-                              }}
-                            >
-                              ลบรายการ
-                            </a>
-                          </Form.Item>
+                        {fields.length > 1 && (
+              <Form.Item colon={false} label="">
+                <a
+                  onClick={() => {
+                    remove(field.name);
+                  }}
+                >
+                  ลบรายการ
+                </a>
+              </Form.Item>
+            )}
                         </div>
                       </div>
                     ))}

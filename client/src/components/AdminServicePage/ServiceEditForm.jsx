@@ -35,18 +35,22 @@ function ServiceEditForm() {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   //state for category
-  const [category, setCategory] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [currentCategory, setCurrentCategory] = useState([]);
+  const [category, setCategory] = useState([]); //use to map data on category
+  const [selectedCategory, setSelectedCategory] = useState(""); //this state store the select category
+  const [currentCategory, setCurrentCategory] = useState([]); // the category from serviceID(the data before editng)
 
   const categoryName = currentCategory.category_name;
 
+  console.log("category use to map", category);
+
   console.log(categoryName);
 
-  console.log("อันนี้แคท", currentCategory);
+  console.log("ก่อน", currentCategory); // this one shouldn't be changed
 
-  //state for all
-  const [data, setData] = useState([]);
+  console.log("หลัง", selectedCategory); // this one should change after selection
+
+  //state for category to map
+  const [data, setData] = useState([]); //use to map category
 
   //state for sub_category
   const [service, setService] = useState([]);
@@ -79,6 +83,11 @@ function ServiceEditForm() {
   const [currentImage, setCurrentImage] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const handleCategoryChange = (value) => {
+    console.log("Selected Category:", value);
+    setSelectedCategory(value);
+  };
+
   const handleFileChange = (file) => {
     console.log("file", file);
     const reader = new FileReader();
@@ -106,15 +115,15 @@ function ServiceEditForm() {
 
   //delete
 
-  const deleteCategoryById = async (serviceId) => {
-    try {
-      await axios.delete(`http://localhost:4000/service/${serviceId}`);
-      getServices();
-      hide();
-    } catch (error) {
-      console.error("เกิดข้อผิดพลาดในการลบหมวดหมู่:", error);
-    }
-  };
+  // const deleteCategoryById = async (serviceId) => {
+  //   try {
+  //     await axios.delete(`http://localhost:4000/service/${serviceId}`);
+  //     getServices();
+  //     hide();
+  //   } catch (error) {
+  //     console.error("เกิดข้อผิดพลาดในการลบหมวดหมู่:", error);
+  //   }
+  // };
 
   const hide = () => {
     setDeleteConfirmation(false);
@@ -230,7 +239,7 @@ function ServiceEditForm() {
     axios
       .get("http://localhost:4000/category")
       .then((response) => {
-        setData(response.data.data); // Store data in state
+        // Store data in state
         setCategory(response.data.data);
         console.log(response.data);
       })
@@ -252,7 +261,7 @@ function ServiceEditForm() {
         onFinish={handleSubmitEdit}
         initialValues={{
           service_name: editableServiceName,
-          category_id: categoryName,
+          category_id: selectedCategory,
           service: {
             sub_service:
               service.sub_service &&
@@ -324,13 +333,15 @@ function ServiceEditForm() {
 
               <Form.Item label={<span>หมวดหมู่</span>} colon={false}>
                 <Select
-                  value={categoryName}
+                  value={
+                 currentCategory.category_name
+                  }
                   style={{ width: "50%" }}
-                  onChange={(value) => setSelectedCategory(value)}
+                  name="category_id"
+                  onChange={(value) => setCurrentCategory(value)}
                 >
-                  {data &&
-                    data.data &&
-                    data.data.map((categoryItem) => (
+                  {category.data &&
+                    category.data.map((categoryItem) => (
                       <Select.Option
                         key={categoryItem.category_id}
                         value={categoryItem.category_name}
@@ -340,6 +351,7 @@ function ServiceEditForm() {
                     ))}
                 </Select>
               </Form.Item>
+
               <div className="h-40 w-8/12 pr-16 mb-10 flex justify-between ">
                 <div className="text-grey700 w-52 text-base font-medium ">
                   รูปภาพ
@@ -400,113 +412,114 @@ function ServiceEditForm() {
               <hr className="mb-10 text-grey300 "></hr>
 
               {/* {service.sub_service.length > 0 && ( */}
-                <Form.List name="service.sub_service"
-                initialValue={subServiceArray}>
-                  {(subServices, { add, remove }) => (
-                    <>
-                      {service.sub_service &&
-                        subServices.map(
-                          ({ key, name, fieldKey, ...restField }) => (
-                            <Space
-                              key={key}
-                              style={{ display: "flex", marginBottom: 8 }}
-                              align="baseline"
+              <Form.List
+                name="service.sub_service"
+                initialValue={subServiceArray}
+              >
+                {(subServices, { add, remove }) => (
+                  <>
+                    {service.sub_service &&
+                      subServices.map(
+                        ({ key, name, fieldKey, ...restField }) => (
+                          <Space
+                            key={key}
+                            style={{ display: "flex", marginBottom: 8 }}
+                            align="baseline"
+                          >
+                            <Form.Item
+                              {...restField}
+                              name={[name, "sub_service_name"]}
+                              label="ชื่อรายการ"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "กรุณากรอกชื่อรายการ",
+                                },
+                              ]}
+                              initialValue={
+                                subServiceArray[key]?.sub_service_name
+                              }
                             >
-                              <Form.Item
-                                {...restField}
-                                name={[name, "sub_service_name"]}
-                                label="ชื่อรายการ"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "กรุณากรอกชื่อรายการ",
-                                  },
-                                ]}
-                                initialValue={
-                                  subServiceArray[key]?.sub_service_name
-                                }
-                              >
-                                <Input
-                                  className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
-                                  placeholder="ชื่อรายการ"
-                                />
+                              <Input
+                                className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                                placeholder="ชื่อรายการ"
+                              />
+                            </Form.Item>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "price_per_unit"]}
+                              label="ค่าบริการ / 1 หน่วย"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "กรุณากรอกค่าบริการ / 1 หน่วย",
+                                },
+                                {
+                                  type: "number",
+                                  message: "กรุณากรอกตัวเลข",
+                                },
+                              ]}
+                              initialValue={
+                                subServiceArray[key]?.price_per_unit
+                              }
+                            >
+                              <Input
+                                type="number"
+                                min="0"
+                                max="20000"
+                                step="any"
+                                className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                                placeholder="ค่าบริการ / 1 หน่วย"
+                              />
+                            </Form.Item>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "unit"]}
+                              label="หน่วยการบริการ"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "กรุณากรอกหน่วยการบริการ",
+                                },
+                              ]}
+                              initialValue={subServiceArray[key]?.unit}
+                            >
+                              <Input
+                                className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
+                                placeholder="หน่วยการบริการ"
+                              />
+                            </Form.Item>
+                            <div
+                              style={{
+                                flex: "1",
+                                display: "flex",
+                                alignItems: "flex-end",
+                              }}
+                            >
+                              <Form.Item colon={false} label="">
+                                <a
+                                  className=" text-blue600 text-base not-italic font-semibold underline"
+                                  onClick={() => {
+                                    remove(name);
+                                  }}
+                                >
+                                  ลบรายการ
+                                </a>
                               </Form.Item>
-                              <Form.Item
-                                {...restField}
-                                name={[name, "price_per_unit"]}
-                                label="ค่าบริการ / 1 หน่วย"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "กรุณากรอกค่าบริการ / 1 หน่วย",
-                                  },
-                                  {
-                                    type: "number",
-                                    message: "กรุณากรอกตัวเลข",
-                                  },
-                                ]}
-                                initialValue={
-                                  subServiceArray[key]?.price_per_unit
-                                }
-                              >
-                                <Input
-                                  type="number"
-                                  min="0"
-                                  max="20000"
-                                  step="any"
-                                  className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
-                                  placeholder="ค่าบริการ / 1 หน่วย"
-                                />
-                              </Form.Item>
-                              <Form.Item
-                                {...restField}
-                                name={[name, "unit"]}
-                                label="หน่วยการบริการ"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "กรุณากรอกหน่วยการบริการ",
-                                  },
-                                ]}
-                                initialValue={subServiceArray[key]?.unit}
-                              >
-                                <Input
-                                  className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
-                                  placeholder="หน่วยการบริการ"
-                                />
-                              </Form.Item>
-                              <div
-                                style={{
-                                  flex: "1",
-                                  display: "flex",
-                                  alignItems: "flex-end",
-                                }}
-                              >
-                                <Form.Item colon={false} label="">
-                                  <a
-                                    className=" text-blue600 text-base not-italic font-semibold underline"
-                                    onClick={() => {
-                                      remove(name);
-                                    }}
-                                  >
-                                    ลบรายการ
-                                  </a>
-                                </Form.Item>
-                              </div>
-                            </Space>
-                          )
-                        )}
-                      <button
-                        className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
-                        type="button"
-                        onClick={() => add()}
-                      >
-                        + เพิ่มรายการ
-                      </button>
-                    </>
-                  )}
-                </Form.List>
-              
+                            </div>
+                          </Space>
+                        )
+                      )}
+                    <button
+                      className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
+                      type="button"
+                      onClick={() => add()}
+                    >
+                      + เพิ่มรายการ
+                    </button>
+                  </>
+                )}
+              </Form.List>
 
               <hr className="mt-10 mb-10 text-grey300 "></hr>
               <p className="pb-[25px] ">
