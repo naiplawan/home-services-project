@@ -54,6 +54,8 @@ function AddService() {
 
   const handleSubmitService = async (values) => {
     try {
+      const user_id = localStorage.getItem('user_id');
+
       console.log("values", values);
       console.log("selectedCategory", selectedCategory);
       console.log("fileList:", fileList);
@@ -61,10 +63,6 @@ function AddService() {
       const selectedCategoryId = category.data.find(
         (category) => category.category_name === selectedCategory
       )?.category_id;
-
-      console.log('ก่อนส่ง',user_id)
-
-      const user_id = localStorage.getItem('user_id');
 
       console.log('ก่อนส่ง',user_id)
 
@@ -79,7 +77,7 @@ function AddService() {
 
       formData.append("file", fileList[0]);
 
-      values.items.forEach((item, index) => {
+      values.items.forEach((item) => {
         formData.append(
           "items",
           JSON.stringify({
