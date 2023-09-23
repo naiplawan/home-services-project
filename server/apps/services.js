@@ -184,24 +184,28 @@ serviceRouter.put("/:id", async (req, res) => {
     const serviceId = req.params.id; 
     const file = req.file;
 
+    const user_id = req.body.user_id;
+
+
     // if (!file) {
     //   return res.status(400).json({ message: "No file uploaded" });
     // }
     
     const updatedServiceItem = {
+      user_id: user_id,
       service_name: req.body.service_name,
       category_id: req.body.category_id,
       // service_photo: req.file,
       service_edited_date: new Date(),
     };
 
-    const items = JSON.parse(requestBody.items);
+    // const items = JSON.parse(req.body.items);
 
-    const updatedSubServiceItems = {
-      sub_service_name: items.sub_service_name,
-      unit: items.unit,
-      price_per_unit: items.price_per_unit,
-    };
+    // const updatedSubServiceItems = {
+    //   sub_service_name: items.sub_service_name,
+    //   unit: items.unit,
+    //   price_per_unit: items.price_per_unit,
+    // };
     
     if (file) {
       const updateResult = await supabase.storage
@@ -231,37 +235,37 @@ serviceRouter.put("/:id", async (req, res) => {
       return res.status(500).json({ message: "Error updating data in supabase" });
     }
 
-    const { data: latestService } = await supabase
-      .from("service")
-      .select("service_id")
-      .order("service_id", { ascending: false })
-      .limit(1);
+    // const { data: latestService } = await supabase
+    //   .from("service")
+    //   .select("service_id")
+    //   .order("service_id", { ascending: false })
+    //   .limit(1);
 
-    const service_id = latestService[0].service_id;
+    // const service_id = latestService[0].service_id;
 
-    for (const subServiceItem of updatedSubServiceItems) {
-      subServiceItem.service_id = service_id; // Add service_id to each subServiceItem
-    }
+    // for (const subServiceItem of updatedSubServiceItems) {
+    //   subServiceItem.service_id = service_id; // Add service_id to each subServiceItem
+    // }
 
-    if (!service_id) {
-      console.error("Failed to retrieve service_id from database");
-      return res
-        .status(500)
-        .json({ message: "Failed to retrieve service_id from database" });
-    }
+    // if (!service_id) {
+    //   console.error("Failed to retrieve service_id from database");
+    //   return res
+    //     .status(500)
+    //     .json({ message: "Failed to retrieve service_id from database" });
+    // }
 
-    // แก้ไขรายการบริการย่อย (sub_service)
-    const { data: updatedSubServiceData, error: updatedSubServiceError } = await supabase
-      .from("sub_service")
-      .update(updatedSubServiceItems)
-      .eq("service_id", serviceId)
+    // // แก้ไขรายการบริการย่อย (sub_service)
+    // const { data: updatedSubServiceData, error: updatedSubServiceError } = await supabase
+    //   .from("sub_service")
+    //   .update(updatedSubServiceItems)
+    //   .eq("service_id", serviceId)
     
-    if (serviceError || subServiceError) {
-      console.error('เกิดข้อผิดพลาดในการอัพเดทข้อมูล:', serviceError || subServiceError);
-      res.status(500).json({ error: 'เกิดข้อผิดพลาดในการอัพเดทข้อมูล' });
-    } else {
-      res.status(200).json({ message: 'อัพเดทข้อมูลเรียบร้อย' });
-    }
+    // if (serviceError || subServiceError) {
+    //   console.error('เกิดข้อผิดพลาดในการอัพเดทข้อมูล:', serviceError || subServiceError);
+    //   res.status(500).json({ error: 'เกิดข้อผิดพลาดในการอัพเดทข้อมูล' });
+    // } else {
+    //   res.status(200).json({ message: 'อัพเดทข้อมูลเรียบร้อย' });
+    // }
 
     return res.status(200).send("Service DATA updated successfully");
   } catch (error) {

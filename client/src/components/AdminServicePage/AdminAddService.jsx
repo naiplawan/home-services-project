@@ -54,9 +54,10 @@ function AddService() {
 
   const handleSubmitService = async (values) => {
     try {
-      const user_id = localStorage.getItem('user_id');
 
       console.log("values", values);
+      const user_id = localStorage.getItem('user_id');
+
       console.log("selectedCategory", selectedCategory);
       console.log("fileList:", fileList);
 

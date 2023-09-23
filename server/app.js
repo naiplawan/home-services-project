@@ -8,7 +8,6 @@ import checkoutRouter from "./apps/checkout.js";
 import orderHistoryRouter from "./apps/orderHistory.js";
 import orderHistoryByOrderHistoryIdRouter from "./apps/orderHistoryByOrderhistoryID.js";
 import dotenv from "dotenv";
-import multer from "multer";
 
 async function init() {
   dotenv.config();
@@ -21,7 +20,6 @@ async function init() {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   // app.use(upload.none());
-
 
   app.use("/auth", authRouter);
   app.use("/category", categoryRouter);

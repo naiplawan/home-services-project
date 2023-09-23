@@ -9,6 +9,7 @@ import {
   Button,
   Modal,
   Space,
+  notification,
 } from "antd";
 import {
   LoadingOutlined,
@@ -39,16 +40,6 @@ function ServiceEditForm() {
   const [selectedCategory, setSelectedCategory] = useState(""); //this state store the select category
   const [currentCategory, setCurrentCategory] = useState([]); // the category from serviceID(the data before editng)
 
-  const categoryName = currentCategory.category_name;
-
-  console.log("category use to map", category);
-
-  console.log(categoryName);
-
-  console.log("ก่อน", currentCategory); // this one shouldn't be changed
-
-  console.log("หลัง", selectedCategory); // this one should change after selection
-
   //state for category to map
   const [data, setData] = useState([]); //use to map category
 
@@ -61,32 +52,15 @@ function ServiceEditForm() {
   );
 
   //state for sub_service
-  const [subService, setSubService] = useState([]);
+
 
   const subServiceArray = service.sub_service;
-
-  // subServiceArray.forEach((subService) => {
-  //   const pricePerUnit = subService.price_per_unit;
-  //   const subServiceName = subService.sub_service_name;
-  //   const unit = subService.unit;
-
-  //   console.log(`Price per unit: ${pricePerUnit}`);
-  //   console.log(`Sub service name: ${subServiceName}`);
-  //   console.log(`Unit: ${unit}`);
-  // });
-
-  console.log("อันนี้คือซับ", subService);
 
   //state for image
   const [selectedImage, setSelectedImage] = useState(null);
   const [fileList, setFileList] = useState([]);
   const [currentImage, setCurrentImage] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const handleCategoryChange = (value) => {
-    console.log("Selected Category:", value);
-    setSelectedCategory(value);
-  };
 
   const handleFileChange = (file) => {
     console.log("file", file);
@@ -103,14 +77,6 @@ function ServiceEditForm() {
   const handleDeleteImage = () => {
     setSelectedImage(null);
     setCurrentImage(null);
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
   };
 
   //delete
@@ -155,12 +121,6 @@ function ServiceEditForm() {
 
   // fetch data area
 
-  // const getCategory = async () => {
-  //   const result = await axios("http://localhost:4000/category");
-  //   setCategory(result.data.data);
-  //   console.log("category", result.data.data);
-  // };
-
   console.log(category.data); // array of object
 
   const getService = async (serviceId) => {
@@ -172,7 +132,6 @@ function ServiceEditForm() {
       setEditableServiceName(response.data.data.service_name);
       setCurrentImage(response.data.data.service_photo);
       setCurrentCategory(response.data.data.category);
-      setSubService(response.data.data.sub_service);
       console.log("what is this", response.data.data);
       // setSelectedImage(response.data.image_url);
       // setFileList([
@@ -193,25 +152,36 @@ function ServiceEditForm() {
   // put data API area
   const handleSubmitEdit = async (values) => {
     try {
-      const selectedCategoryId = category.find(
-        (categoryItem) => categoryItem.category_name === selectedCategory
+      console.log('ทั้งหมด',values)
+
+
+      const user_id = localStorage.getItem('user_id');
+
+      const selectedCategoryId = category.data.find(
+        (category) => category.category_name === currentCategory
       )?.category_id;
 
+      console.log(user_id)
       const formData = new FormData();
+      formData.append('user_id', user_id);
       formData.append("service_name", values.service_name);
-      formData.append("category_id", selectedCategoryId);
+      formData.append("category_id", selectedCategory);
       formData.append("file", fileList[0]);
 
-      values.items.forEach((item, index) => {
-        formData.append(
-          "items",
-          JSON.stringify({
-            sub_service_name: item.name,
-            unit: item.unit,
-            price_per_unit: item.cost,
-          })
-        );
-      });
+      // values.items.forEach((item) => {
+      //   formData.append(
+      //     "items",
+      //     JSON.stringify({
+      //       sub_service_name: item.name, // Change name to sub_service_name
+      //       unit: item.unit,
+      //       price_per_unit: item.cost, // Change cost to price_per_unit
+      //     })
+      //   );
+      // });
+      
+      // for (const [key, value] of formData.entries()) {
+      //   console.log(`${key}: ${value}`);
+      // }
 
       const response = await axios.put(
         `http://localhost:4000/service/${params.serviceId}`,
@@ -333,9 +303,7 @@ function ServiceEditForm() {
 
               <Form.Item label={<span>หมวดหมู่</span>} colon={false}>
                 <Select
-                  value={
-                 currentCategory.category_name
-                  }
+                  value={currentCategory.category_name}
                   style={{ width: "50%" }}
                   name="category_id"
                   onChange={(value) => setCurrentCategory(value)}
@@ -443,6 +411,7 @@ function ServiceEditForm() {
                               <Input
                                 className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
                                 placeholder="ชื่อรายการ"
+                                name="sub_service_name"
                               />
                             </Form.Item>
                             <Form.Item
@@ -455,7 +424,6 @@ function ServiceEditForm() {
                                   message: "กรุณากรอกค่าบริการ / 1 หน่วย",
                                 },
                                 {
-                                  type: "number",
                                   message: "กรุณากรอกตัวเลข",
                                 },
                               ]}
@@ -470,6 +438,7 @@ function ServiceEditForm() {
                                 step="any"
                                 className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
                                 placeholder="ค่าบริการ / 1 หน่วย"
+                                name="price_per_unit"
                               />
                             </Form.Item>
                             <Form.Item
@@ -487,6 +456,7 @@ function ServiceEditForm() {
                               <Input
                                 className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
                                 placeholder="หน่วยการบริการ"
+                                name="unit"
                               />
                             </Form.Item>
                             <div
@@ -500,7 +470,16 @@ function ServiceEditForm() {
                                 <a
                                   className=" text-blue600 text-base not-italic font-semibold underline"
                                   onClick={() => {
-                                    remove(name);
+                                    if (subServices.length > 1) {
+                                      remove(name);
+                                    } else {
+                                      notification.error({
+                                        message: "Error",
+                                        description:
+                                          "ต้องมีรายการย่อยอย่างน้อย  1 รายการ",
+                                        duration: 5, // Set duration (in seconds)
+                                      });
+                                    }
                                   }}
                                 >
                                   ลบรายการ
