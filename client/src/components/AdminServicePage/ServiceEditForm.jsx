@@ -39,7 +39,8 @@ function ServiceEditForm() {
   const [category, setCategory] = useState([]); //use to map data on category
   const [selectedCategory, setSelectedCategory] = useState(""); //this state store the select category
   const [currentCategory, setCurrentCategory] = useState([]); // the category from serviceID(the data before editng)
-  console.log('เปลี่ยนแคท', currentCategory, typeof currentCategory)
+  console.log("เปลี่ยนแคท", currentCategory, typeof currentCategory);
+  console.log(selectedCategory);
 
   //state for category to map
   const [data, setData] = useState([]); //use to map category
@@ -52,17 +53,20 @@ function ServiceEditForm() {
     service.service_name
   );
 
-  console.log('เปลี่ยนชื่อ', editableServiceName, typeof editableServiceName)
+  console.log("เปลี่ยนชื่อ", editableServiceName, typeof editableServiceName);
   //state for sub_service
-
 
   const subServiceArray = service.sub_service;
 
   //state for image
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [fileList, setFileList] = useState([]);
-  const [currentImage, setCurrentImage] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null); //โชว์รูปภาพที่เลือก
+  const [fileList, setFileList] = useState([]); //ส่งไปหลังบ้าน
+  const [currentImage, setCurrentImage] = useState(""); //รูปที่ fetchมา
   // const [isModalVisible, setIsModalVisible] = useState(false);
+
+  console.log("a", selectedImage);
+  console.log("b", fileList);
+  console.log("c", currentImage);
 
   const handleFileChange = (file) => {
     console.log("file", file);
@@ -73,6 +77,7 @@ function ServiceEditForm() {
     };
 
     reader.readAsDataURL(file);
+    setFileList([file]);
     return false;
   };
 
@@ -154,36 +159,43 @@ function ServiceEditForm() {
   // put data API area
   const handleSubmitEdit = async (values) => {
     try {
-      console.log('ทั้งหมด',values)
-
+      const updatedSubServiceArray = values.service.sub_service;
 
       // const user_id = localStorage.getItem('user_id');
 
       const selectedCategoryId = category.data.find(
-        (category) => category.category_name === currentCategory
+        (category) => category.category_name === selectedCategory
       )?.category_id;
 
-      
+      console.log("อายดี", selectedCategoryId);
+      console.log("ฟายลิส", fileList);
+
       const formData = new FormData();
       // formData.append('user_id', user_id);
+      console.log("อีดิทเทเบิล", editableServiceName);
       formData.append("service_name", editableServiceName);
-      formData.append("category_id", selectedCategoryId);
-      formData.append("file", fileList[0]);
 
-      // values.items.forEach((item) => {
-      //   formData.append(
-      //     "items",
-      //     JSON.stringify({
-      //       sub_service_name: item.name, // Change name to sub_service_name
-      //       unit: item.unit,
-      //       price_per_unit: item.cost, // Change cost to price_per_unit
-      //     })
-      //   );
-      // });
-      
-      // for (const [key, value] of formData.entries()) {
-      //   console.log(`${key}: ${value}`);
-      // }
+      formData.append("category_id", selectedCategoryId);
+      formData.append("file", fileList);
+
+      console.log(updatedSubServiceArray);
+
+      updatedSubServiceArray.forEach((item, index) => {
+        const subServiceData = {
+          sub_service_name: item.sub_service_name,
+          unit: item.unit,
+          price_per_unit: item.price_per_unit,
+        };
+
+        formData.append(
+          `service.sub_service[${index}]`,
+          JSON.stringify(subServiceData)
+        );
+      });
+
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
 
       const response = await axios.put(
         `http://localhost:4000/service/${params.serviceId}`,
@@ -222,7 +234,15 @@ function ServiceEditForm() {
     getService(params.serviceId);
   }, [params.serviceId]);
 
-  console.log("all data", data);
+  const labelStyle = {
+    marginTop: "10px",
+    color: "var(--gray-900, #323640)",
+    fontFamily: "Prompt",
+    fontSize: "16px",
+    fontStyle: "normal",
+    fontWeight: 500,
+    lineHeight: "150%", // 24px
+  };
 
   return (
     <>
@@ -285,30 +305,41 @@ function ServiceEditForm() {
             {/* content */}
             <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
               <Form.Item
-                label="ชื่อบริการ"
+                label={<span style={labelStyle}>ชื่อบริการ</span>}
                 rules={[
                   {
                     required: true,
                     message: "โปรดกรอกชื่อบริการ",
                   },
                 ]}
+                required
               >
                 <Input
                   style={{ width: "50%" }}
                   name="service_name"
                   type="text"
-                  required
+                 
                   value={editableServiceName}
                   onChange={(e) => setEditableServiceName(e.target.value)}
                 />
               </Form.Item>
 
-              <Form.Item label={<span>หมวดหมู่</span>} colon={false}>
+              <Form.Item
+                label={<span style={labelStyle}>หมวดหมู่</span>}
+                colon={false}
+                rules={[
+                  {
+                    required: true,
+                    message: "โปรดเลือกหมวดหมู่",
+                  },
+                ]}
+                required
+              >
                 <Select
-                  value={currentCategory.category_name}
+                  value={selectedCategory}
                   style={{ width: "50%" }}
                   name="category_id"
-                  onChange={(value) => setCurrentCategory(value)}
+                  onChange={(value) => setSelectedCategory(value)}
                 >
                   {category.data &&
                     category.data.map((categoryItem) => (
@@ -322,30 +353,48 @@ function ServiceEditForm() {
                 </Select>
               </Form.Item>
 
-              <div className="h-40 w-8/12 pr-16 mb-10 flex justify-between ">
-                <div className="text-grey700 w-52 text-base font-medium ">
-                  รูปภาพ
-                </div>
-
+              <Form.Item
+                label={<span style={labelStyle}>รูปภาพ</span>}
+                colon={false}
+                rules={[
+                  {
+                    required: true,
+                    message: "โปรดเลือกรูปภาพ",
+                  },
+                ]}
+                required
+                className="mb-10"
+              >
+                {/* {" "} */}
                 <div className="w-3/4 h-40 relative">
                   {currentImage && (
                     <div>
-                      <img src={currentImage} />
+                      <img
+                        src={currentImage}
+                        alt="selected image"
+                        style={{ maxWidth: "50%", maxHeight: "100%" }}
+                      />
                     </div>
                   )}
 
                   {!currentImage && (
                     <Upload.Dragger
+                      style={{ width: "50%" }}
                       name="file"
                       accept=".png,.jpg,.jpeg"
                       beforeUpload={(file) => {
-                        setFileList([file]);
                         handleFileChange(file);
-                        return false;
+                        return false; // Prevent default upload behavior
                       }}
                       maxFileSize={5 * 1024 * 1024}
                       showUploadList={false}
                       className="relative"
+                      rules={[
+                        {
+                          required: true,
+                          message: "เลือกรูปภาพ",
+                        },
+                      ]}
                     >
                       {selectedImage && (
                         <div>
@@ -356,32 +405,45 @@ function ServiceEditForm() {
                           />
                         </div>
                       )}
-                      <div></div>
                       <div>
-                        <InboxOutlined style={{ fontSize: "36px" }} />
-                        <p className="ant-upload-text">อัพโหลดรูปภาพ</p>
-                        <p className="ant-upload-hint">
-                          PNG, JPG ขนาดไม่เกิน 5MB
-                        </p>
-                      </div>
-                      <div className="text-grey700 text-xs z-0 mt-1">
-                        ขนาดภาพที่แนะนำ: 1440 x 225 PX
+                        {!selectedImage && (
+                          <>
+                            <InboxOutlined style={{ fontSize: "36px" }} />
+                            <p className="ant-upload-text">
+                              <span className="text-blue600 text-base not-italic font-semibold underline">
+                                อัพโหลดรูปภาพ
+                              </span>{" "}
+                              หรือ ลากและวางที่นี่
+                            </p>
+                            <p className="ant-upload-hint">
+                              PNG, JPG ขนาดไม่เกิน 5MB
+                            </p>
+                          </>
+                        )}
                       </div>
                     </Upload.Dragger>
                   )}
-                  <div className="text-grey700 text-xs z-0 mt-1">
-                    ขนาดภาพที่แนะนำ: 1440 x 225 PX
-                    <span>
+                  <div
+                    className="flex justify-between"
+                    style={{ width: "50%" }}
+                  >
+                    <div className="text-grey700 text-xs z-0 mt-1">
+                      ขนาดภาพที่แนะนำ: 1440 x 225 PX
+                    </div>
+                    <div className=" text-blue500 text-base not-italic font-semibold underline">
                       {" "}
-                      <Button onClick={handleDeleteImage}>Delete</Button>
-                    </span>
+                      <a onClick={handleDeleteImage}>ลบรูปภาพ</a>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Form.Item>
 
-              <hr className="mb-10 text-grey300 "></hr>
+              <hr className="mt-10 mb-10 text-grey300" />
 
               {/* {service.sub_service.length > 0 && ( */}
+              <div className="mb-10 text-grey700 text-base font-medium ">
+                รายการบริการย่อย
+              </div>
               <Form.List
                 name="service.sub_service"
                 initialValue={subServiceArray}
