@@ -171,7 +171,7 @@ function AdminDetailService() {
                 ))}
             </div>
 
-            <p className="pb-[25px] ">
+            <p className="mt-10 pb-[25px] ">
               <span className="text-grey700">สร้างเมื่อ</span>
               <span className="px-[200px] text-black ">
                 {dateFormat(service.service_created_date)}
