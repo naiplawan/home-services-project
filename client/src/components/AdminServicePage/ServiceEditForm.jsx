@@ -23,14 +23,13 @@ import arrow from "../../assets/AdminPhoto/arrow.png";
 import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
 import image from "../../assets/AdminPhoto/imageIndex.js";
-import { v4 as uuidv4 } from "uuid";
+
 
 function ServiceEditForm() {
   //render component and package area
   const navigate = useNavigate();
   const params = useParams();
   const { Dragger } = Upload;
-  uuidv4();
 
   //delete state
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
