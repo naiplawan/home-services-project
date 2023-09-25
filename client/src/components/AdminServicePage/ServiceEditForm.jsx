@@ -1,29 +1,22 @@
 import {
-  Form,
-  Input,
-  Upload,
-  Select,
-  message,
-  InputNumber,
-  Image,
-  Button,
-  Modal,
-  Space,
-  notification,
-} from "antd";
-import {
-  LoadingOutlined,
-  PlusOutlined,
-  InboxOutlined,
+  InboxOutlined
 } from "@ant-design/icons";
-import { useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import {
+  Form,
+  Image,
+  Input,
+  Select,
+  Space,
+  Upload,
+  message,
+  notification
+} from "antd";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import arrow from "../../assets/AdminPhoto/arrow.png";
-import dateFormat from "../../utils/dateFormat.js";
-import AlertBoxDelete from "../AlertBox.jsx";
 import image from "../../assets/AdminPhoto/imageIndex.js";
-
+import dateFormat from "../../utils/dateFormat.js";
 
 function ServiceEditForm() {
   //render component and package area
@@ -52,25 +45,28 @@ function ServiceEditForm() {
     service.service_name
   );
 
-
-  
   console.log("เปลี่ยนชื่อ", editableServiceName, typeof editableServiceName);
+
+
   //state for sub_service
 
-  const currentSubService = service.sub_service;
+  const currentSubService = service.sub_service; // subservice เดิม
 
+// ถ้าเพิ่ม sub service ใหม่ จะทำการเก็บไว้อีก state นึง โดย ใส่ ฟังก์ชั่น onchange and conditional logic 
+// if there is a new sub service item added set state into setNewSubService
 
-  const [updateSubService, setUpdateSubService] = useState([])
+  const [newSubService, setNewSubService] = useState([])
+
+  console.log('subService:', subService)
+
+  const [updateSubService, setUpdateSubService] = useState([]);
 
   //state for image
   const [selectedImage, setSelectedImage] = useState(null); //โชว์รูปภาพที่เลือก
   const [fileList, setFileList] = useState([]); //ส่งไปหลังบ้าน
   const [currentImage, setCurrentImage] = useState(""); //รูปที่ fetchมา
   // const [isModalVisible, setIsModalVisible] = useState(false);
-
-  console.log("a", selectedImage);
-  console.log("b", fileList);
-  console.log("c", currentImage);
+ console.log("b", fileList);
 
   const handleFileChange = (file) => {
     console.log("file", file);
@@ -91,19 +87,23 @@ function ServiceEditForm() {
   };
 
   //onchange sub_service
-  const handleSubServiceChange = (index, field, value) => {
-    const updatedSubService = [...currentSubService]; // Create a copy of currentSubService
-    updatedSubService[index][field] = value; // Update the specific field in the copied subService
-  
-    // Update the form values with the new sub_service array
-    setService(prevService => ({
-      ...prevService,
-      sub_service: updatedSubService,
-    }));
-  };
-  
+  // const handleSubServiceChange = (index, field, value) => {
+  //   console.log("index:", index);
+  //   console.log("field:", field);
+  //   console.log("value:", value);
+  //   const updatedSubService = [...currentSubService];
+  //   console.log("updatedSubService:", updatedSubService); // Create a copy of currentSubService
+  //   if (updatedSubService[index]) {
+  //     updatedSubService[index][field] = value;
 
-  console.log('updateSubService', updateSubService)
+  //     setService((prevService) => ({
+  //       ...prevService,
+  //       sub_service: updatedSubService,
+  //     }));
+  //   }
+  // };
+
+  // console.log("updateSubService", updateSubService);
 
   //delete
 
@@ -158,6 +158,8 @@ function ServiceEditForm() {
       setEditableServiceName(response.data.data.service_name);
       setCurrentImage(response.data.data.service_photo);
       setCurrentCategory(response.data.data.category);
+      // setSubService(response.data.data.service.sub_service)
+      // console.log('?', response.data.data.service.sub_service)
       console.log("what is this", response.data.data);
       // setSelectedImage(response.data.image_url);
       // setFileList([
@@ -174,13 +176,22 @@ function ServiceEditForm() {
   };
 
   console.log(currentImage);
-  console.log('updateSubService', updateSubService)
+  console.log("updateSubService", updateSubService);
 
   // put data API area
   const handleSubmitEdit = async (values) => {
     try {
-      console.log(values)
+      console.log('Form values:', values);
+
+      // const updatedSubServiceItems = values.service.sub_service.map((item, index) => ({
+      //   sub_service_name: item.sub_service_name,
+      //   unit: item.unit,
+      //   price_per_unit: item.price_per_unit,
+      // }));
   
+
+      // console.log('updatedSubServiceItems', updatedSubServiceItems)
+
       // const user_id = localStorage.getItem('user_id');
 
       const selectedCategoryId = category.data.find(
@@ -197,19 +208,52 @@ function ServiceEditForm() {
 
       formData.append("category_id", selectedCategoryId);
       formData.append("file", fileList[0]);
+console.log('currentSubService', currentSubService)
+      formData.append('items', JSON.stringify(currentSubService));
 
       // console.log(updatedSubServiceArray);
+      // values.service?.sub_service?.forEach((item, index) => {
+      //   console.log(`Sub Service ${index + 1}`);
+      //   console.log(`Sub Service Name: ${item.sub_service_name}`);
+      //   console.log(`Unit: ${item.unit}`);
+      //   console.log(`Price per Unit: ${item.price_per_unit}`);
 
-      currentSubService.forEach((item, index) => {
-        formData.append(`service.sub_service[${index}].sub_service_name`, item.sub_service_name);
-        formData.append(`service.sub_service[${index}].unit`, item.unit);
-        formData.append(`service.sub_service[${index}].price_per_unit`, item.price_per_unit);
-      });
-      
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
-      
+      //   // Append to formData
+      //   formData.append(`service.sub_service[${index}].sub_service_name`, item.sub_service_name);
+      //   formData.append(`service.sub_service[${index}].unit`, item.unit);
+      //   formData.append(`service.sub_service[${index}].price_per_unit`, item.price_per_unit);
+      // });
+
+      // currentSubService.forEach((item, index) => {
+      //   formData.append(
+      //     `service.sub_service[${index}].sub_service_name`,
+      //     item.sub_service_name
+      //   );
+      //   formData.append(`service.sub_service[${index}].unit`, item.unit);
+      //   formData.append(
+      //     `service.sub_service[${index}].price_per_unit`,
+      //     item.price_per_unit
+      //   );
+      // });
+
+      // for (const [key, value] of formData.entries()) {
+      //   console.log(`${key}: ${value}`);
+      // }
+
+      // values.service.sub_service.forEach((item, index) => {
+      //   formData.append(
+      //     `service.sub_service[${currentSubService.length + index}].sub_service_name`,
+      //     item.sub_service_name
+      //   );
+      //   formData.append(
+      //     `service.sub_service[${currentSubService.length + index}].unit`,
+      //     item.unit
+      //   );
+      //   formData.append(
+      //     `service.sub_service[${currentSubService.length + index}].price_per_unit`,
+      //     item.price_per_unit
+      //   );
+      // });
 
       const response = await axios.put(
         `http://localhost:4000/service/${params.serviceId}`,
@@ -269,14 +313,7 @@ function ServiceEditForm() {
           service_name: editableServiceName,
           category_id: selectedCategory,
           service: {
-            sub_service:
-              service.sub_service &&
-              currentSubService.map((subService, index) => ({
-                sub_service_name: subService.sub_service_name,
-                price_per_unit: subService.price_per_unit,
-                unit: subService.unit,
-                key: index,
-              })),
+            // sub_service: [],
             service_photo: currentImage,
           },
         }}
@@ -332,7 +369,6 @@ function ServiceEditForm() {
                   style={{ width: "50%" }}
                   name="service_name"
                   type="text"
-                 
                   value={editableServiceName}
                   onChange={(e) => setEditableServiceName(e.target.value)}
                 />
@@ -465,111 +501,109 @@ function ServiceEditForm() {
                 {(subServices, { add, remove }) => (
                   <>
                     {service.sub_service &&
-                      subServices.map(
-                        ({ key, name, ...restField }) => (
-                          <Space
-                            key={key}
-                            style={{ display: "flex", marginBottom: 8 }}
-                            align="baseline"
+                      subServices.map(({ key, name, ...restField }) => (
+                        <Space
+                          key={key}
+                          style={{ display: "flex", marginBottom: 8 }}
+                          align="baseline"
+                        >
+                          <Form.Item
+                            {...restField}
+                            name={[name, "sub_service_name"]}
+                            label="ชื่อรายการ"
+                            rules={[
+                              {
+                                required: true,
+                                message: "กรุณากรอกชื่อรายการ",
+                              },
+                            ]}
+                            initialValue={
+                              currentSubService[key]?.sub_service_name
+                            }
                           >
-                            <Form.Item
-                              {...restField}
-                              name={[name, "sub_service_name"]}
-                              label="ชื่อรายการ"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "กรุณากรอกชื่อรายการ",
-                                },
-                              ]}
-                              initialValue={
-                                currentSubService[key]?.sub_service_name
-                              }
-                            >
-                              <Input
-                                className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
-                                placeholder="ชื่อรายการ"
-                                name="sub_service_name"
-                                onChange={handleSubServiceChange}
-                              />
+                            <Input
+                              className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                              placeholder="ชื่อรายการ"
+                              name="sub_service_name"
+                              // onChange={handleSubServiceChange}
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            name={[name, "price_per_unit"]}
+                            label="ค่าบริการ / 1 หน่วย"
+                            rules={[
+                              {
+                                required: true,
+                                message: "กรุณากรอกค่าบริการ / 1 หน่วย",
+                              },
+                              {
+                                message: "กรุณากรอกตัวเลข",
+                              },
+                            ]}
+                            initialValue={
+                              currentSubService[key]?.price_per_unit
+                            }
+                          >
+                            <Input
+                              type="number"
+                              min="0"
+                              max="20000"
+                              step="any"
+                              className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                              placeholder="ค่าบริการ / 1 หน่วย"
+                              name="price_per_unit"
+                              // onChange={handleSubServiceChange}
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            {...restField}
+                            name={[name, "unit"]}
+                            label="หน่วยการบริการ"
+                            rules={[
+                              {
+                                required: true,
+                                message: "กรุณากรอกหน่วยการบริการ",
+                              },
+                            ]}
+                            initialValue={currentSubService[key]?.unit}
+                          >
+                            <Input
+                              className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
+                              placeholder="หน่วยการบริการ"
+                              name="unit"
+                              // onChange={handleSubServiceChange}
+                            />
+                          </Form.Item>
+                          <div
+                            style={{
+                              flex: "1",
+                              display: "flex",
+                              alignItems: "flex-end",
+                            }}
+                          >
+                            <Form.Item colon={false} label="">
+                              <a
+                                className=" text-blue600 text-base not-italic font-semibold underline"
+                                onClick={() => {
+                                  if (subServices.length > 1) {
+                                    remove(name);
+                                  } else {
+                                    notification.error({
+                                      message: "Error",
+                                      description:
+                                        "ต้องมีรายการย่อยอย่างน้อย  1 รายการ",
+                                      duration: 5, // Set duration (in seconds)
+                                    });
+                                  }
+                                }}
+                              >
+                                ลบรายการ
+                              </a>
                             </Form.Item>
-                            <Form.Item
-                              {...restField}
-                              name={[name, "price_per_unit"]}
-                              label="ค่าบริการ / 1 หน่วย"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "กรุณากรอกค่าบริการ / 1 หน่วย",
-                                },
-                                {
-                                  message: "กรุณากรอกตัวเลข",
-                                },
-                              ]}
-                              initialValue={
-                                currentSubService[key]?.price_per_unit
-                              }
-                            >
-                              <Input
-                                type="number"
-                                min="0"
-                                max="20000"
-                                step="any"
-                                className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
-                                placeholder="ค่าบริการ / 1 หน่วย"
-                                name="price_per_unit"
-                                onChange={handleSubServiceChange}
-                              />
-                            </Form.Item>
-                            <Form.Item
-                              {...restField}
-                              name={[name, "unit"]}
-                              label="หน่วยการบริการ"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "กรุณากรอกหน่วยการบริการ",
-                                },
-                              ]}
-                              initialValue={currentSubService[key]?.unit}
-                            >
-                              <Input
-                                className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
-                                placeholder="หน่วยการบริการ"
-                                name="unit"
-                                onChange={handleSubServiceChange}
-                              />
-                            </Form.Item>
-                            <div
-                              style={{
-                                flex: "1",
-                                display: "flex",
-                                alignItems: "flex-end",
-                              }}
-                            >
-                              <Form.Item colon={false} label="">
-                                <a
-                                  className=" text-blue600 text-base not-italic font-semibold underline"
-                                  onClick={() => {
-                                    if (subServices.length > 1) {
-                                      remove(name);
-                                    } else {
-                                      notification.error({
-                                        message: "Error",
-                                        description:
-                                          "ต้องมีรายการย่อยอย่างน้อย  1 รายการ",
-                                        duration: 5, // Set duration (in seconds)
-                                      });
-                                    }
-                                  }}
-                                >
-                                  ลบรายการ
-                                </a>
-                              </Form.Item>
-                            </div>
-                          </Space>
-                        )
-                      )}
+                          </div>
+                        </Space>
+                      ))}
                     <button
                       className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
                       type="button"
