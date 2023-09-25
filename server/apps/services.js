@@ -185,6 +185,15 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
   try {
     console.log("เริ่ม", req.body);
     const serviceId = req.params.id;
+
+    // const subServiceId = await supabase
+    // .from("sub_service")
+    // .select("service_id")
+    // .eq("service_id", serviceId)
+
+    // console.log(subServiceId)
+
+    console.log(serviceId);
     const file = req.file;
     console.log("ฟาย", file);
 
@@ -200,28 +209,30 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
       service_edited_date: new Date(),
     };
 
-    console.log('req.updatedServiceItem', updatedServiceItem)
+    console.log("req.updatedServiceItem", updatedServiceItem);
 
-    // let updatedSubServiceItems;
+    let updatedSubServiceItems;
 
-    // try {
-    //   updatedSubServiceItems = JSON.parse(req.body.items);
-    
-    //   if (!Array.isArray(updatedSubServiceItems)) {
-    //     updatedSubServiceItems = [updatedSubServiceItems];
-    //   }
-    // } catch (error) {
-    //   console.error("Error parsing subServiceItems:", error);
-    //   return res
-    //     .status(400)
-    //     .json({ message: "Invalid format for subServiceItems" });
-    // }
+    try {
+      updatedSubServiceItems = JSON.parse(req.body.items);
 
-    // console.log("sub service data", updatedSubServiceItems);
+      if (!Array.isArray(updatedSubServiceItems)) {
+        updatedSubServiceItems = [updatedSubServiceItems];
+      }
+    } catch (error) {
+      console.error("Error parsing subServiceItems:", error);
+      return res
+        .status(400)
+        .json({ message: "Invalid format for subServiceItems" });
+    }
+
+    console.log("sub service data", updatedSubServiceItems);
+
+    console.log("a", file.originalname);
 
     const updateResult = await supabase.storage
       .from("home_service")
-      .update(`service_photo/${Date.now()}${file.originalname}`, file.buffer, {
+      .upload(`service_photo/${Date.now()}${file.originalname}`, file.buffer, {
         cacheControl: "3600",
         upsert: false,
         contentType: file.mimetype,
@@ -236,6 +247,8 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
 
       // Assign the URL directly to service_photo
       updatedServiceItem["service_photo"] = servicePhotourl;
+
+      console.log(updatedServiceItem["service_photo"]);
     } else {
       console.error(
         "Error uploading file to Supabase storage",
@@ -246,11 +259,15 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
         .json({ message: "Error uploading file to Supabase storage" });
     }
 
+    console.log([updatedServiceItem]);
+
     const { data: updatedServiceData, error: updatedServiceError } =
       await supabase
         .from("service")
         .update([updatedServiceItem])
-        //.eq("service_id", serviceId);
+        .eq("service_id", serviceId);
+
+   
 
     if (updatedServiceError) {
       console.error("Error updating service data", updatedServiceError);
@@ -280,47 +297,38 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
 
     // // // แก้ไขรายการบริการย่อย (sub_service)
 
-    // console.log('ก่อนส่ง', [updatedSubServiceItems])
-    // const { data: updatedSubServiceData, error: updatedSubServiceError } =
-    //   await supabase
-    //     .from("sub_service")
-    //     .update([updatedSubServiceItems])
-    //     .eq("service_id", serviceId);
+    
 
-    // if (serviceError || subServiceError) {
-    //   console.error(
-    //     "เกิดข้อผิดพลาดในการอัพเดทข้อมูล:",
-    //     serviceError || subServiceError
-    //   );
-    //   res.status(500).json({ error: "เกิดข้อผิดพลาดในการอัพเดทข้อมูล" });
-    // } else {
-    //   res.status(200).json({ message: "อัพเดทข้อมูลเรียบร้อย" });
-    // }
+    console.log("ก่อนส่ง", updatedSubServiceItems);
+    const { data: updatedSubServiceData, error: updatedSubServiceError } =
+      await supabase
+        .from("sub_service")
+        .update([updatedSubServiceItems])
+        .eq("service_id", serviceId);
+
+        console.log("updatedSubServiceError:", updatedSubServiceError);
 
     return res.status(200).send("Service DATA updated successfully");
   } catch (error) {
     console.error("Error updating service data", error);
     res.status(500).json({
       message: "Error updating service data in supabase",
-      error: error.message // Include specific error message
+      error: error.message, // Include specific error message
     });
   }
 });
 
-
-
 //API ROUTE to delete exisitng service item
-
 
 // serviceRouter.put("/:id", async (req, res) => {
 //   try {
-//     const serviceId = req.params.id; 
+//     const serviceId = req.params.id;
 //     const file = req.file;
 
 //     // if (!file) {
 //     //   return res.status(400).json({ message: "No file uploaded" });
 //     // }
-    
+
 //     const updatedServiceItem = {
 //       service_name: req.body.service_name,
 //       category_id: req.body.category_id,
@@ -335,7 +343,7 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
 //       unit: items.unit,
 //       price_per_unit: items.price_per_unit,
 //     };
-    
+
 //     if (file) {
 //       const updateResult = await supabase.storage
 //         .from("home_service")
@@ -350,7 +358,7 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
 //           .getPublicUrl(`service_photo/${Date.now()}${file.originalname}`);
 
 //         updatedServiceItem["service_photo"] = servicePhotoUrl;
-//     }   
+//     }
 
 //     console.log(updatedServiceItem);
 
@@ -358,7 +366,7 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
 //       .from("service")
 //       .update(updatedServiceItem)
 //       .eq("service_id", serviceId);
-    
+
 //     if (updatedServiceError) {
 //       console.error("Error updating service data", updatedServiceError);
 //       return res.status(500).json({ message: "Error updating data in supabase" });
@@ -388,7 +396,7 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
 //       .from("sub_service")
 //       .update(updatedSubServiceItems)
 //       .eq("service_id", serviceId)
-    
+
 //     if (serviceError || subServiceError) {
 //       console.error('เกิดข้อผิดพลาดในการอัพเดทข้อมูล:', serviceError || subServiceError);
 //       res.status(500).json({ error: 'เกิดข้อผิดพลาดในการอัพเดทข้อมูล' });
