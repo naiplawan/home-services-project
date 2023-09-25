@@ -154,6 +154,7 @@ function ServiceEditForm() {
   // put data API area
   const handleSubmitEdit = async (values) => {
     try {
+
       console.log("Form values:", values);
 
       const subServiceData = values["service.sub_service"];
@@ -164,29 +165,50 @@ function ServiceEditForm() {
           `Sub Service Name: ${sub_service_name}, Unit: ${unit}, Price per Unit: ${price_per_unit}`
         );
       }
-
-      // console.log('updatedSubServiceItems', updatedSubServiceItems)
-
+    
       const user_id = localStorage.getItem('user_id');
-
       const selectedCategoryId = category.data.find(
         (category) => category.category_name === selectedCategory
       )?.category_id;
-
-      console.log("อายดี", selectedCategoryId);
-      console.log("ฟายลิส", fileList);
-
+  
       const formData = new FormData();
       formData.append('user_id', user_id);
-      console.log("อีดิทเทเบิล", editableServiceName);
-      formData.append("service_name", editableServiceName);
+  
+      // Check if service_name has changed
+      if (editableServiceName !== service.service_name) {
+        formData.append("service_name", editableServiceName);
+      } else {
+        formData.append("service_name", service.service_name); // Use the fetched value
+      }
+  
+      // Check if category_id has changed
+      if (selectedCategoryId !== currentCategory.category_id) {
+        formData.append("category_id", selectedCategoryId);
+      } else {
+        formData.append("category_id", currentCategory.category_id); // Use the fetched value
+      }
+  
+      // Check if file has changed
+      if (fileList[0] && fileList[0] !== currentImage) {
+        formData.append("file", fileList[0]);
+      } else {
+        formData.append("file", currentImage); // Use the fetched value
+      }
+  
+      // Check if sub_service has changed
+      if (JSON.stringify(subServiceData) !== JSON.stringify(currentSubService)) {
+        formData.append("items", JSON.stringify(subServiceData));
+      } else {
+        formData.append("items", JSON.stringify(currentSubService)); // Use the fetched value
+      }
 
-      formData.append("category_id", selectedCategoryId);
-      formData.append("file", fileList[0] || currentImage);
-      console.log("currentSubService", subServiceData);
-      formData.append("items", JSON.stringify(subServiceData)); //insert and update new one DONE 0/
-        formData.append("service_created_date", service.service_created_date)
-
+      
+      // formData.append("items", JSON.stringify(subServiceData)); //insert and update new one DONE 0/
+  
+  
+      // Add the unchanged fields
+      formData.append("service_created_date", service.service_created_date);
+  
       const response = await axios.put(
         `http://localhost:4000/service/${params.serviceId}`,
         formData,
@@ -194,7 +216,7 @@ function ServiceEditForm() {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
+  
       if (response.status === 200) {
         message.success("Successfully update service");
       } else {
