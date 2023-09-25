@@ -32,8 +32,7 @@ promotionRouter.post("/", async (req, res) => {
 
     // Get current date and time
     const currentDateTime = new Date();
-
-    console.log(promotionItem)
+    console.log(promotion_code, promotion_types, promotion_quota, expiryDate, expiryTime);
 
     // Insert data into Supabase table
     const { data, error } = await supabase
