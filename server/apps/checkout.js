@@ -30,7 +30,6 @@ checkoutRouter.get("/", async (req, res) => {
 
 checkoutRouter.post("/", async (req, res) => {
   //req.body ที่ได้มา ใช้ insert 3 table
-  // ไม่มั่นใจว่า user_id สามารถแนบมาจากทางหน้าบ้านได้ไหม ต้องไปเขียน logic หน้าบ้าน
 
   try {
     console.log(req.body);
