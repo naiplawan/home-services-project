@@ -39,6 +39,7 @@ function ServiceEditForm() {
   const [currentCategory, setCurrentCategory] = useState([]); // the category from serviceID(the data before editng)
   console.log("เปลี่ยนแคท", currentCategory, typeof currentCategory);
   console.log(selectedCategory);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(""); // display the selected category
 
   //state for category to map
   const [data, setData] = useState([]); //use to map category
@@ -127,6 +128,8 @@ function ServiceEditForm() {
       const response = await axios.get(
         `http://localhost:4000/service/${serviceId}`
       );
+      const serviceData = response.data.data;
+      setSelectedCategoryId(serviceData.category_id); // display the selected category
       setService(response.data.data);
       setEditableServiceName(response.data.data.service_name);
       setCurrentImage(response.data.data.service_photo);
@@ -328,7 +331,7 @@ function ServiceEditForm() {
                 required
               >
                 <Select
-                  value={selectedCategory}
+                  value={selectedCategoryId} // change selectedCategory to selectedCategoryId
                   style={{ width: "50%" }}
                   name="category_id"
                   onChange={(value) => setSelectedCategory(value)}
@@ -337,7 +340,7 @@ function ServiceEditForm() {
                     category.data.map((categoryItem) => (
                       <Select.Option
                         key={categoryItem.category_id}
-                        value={categoryItem.category_name}
+                        value={categoryItem.category_id} // change category_name to category_id
                       >
                         {categoryItem.category_name}
                       </Select.Option>
