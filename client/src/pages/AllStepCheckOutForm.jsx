@@ -5,6 +5,9 @@ import arrowBlue from "../assets/CustomerPhoto/icons/arrow-blue.svg"
 import arrowWhite from "../assets/CustomerPhoto/icons/arrow-white.svg";
 import sellblack from "../assets/CustomerPhoto/icons/sellblack.svg";
 import axios from "axios";
+import dayjs from 'dayjs'
+import credit from "../assets/CustomerPhoto/icons/credit.svg";
+import qr from "../assets/CustomerPhoto/icons/qr.svg";
 import greyarrow from "../assets/CustomerPhoto/icons/BackGrey.svg";
 import { message, Steps, Form, Input, DatePicker, TimePicker } from "antd";
 
@@ -17,6 +20,7 @@ function AllStepCheckOutForm() {
   const { TextArea } = Input;
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
+  const monthFormat = 'MM/YY';
 
   console.log("params.serviceId:", params.serviceId);
   console.log("Service Data:", service);
@@ -32,8 +36,8 @@ function AllStepCheckOutForm() {
     },
     {
       title: "ชำระเงิน",
-      content: "Last-content",
-    },
+      content: "Third-content",
+    }
   ];
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
@@ -117,7 +121,15 @@ function AllStepCheckOutForm() {
     next();
   };
 
-  console.log(current)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+
+const handlePaymentMethodClick = (method) => {
+    setSelectedPaymentMethod(method);
+  };
+
+  console.log("current is:",current)
+  console.log("Form:",formData)
+  console.log("Subservices:",selectedSubService)
 
   return (
     <div className="First-content bg-grey300" content="First-content">
@@ -141,9 +153,11 @@ function AllStepCheckOutForm() {
         ) : (
           <p>No service photo available.</p>
         )}
-        <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
-          <Steps current={0} labelPlacement="vertical" items={items} />
-        </div>
+       {current !== 3 && ( // Hide Steps on the Summary page
+          <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
+            <Steps current={current} labelPlacement="vertical" items={items} />
+          </div>
+        )}
       </div>
       <div className="flex my-8 lg:mx-[12rem] md:mx-10 justify-between min-h-screen w-[80%]  bg-white ">
         {current === 0 ? (
@@ -328,24 +342,85 @@ function AllStepCheckOutForm() {
               </div>
             </div>
           </div>
-        ) : (
+        ) : current === 2 ? (
           <div
+            className="Last-content  h-full w-[687px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border border-grey300 rounded-lg mt-20"
+            content="Last-content"
+          >
+            <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
+              <Steps current={current} labelPlacement="vertical" items={items} />
+            </div>
+            <div
             className="Last-content  h-full w-[687px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border border-grey300 rounded-lg mt-20"
             content="Last-content"
           >
             <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
               <Steps current={2} labelPlacement="vertical" items={items} />
             </div>
-            นี่คือเนื้อหาของ Step ที่ 3
+            <div>ชำระเงิน</div>
+            <div className="flex justify-evenly mt-4">
+            <button
+              className={`w-full border border-[#CCD0D7] rounded-lg p-1 flex flex-col justify-center items-center focus:outline-none focus:ring focus:ring-[#336DF2] ${
+                selectedPaymentMethod === "qr" ? "bg-[#E7EEFF] focus:ring focus:ring-[#336DF2]" : ""
+              }`}
+              onClick={() => handlePaymentMethodClick("qr")}
+            >
+              <img src={qr} />
+              <p>พร้อมเพ</p>
+            </button>
+            <button
+              className={`w-full border border-[#CCD0D7] rounded-lg p-1 ml-4 flex flex-col justify-center items-center focus:outline-none focus:ring focus:ring-[#336DF2] ${
+                selectedPaymentMethod === "credit" ? "bg-[#E7EEFF] focus:ring focus:ring-[#336DF2]" : ""
+              }`}
+              onClick={() => handlePaymentMethodClick("credit")}
+            >
+              <img src={credit} />
+              <p>บัตรเครดิต</p>
+            </button>
+              </div>
+              <div className="mt-5">
+                <p>หมายเลขบัตรเครดิต<span className="text-[#C82438]">*</span></p>
+                <input placeholder="กรุณากรอกหมายเลขบัตรเครดิต" className="w-full border border-[#CCD0D7] rounded-lg p-2" required/>
+                </div>
+              <div className="mt-5">
+              <p>ชื่อบนบัตร<span className="text-[#C82438]">*</span></p>
+              <input placeholder="กรุณากรอกชื่อบนบัตร" className="w-full border border-[#CCD0D7] rounded-lg p-2" required/>
+              </div>
+              <div className="flex mt-5">
+              <div>
+              <p>วันหมดอายุ<span className="text-[#C82438]">*</span></p>
+              <DatePicker defaultValue={dayjs('2015/01', monthFormat)} format={monthFormat} picker="month" placeholder="MM/YY" required/>
+              </div>
+              <div className="ml-4">
+              <p>รหัส CVC / CVV<span className="text-[#C82438]">*</span></p>
+              <input  type="tel"
+  placeholder="xxx"
+  className="w-full border border-[#CCD0D7] rounded-lg p-0.5"
+  maxlength="3" pattern="([0-9]{3})" required/>
+              </div>
+              </div>
+              <div className="my-8 w-full h-[1px] border border-[#CCD0D7]"></div>
+              <div className="flex">
+              <div>
+              <p>Promotion Code</p>
+              <input placeholder="กรุณากรอกโค้ดส่วนลด (ถ้ามี)" className="w-full border border-[#CCD0D7] rounded-lg p-1"/>
+              </div>
+              <div className="pt-6 ml-5">
+                <button className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-20 p-1 px-1 bg-[#336DF2] rounded-lg">ใช้โค้ด</button>
+              </div>
+              </div>
           </div>
-        )}
+
+          </div>
+        ) : null}
+        {/* summary-box */}
         <div className="h-full w-[562px] py-8 px-6 flex flex-col justify-between border border-grey300 rounded-lg mr-0 top-40 mt-20 ">
-          <div className="summary-box pb-3 text-[20px] text-[#646C80]">สรุปรายการ</div>
+          <div className="summary-box flex-auto text-center pb-3 text-[40px] text-[#646C80]"> {current === 3 ? "ชำระเงินเรียบร้อยแล้ว" : "สรุปรายการ"}</div>
           <ul>
             {calculateTotalPrice().map((item, index) => (
               <li key={index} className="flex justify-between">
-                <p>{item.sub_service_name}</p>
-                <p>
+                <p className="text-black" >{item.sub_service_name}</p>
+                <p className="text-black">
                   {item.count > 1
                     ? `${item.count} ${item.unit}`
                     : `1  ${item.unit}`}
@@ -354,31 +429,32 @@ function AllStepCheckOutForm() {
             ))}
           </ul>
           <div className="w-[301]px h-[1px] border border-[#CCD0D7] mt-3"></div>
-          <div className="pt-10"><div> {current === 1 || current === 2 ? (
+          <div className="pt-10"><div> {current === 1 || current === 2 || current ===3 ? (
       <div>
         <div className="flex justify-between">
           <div className="text-[#646C80]">วันที่:</div>
-          <div>{formData.date ? formData.date.format('DD/MM/YYYY') : ''}</div>
+          <div className="text-black">{formData.date ? formData.date.format('DD/MM/YYYY') : ''}</div>
         </div>
         <div className="flex justify-between">
           <div className="text-[#646C80]">เวลา:</div>
-          <div>{formData.time ? formData.time.format('HH:mm') : ''}</div>
+          <div className="text-black">{formData.time ? formData.time.format('HH:mm') : ''}</div>
         </div>
         <div className="flex justify-between">
           <div className="text-[#646C80]">สถานที่:</div>
-          <div>{formData.address} {formData.subdistrict} {formData.district} {formData.province} {formData.zipcode}</div>
+          <div className="text-black">{formData.address} {formData.subdistrict} {formData.district} {formData.province} {formData.zipcode}</div>
         </div>
         <div className="flex justify-between">
           <div className="text-[#646C80]">ข้อมูลเพิ่มเติม:</div>
-          <div>{formData.additionalInfo}</div>
+          <div className="text-black">{formData.additionalInfo}</div>
         </div>
       </div>
     ) : null}</div>
   </div>
+  <div className="w-[301]px h-[1px] border border-[#CCD0D7] mt-3"></div>
           <div className="flex justify-between pt-5 mb-2">
-
+            
             <div className="text-[16px] text-[#646C80]">รวม</div>
-            <div>
+            <div className="text-black">
               {calculateTotalPrice().reduce(
                 (total, item) => total + item.price_per_unit * item.count,
                 0
@@ -386,7 +462,19 @@ function AllStepCheckOutForm() {
               .00฿
             </div>
           </div>
+          {current === 3 && (
+  <div>
+    <button
+      className="bg-blue600 w-full h-11 rounded-lg text-white"
+      onClick={() => navigate(`/customer-services-history/:userId`)}
+    >
+      เช็ครายการซ่อม
+    </button>
+  </div>
+)}
+
         </div>
+
       </div>
       <div className="flex justify-between p-5 sticky bottom-0 z-[100] border-y-grey300 border-x-white border px-40 bg-white">
   {current === 0 ? (
@@ -432,7 +520,10 @@ function AllStepCheckOutForm() {
       {current === steps.length - 1 && (
         <button
           type="primary"
-          onClick={() => message.success("Processing complete!")}
+          onClick={() => {
+            message.success('Processing complete!');
+            next();
+          }}
           className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-45 p-2 px-6 bg-[#336DF2] rounded-lg"
         >
           ยืนยันการชำระเงิน
