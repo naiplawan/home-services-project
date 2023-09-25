@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import classnames from "classnames";
 import PropTypes from "prop-types";
 import "./InputPriceRange.css";
@@ -66,7 +66,7 @@ const InputPriceRange = ({
           max={max}
           value={minVal}
           ref={minValRef}
-          step="500"
+          step="100"
           onChange={(event) => {
             const value = Math.min(+event.target.value, maxVal - 1);
             setMinVal(value);
@@ -83,7 +83,7 @@ const InputPriceRange = ({
           max={max}
           value={maxVal}
           ref={maxValRef}
-          step="500"
+          step="100"
           onChange={(event) => {
             const value = Math.max(+event.target.value, minVal + 1);
             setMaxVal(value);
