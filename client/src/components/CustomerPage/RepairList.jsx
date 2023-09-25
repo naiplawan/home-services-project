@@ -44,6 +44,7 @@ function RepairList () {
             ) : (
                 <div>
                     {order.map((data, index) => {
+                        if (data.status === "รอดำเนินการ" || data.status === "กำลังดำเนินการ")
                         return (
                             <div 
                                 className="p-6 w-[50vw] ml-10 mb-[28px] bg-white border border-grey300 rounded-lg flex justify-between"
