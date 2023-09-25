@@ -1,22 +1,28 @@
 import {
-  InboxOutlined
-} from "@ant-design/icons";
-import {
   Form,
-  Image,
   Input,
-  Select,
-  Space,
   Upload,
+  Select,
   message,
-  notification
+  InputNumber,
+  Image,
+  Button,
+  Modal,
+  Space,
+  notification,
 } from "antd";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import {
+  LoadingOutlined,
+  PlusOutlined,
+  InboxOutlined,
+} from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import arrow from "../../assets/AdminPhoto/arrow.png";
-import image from "../../assets/AdminPhoto/imageIndex.js";
 import dateFormat from "../../utils/dateFormat.js";
+import AlertBoxDelete from "../AlertBox.jsx";
+import image from "../../assets/AdminPhoto/imageIndex.js";
 
 function ServiceEditForm() {
   //render component and package area
@@ -47,26 +53,21 @@ function ServiceEditForm() {
 
   console.log("เปลี่ยนชื่อ", editableServiceName, typeof editableServiceName);
 
-
   //state for sub_service
+
+  const [newSubService, setNewSubService] = useState([]);
+
+  console.log("newSubService", newSubService);
 
   const currentSubService = service.sub_service; // subservice เดิม
 
-// ถ้าเพิ่ม sub service ใหม่ จะทำการเก็บไว้อีก state นึง โดย ใส่ ฟังก์ชั่น onchange and conditional logic 
-// if there is a new sub service item added set state into setNewSubService
-
-  const [newSubService, setNewSubService] = useState([])
-
-  console.log('subService:', subService)
-
-  const [updateSubService, setUpdateSubService] = useState([]);
 
   //state for image
   const [selectedImage, setSelectedImage] = useState(null); //โชว์รูปภาพที่เลือก
   const [fileList, setFileList] = useState([]); //ส่งไปหลังบ้าน
   const [currentImage, setCurrentImage] = useState(""); //รูปที่ fetchมา
   // const [isModalVisible, setIsModalVisible] = useState(false);
- console.log("b", fileList);
+  console.log("b", fileList);
 
   const handleFileChange = (file) => {
     console.log("file", file);
@@ -86,24 +87,6 @@ function ServiceEditForm() {
     setCurrentImage(null);
   };
 
-  //onchange sub_service
-  // const handleSubServiceChange = (index, field, value) => {
-  //   console.log("index:", index);
-  //   console.log("field:", field);
-  //   console.log("value:", value);
-  //   const updatedSubService = [...currentSubService];
-  //   console.log("updatedSubService:", updatedSubService); // Create a copy of currentSubService
-  //   if (updatedSubService[index]) {
-  //     updatedSubService[index][field] = value;
-
-  //     setService((prevService) => ({
-  //       ...prevService,
-  //       sub_service: updatedSubService,
-  //     }));
-  //   }
-  // };
-
-  // console.log("updateSubService", updateSubService);
 
   //delete
 
@@ -134,16 +117,6 @@ function ServiceEditForm() {
   const hideDeleteConfirmation = () => {
     setDeleteConfirmation(false);
   };
-
-  // const handleInputChange = (e) => {
-  //   const { key, value } = e.target;
-  //   setFormData({
-  //     ...formData,
-  //     [key]: value,
-  //   });
-  // };
-
-  // function area
 
   // fetch data area
 
@@ -176,23 +149,25 @@ function ServiceEditForm() {
   };
 
   console.log(currentImage);
-  console.log("updateSubService", updateSubService);
+  // console.log("updateSubService", updateSubService);
 
   // put data API area
   const handleSubmitEdit = async (values) => {
     try {
-      console.log('Form values:', values);
+      console.log("Form values:", values);
 
-      // const updatedSubServiceItems = values.service.sub_service.map((item, index) => ({
-      //   sub_service_name: item.sub_service_name,
-      //   unit: item.unit,
-      //   price_per_unit: item.price_per_unit,
-      // }));
-  
+      const subServiceData = values["service.sub_service"];
+
+      for (const item of subServiceData) {
+        const { sub_service_name, unit, price_per_unit } = item;
+        console.log(
+          `Sub Service Name: ${sub_service_name}, Unit: ${unit}, Price per Unit: ${price_per_unit}`
+        );
+      }
 
       // console.log('updatedSubServiceItems', updatedSubServiceItems)
 
-      // const user_id = localStorage.getItem('user_id');
+      const user_id = localStorage.getItem('user_id');
 
       const selectedCategoryId = category.data.find(
         (category) => category.category_name === selectedCategory
@@ -202,58 +177,15 @@ function ServiceEditForm() {
       console.log("ฟายลิส", fileList);
 
       const formData = new FormData();
-      // formData.append('user_id', user_id);
+      formData.append('user_id', user_id);
       console.log("อีดิทเทเบิล", editableServiceName);
       formData.append("service_name", editableServiceName);
 
       formData.append("category_id", selectedCategoryId);
-      formData.append("file", fileList[0]);
-console.log('currentSubService', currentSubService)
-      formData.append('items', JSON.stringify(currentSubService));
-
-      // console.log(updatedSubServiceArray);
-      // values.service?.sub_service?.forEach((item, index) => {
-      //   console.log(`Sub Service ${index + 1}`);
-      //   console.log(`Sub Service Name: ${item.sub_service_name}`);
-      //   console.log(`Unit: ${item.unit}`);
-      //   console.log(`Price per Unit: ${item.price_per_unit}`);
-
-      //   // Append to formData
-      //   formData.append(`service.sub_service[${index}].sub_service_name`, item.sub_service_name);
-      //   formData.append(`service.sub_service[${index}].unit`, item.unit);
-      //   formData.append(`service.sub_service[${index}].price_per_unit`, item.price_per_unit);
-      // });
-
-      // currentSubService.forEach((item, index) => {
-      //   formData.append(
-      //     `service.sub_service[${index}].sub_service_name`,
-      //     item.sub_service_name
-      //   );
-      //   formData.append(`service.sub_service[${index}].unit`, item.unit);
-      //   formData.append(
-      //     `service.sub_service[${index}].price_per_unit`,
-      //     item.price_per_unit
-      //   );
-      // });
-
-      // for (const [key, value] of formData.entries()) {
-      //   console.log(`${key}: ${value}`);
-      // }
-
-      // values.service.sub_service.forEach((item, index) => {
-      //   formData.append(
-      //     `service.sub_service[${currentSubService.length + index}].sub_service_name`,
-      //     item.sub_service_name
-      //   );
-      //   formData.append(
-      //     `service.sub_service[${currentSubService.length + index}].unit`,
-      //     item.unit
-      //   );
-      //   formData.append(
-      //     `service.sub_service[${currentSubService.length + index}].price_per_unit`,
-      //     item.price_per_unit
-      //   );
-      // });
+      formData.append("file", fileList[0] || currentImage);
+      console.log("currentSubService", subServiceData);
+      formData.append("items", JSON.stringify(subServiceData)); //insert and update new one DONE 0/
+        formData.append("service_created_date", service.service_created_date)
 
       const response = await axios.put(
         `http://localhost:4000/service/${params.serviceId}`,
@@ -356,13 +288,7 @@ console.log('currentSubService', currentSubService)
             {/* content */}
             <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
               <Form.Item
-                label={<span style={labelStyle}>ชื่อบริการ</span>}
-                rules={[
-                  {
-                    required: true,
-                    message: "โปรดกรอกชื่อบริการ",
-                  },
-                ]}
+                label={<span style={labelStyle}>ชื่อบริการ</span>}             
                 required
               >
                 <Input
@@ -377,12 +303,6 @@ console.log('currentSubService', currentSubService)
               <Form.Item
                 label={<span style={labelStyle}>หมวดหมู่</span>}
                 colon={false}
-                rules={[
-                  {
-                    required: true,
-                    message: "โปรดเลือกหมวดหมู่",
-                  },
-                ]}
                 required
               >
                 <Select
@@ -406,12 +326,7 @@ console.log('currentSubService', currentSubService)
               <Form.Item
                 label={<span style={labelStyle}>รูปภาพ</span>}
                 colon={false}
-                rules={[
-                  {
-                    required: true,
-                    message: "โปรดเลือกรูปภาพ",
-                  },
-                ]}
+              
                 required
                 className="mb-10"
               >
@@ -439,12 +354,7 @@ console.log('currentSubService', currentSubService)
                       maxFileSize={5 * 1024 * 1024}
                       showUploadList={false}
                       className="relative"
-                      rules={[
-                        {
-                          required: true,
-                          message: "เลือกรูปภาพ",
-                        },
-                      ]}
+                     
                     >
                       {selectedImage && (
                         <div>
@@ -607,7 +517,10 @@ console.log('currentSubService', currentSubService)
                     <button
                       className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
                       type="button"
-                      onClick={() => add()}
+                      onClick={() => {
+                        add();
+                        setNewSubService([...newSubService, {}]); // Add a new empty object to newSubService
+                      }}
                     >
                       + เพิ่มรายการ
                     </button>
