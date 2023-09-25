@@ -7,6 +7,7 @@ import serviceRouter from "./apps/services.js";
 import checkoutRouter from "./apps/checkout.js";
 import orderHistoryRouter from "./apps/orderHistory.js";
 import orderHistoryByOrderHistoryIdRouter from "./apps/orderHistoryByOrderhistoryID.js";
+import promotionRouter from "./apps/promotion.js";
 import dotenv from "dotenv";
 
 async function init() {
@@ -27,6 +28,7 @@ async function init() {
   app.use("/checkout", checkoutRouter);
   app.use("/orderHistory", orderHistoryRouter);
   app.use("/orderHistoryByOrderHistoryId", orderHistoryByOrderHistoryIdRouter);
+  app.use("/promotion", promotionRouter);
 
   app.get("/", (req, res) => {
     res.send("Welcome to Home Service!");

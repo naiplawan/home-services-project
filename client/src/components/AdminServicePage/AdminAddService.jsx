@@ -41,6 +41,7 @@ function AddService() {
     };
 
     reader.readAsDataURL(file);
+    setFileList([file])
     return false;
   };
 
