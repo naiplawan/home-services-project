@@ -13,7 +13,11 @@ orderHistoryRouter.get('/:id', async (req, res) => {
 
     const { data: result, error } =  await supabase
       .from("order_history")
-      .select(`*, users(*, service (*, sub_service (*, checkout_quantity (*, checkout (*)))))`)
+      .select(
+        `*, 
+        service (service_name, sub_service (sub_service_name, unit, sub_service_quantity)), 
+        checkout(service_date_time, total_price), 
+        serviceman_detail(serviceman_name)`)
       .eq("user_id", orderHistoryByUserId);
 
       return res.status(200).json({

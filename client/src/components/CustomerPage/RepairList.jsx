@@ -44,6 +44,7 @@ function RepairList () {
             ) : (
                 <div>
                     {order.map((data, index) => {
+                        if (data.status === "รอดำเนินการ" || data.status === "กำลังดำเนินการ")
                         return (
                             <div 
                                 className="p-6 w-[50vw] ml-10 mb-[28px] bg-white border border-grey300 rounded-lg flex justify-between"
@@ -63,7 +64,7 @@ function RepairList () {
                                             <div>
                                               วันเวลาดำเนินการ:{" "}
                                                 {/* <Moment format="DD/MM/YYYY HH:mm"> */}
-                                                    {data.users.service[0].sub_service[0].checkout_quantity[0].checkout.service_date_time}{" "}น.
+                                                    {data.checkout.service_date_time}{" "}น.
                                                 {/* </Moment>{" "}  */}
                                             </div>
                                         </div>
@@ -73,13 +74,13 @@ function RepairList () {
                                                 src={image.personIcon2}
                                                 alt="Person Icon" 
                                             />
-                                            <div>พนักงาน: สตีฟ จ็อบ</div>
+                                            <div>พนักงาน: {data.serviceman_detail.serviceman_name}</div>
                                         </div>
                                     </div>
                                     <div className="text-base font-normal leading-normal text-grey700">
-                                        รายการ: {data.users.service[index].service_name}
+                                        รายการ: {data.service.service_name}
                                         <ul className="flex flex-col list-disc ml-3">
-                                            {data.users.service[index].sub_service.map((subService, index) => {
+                                            {data.service.sub_service.map((subService, index) => {
                                                 return (
                                                     <li
                                                         key={index}
@@ -114,7 +115,7 @@ function RepairList () {
                                         <div className="text-grey700 font-normal text-sm leading-normal flex gap-x-5 justify-end items-center">
                                             ราคารวม:
                                             <div className="text-lg text-black font-medium leading-normal">
-                                                {parseFloat(data.users.service[1].sub_service[0].checkout_quantity[0].checkout.total_price)
+                                                {parseFloat(data.checkout.total_price)
                                                     .toFixed(2)}{" "}
                                                     ฿
                                             </div>
