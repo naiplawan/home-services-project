@@ -52,10 +52,15 @@ function ServiceEditForm() {
     service.service_name
   );
 
+
+  
   console.log("เปลี่ยนชื่อ", editableServiceName, typeof editableServiceName);
   //state for sub_service
 
-  const subServiceArray = service.sub_service;
+  const currentSubService = service.sub_service;
+
+
+  const [updateSubService, setUpdateSubService] = useState([])
 
   //state for image
   const [selectedImage, setSelectedImage] = useState(null); //โชว์รูปภาพที่เลือก
@@ -84,6 +89,17 @@ function ServiceEditForm() {
     setSelectedImage(null);
     setCurrentImage(null);
   };
+
+  //onchange sub_service
+  const handleSubServiceChange = () => {
+    const subServiceItem = {
+      currentSubService
+    }
+    setUpdateSubService(subServiceItem);
+  }
+  
+
+  console.log('updateSubService', updateSubService)
 
   //delete
 
@@ -154,12 +170,13 @@ function ServiceEditForm() {
   };
 
   console.log(currentImage);
+  console.log('updateSubService', updateSubService)
 
   // put data API area
   const handleSubmitEdit = async (values) => {
     try {
-      const updatedSubServiceArray = values.service.sub_service;
-
+      console.log(values)
+  
       // const user_id = localStorage.getItem('user_id');
 
       const selectedCategoryId = category.data.find(
@@ -175,17 +192,17 @@ function ServiceEditForm() {
       formData.append("service_name", editableServiceName);
 
       formData.append("category_id", selectedCategoryId);
-      formData.append("file", fileList);
+      formData.append("file", fileList[0]);
 
-      console.log(updatedSubServiceArray);
+      // console.log(updatedSubServiceArray);
 
-      updatedSubServiceArray.forEach((item, index) => {
+      currentSubService.forEach((item, index) => {
         const subServiceData = {
           sub_service_name: item.sub_service_name,
           unit: item.unit,
           price_per_unit: item.price_per_unit,
         };
-
+      
         formData.append(
           `service.sub_service[${index}]`,
           JSON.stringify(subServiceData)
@@ -256,7 +273,7 @@ function ServiceEditForm() {
           service: {
             sub_service:
               service.sub_service &&
-              subServiceArray.map((subService, index) => ({
+              currentSubService.map((subService, index) => ({
                 sub_service_name: subService.sub_service_name,
                 price_per_unit: subService.price_per_unit,
                 unit: subService.unit,
@@ -445,13 +462,13 @@ function ServiceEditForm() {
               </div>
               <Form.List
                 name="service.sub_service"
-                initialValue={subServiceArray}
+                initialValue={currentSubService}
               >
                 {(subServices, { add, remove }) => (
                   <>
                     {service.sub_service &&
                       subServices.map(
-                        ({ key, name, fieldKey, ...restField }) => (
+                        ({ key, name, ...restField }) => (
                           <Space
                             key={key}
                             style={{ display: "flex", marginBottom: 8 }}
@@ -468,13 +485,14 @@ function ServiceEditForm() {
                                 },
                               ]}
                               initialValue={
-                                subServiceArray[key]?.sub_service_name
+                                currentSubService[key]?.sub_service_name
                               }
                             >
                               <Input
                                 className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
                                 placeholder="ชื่อรายการ"
                                 name="sub_service_name"
+                                onChange={handleSubServiceChange}
                               />
                             </Form.Item>
                             <Form.Item
@@ -491,7 +509,7 @@ function ServiceEditForm() {
                                 },
                               ]}
                               initialValue={
-                                subServiceArray[key]?.price_per_unit
+                                currentSubService[key]?.price_per_unit
                               }
                             >
                               <Input
@@ -502,6 +520,7 @@ function ServiceEditForm() {
                                 className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
                                 placeholder="ค่าบริการ / 1 หน่วย"
                                 name="price_per_unit"
+                                onChange={handleSubServiceChange}
                               />
                             </Form.Item>
                             <Form.Item
@@ -514,12 +533,13 @@ function ServiceEditForm() {
                                   message: "กรุณากรอกหน่วยการบริการ",
                                 },
                               ]}
-                              initialValue={subServiceArray[key]?.unit}
+                              initialValue={currentSubService[key]?.unit}
                             >
                               <Input
                                 className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
                                 placeholder="หน่วยการบริการ"
                                 name="unit"
+                                onChange={handleSubServiceChange}
                               />
                             </Form.Item>
                             <div

@@ -186,6 +186,8 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
     console.log("เริ่ม", req.body);
     const serviceId = req.params.id;
 
+    console.log(req.body.file)
+
     // const subServiceId = await supabase
     // .from("sub_service")
     // .select("service_id")
@@ -264,7 +266,7 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
     const { data: updatedServiceData, error: updatedServiceError } =
       await supabase
         .from("service")
-        .update([updatedServiceItem])
+        .upsert([updatedServiceItem])
         .eq("service_id", serviceId);
 
    
@@ -276,35 +278,42 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
         .json({ message: "Error updating data in supabase" });
     }
 
-    // const { data: latestService } = await supabase
-    //   .from("service")
-    //   .select("service_id")
-    //   .order("service_id", { ascending: false })
-    //   .limit(1);
+    const { data: latestService } = await supabase
+      .from("service")
+      .select("service_id")
+      .order("service_id", { ascending: false })
+      .limit(1);
 
-    // const service_id = latestService[0].service_id;
+    const service_id = latestService[0].service_id;
 
-    // for (const subServiceItem of updatedSubServiceItems) {
-    //   subServiceItem.service_id = service_id; // Add service_id to each subServiceItem
-    // }
+    for (const subServiceItem of updatedSubServiceItems) {
+      subServiceItem.service_id = service_id; // Add service_id to each subServiceItem
+    }
 
-    // if (!service_id) {
-    //   console.error("Failed to retrieve service_id from database");
-    //   return res
-    //     .status(500)
-    //     .json({ message: "Failed to retrieve service_id from database" });
-    // }
+    if (!service_id) {
+      console.error("Failed to retrieve service_id from database");
+      return res
+        .status(500)
+        .json({ message: "Failed to retrieve service_id from database" });
+    }
 
     // // // แก้ไขรายการบริการย่อย (sub_service)
 
-    
+    updatedSubServiceItems = updatedSubServiceItems.map(item => {
+      if (!item.sub_service_quantity) {
+        return { ...item, sub_service_quantity: 1 };
+      }
+      return item;
+    });    
 
     console.log("ก่อนส่ง", updatedSubServiceItems);
     const { data: updatedSubServiceData, error: updatedSubServiceError } =
       await supabase
         .from("sub_service")
-        .update([updatedSubServiceItems])
+        .upsert(updatedSubServiceItems)
         .eq("service_id", serviceId);
+
+        console.log("updatedSubServiceData:",updatedSubServiceData)
 
         console.log("updatedSubServiceError:", updatedSubServiceError);
 
