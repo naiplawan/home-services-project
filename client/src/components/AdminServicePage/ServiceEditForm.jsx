@@ -91,12 +91,16 @@ function ServiceEditForm() {
   };
 
   //onchange sub_service
-  const handleSubServiceChange = () => {
-    const subServiceItem = {
-      currentSubService
-    }
-    setUpdateSubService(subServiceItem);
-  }
+  const handleSubServiceChange = (index, field, value) => {
+    const updatedSubService = [...currentSubService]; // Create a copy of currentSubService
+    updatedSubService[index][field] = value; // Update the specific field in the copied subService
+  
+    // Update the form values with the new sub_service array
+    setService(prevService => ({
+      ...prevService,
+      sub_service: updatedSubService,
+    }));
+  };
   
 
   console.log('updateSubService', updateSubService)
@@ -197,21 +201,15 @@ function ServiceEditForm() {
       // console.log(updatedSubServiceArray);
 
       currentSubService.forEach((item, index) => {
-        const subServiceData = {
-          sub_service_name: item.sub_service_name,
-          unit: item.unit,
-          price_per_unit: item.price_per_unit,
-        };
-      
-        formData.append(
-          `service.sub_service[${index}]`,
-          JSON.stringify(subServiceData)
-        );
+        formData.append(`service.sub_service[${index}].sub_service_name`, item.sub_service_name);
+        formData.append(`service.sub_service[${index}].unit`, item.unit);
+        formData.append(`service.sub_service[${index}].price_per_unit`, item.price_per_unit);
       });
-
+      
       for (const [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
       }
+      
 
       const response = await axios.put(
         `http://localhost:4000/service/${params.serviceId}`,
