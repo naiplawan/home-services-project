@@ -15,6 +15,9 @@ import AllStepCheckOutForm from "./AllStepCheckOutForm.jsx";
 import CustomerServiceListPage from "./CustomerServiceList.jsx";
 import CustomerServiceHistoryPage from "./CustomerServiceHistory.jsx";
 import AdminCreatPromotionPage from "./AdminCreatePromoPage.jsx";
+import AdminPromotionPage from "./AdminPromotionPage.jsx";
+import AdminEditPromoPage from "./AdminEditPromoPage.jsx";
+import AdminPromoDetailPage from "./AdminDetailPromoPage.jsx";
 
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
@@ -56,6 +59,15 @@ function AuthenticatedApp() {
             path="/admin-promotion-create"
             element={<AdminCreatPromotionPage />}
           />
+          <Route 
+          path="/admin-promotion"
+          element={<AdminPromotionPage/>} />
+          <Route 
+          path="/admin-promotion-edit/:promotionId"
+          element={<AdminEditPromoPage/>} />
+           <Route 
+          path="/admin-promotion-detail/:promotionId"
+          element={<AdminPromoDetailPage/>} />
         </Routes>
       ) : (
         <Routes>

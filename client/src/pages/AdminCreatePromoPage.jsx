@@ -1,5 +1,5 @@
 import SideBar from "../components/ServicePage/AdminSidebar.jsx";
-import AddPromotionForm from "../components/AdminPromotionPage/AddPromotionPage.jsx";
+import AddPromotionForm from "../components/AdminPromotionPage/AddPromotion.jsx";
 
 function AdminCreatPromotionPage() {
     return (
