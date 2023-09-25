@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { DatePicker, TimePicker, Button, Input, Radio } from 'antd';
 import moment from 'moment';
+import { useNavigate } from "react-router-dom";
 
-const PromotionForm = () => {
-  const [formData, setFormData] = useState({
+const AddPromotionForm = () => {
+
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
     promotion_code: '',
     promotion_types: 'fixed', // Default to 'fixed'
     promotion_quota: '',
@@ -116,4 +119,4 @@ const PromotionForm = () => {
   );
 };
 
-export default PromotionForm;
+export default AddPromotionForm;
