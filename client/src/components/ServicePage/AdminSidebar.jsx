@@ -51,7 +51,7 @@ return (
               บริการ
             </button>
           </div>
-          <div className="hover:bg-blue900 h-12 my-1 cursor-pointer flex items-center" onClick={() => navigate("/order-dashboard")}>
+          <div className="hover:bg-blue900 h-12 my-1 cursor-pointer flex items-center" onClick={() => navigate("/admin-promotion")}>
           <img
               className="inline-block h-6 mr-1 ml-7"
               src={image.coupon}

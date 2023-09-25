@@ -9,12 +9,15 @@ import AdminDetailCategory from "./AdminDetailCategory.jsx";
 import AdminEditServicePage from "./AdminEditServicePage.jsx";
 import AdminDetailServicePage from "./AdminDetailServicePage.jsx";
 import AdminEditCategory from "./AdminEditCategory.jsx";
-
 import AdminCreateServicePage from "./AdminCreateServicePage.jsx";
 import CustomerServiceListDisplay from "./CustomerServiceListDisplay.jsx";
 import AllStepCheckOutForm from "./AllStepCheckOutForm.jsx";
 import CustomerServiceListPage from "./CustomerServiceList.jsx";
 import CustomerServiceHistoryPage from "./CustomerServiceHistory.jsx";
+import AdminCreatPromotionPage from "./AdminCreatePromoPage.jsx";
+import AdminPromotionPage from "./AdminPromotionPage.jsx";
+import AdminEditPromoPage from "./AdminEditPromoPage.jsx";
+import AdminPromoDetailPage from "./AdminDetailPromoPage.jsx";
 
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
@@ -52,6 +55,19 @@ function AuthenticatedApp() {
             element={<AdminEditCategory />}
           />
           <Route path="" element={<NotFoundPage />} />
+          <Route
+            path="/admin-promotion-create"
+            element={<AdminCreatPromotionPage />}
+          />
+          <Route 
+          path="/admin-promotion"
+          element={<AdminPromotionPage/>} />
+          <Route 
+          path="/admin-promotion-edit/:promotionId"
+          element={<AdminEditPromoPage/>} />
+           <Route 
+          path="/admin-promotion-detail/:promotionId"
+          element={<AdminPromoDetailPage/>} />
         </Routes>
       ) : (
         <Routes>
