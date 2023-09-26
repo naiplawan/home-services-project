@@ -6,29 +6,30 @@ import categoryRouter from "./apps/category.js";
 import serviceRouter from "./apps/services.js";
 import checkoutRouter from "./apps/checkout.js";
 import orderHistoryRouter from "./apps/orderHistory.js";
-import orderHistoryByOrderHistoryIdRouter from "./apps/orderHistoryByOrderhistoryID.js";
 import paymentRouter from "./apps/payment.js";
 import promotionRouter from "./apps/promotion.js";
 import dotenv from "dotenv";
+import multer from "multer";
 
 async function init() {
   dotenv.config();
 
   const app = express();
   const port = 4000;
-  // const upload = multer();
+  const upload = multer();
 
   app.use(cors());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
-  // app.use(upload.none());
+  app.use(upload.none());
 
   app.use("/auth", authRouter);
   app.use("/category", categoryRouter);
   app.use("/service", serviceRouter);
   app.use("/checkout", checkoutRouter);
   app.use("/orderHistory", orderHistoryRouter);
-  app.use("/orderHistoryByOrderHistoryId", orderHistoryByOrderHistoryIdRouter);
+  app.use("/promotion",promotionRouter)
+  app.use("/payment", paymentRouter)
 
   app.get("/", (req, res) => {
     res.send("Welcome to Home Service!");
