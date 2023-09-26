@@ -47,6 +47,8 @@ function AddPromotionForm() {
     setFormData({ ...formData, promotion_expiry_time: time });
   };
 
+  console.log('formData', formData);
+
   const onFinish = async (values) => {
     try {
       const formData = new FormData();
@@ -73,8 +75,6 @@ function AddPromotionForm() {
       console.error("Error creating promotion:", error);
     }
   };
-
-  
 
   const labelStyle = {
     marginTop: "10px",
@@ -130,14 +130,13 @@ function AddPromotionForm() {
               },
             ]}
           >
-            <Input style={{ width: "50%" }} />
+            <Input style={{ width: "50%" }} onChange={handleInputChange} />
           </Form.Item>
 
           <Form.Item
             label={<span style={labelStyle}>ประเภท</span>}
             colon={false}
             name="promotion_types"
-            initialValue="fixed"
             rules={[
               {
                 required: true,
@@ -151,7 +150,7 @@ function AddPromotionForm() {
                 valuePropName="checked"
                 style={{ display: "flex", alignItems: "center" }}
               >
-                <Radio value="fixed">Fixed</Radio>
+                <Radio  value="fixed">Fixed</Radio>
                 {formData.promotion_types === "fixed" && (
                   <Form.Item
                     noStyle
@@ -165,7 +164,7 @@ function AddPromotionForm() {
                       },
                     ]}
                   >
-                    <InputNumber
+                    <Input
                       formatter={(value) =>
                         `฿ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                       }
@@ -175,8 +174,6 @@ function AddPromotionForm() {
                         formData.promotion_types !== "fixed" &&
                         formData.promotion_types !== "percent"
                       }
-                      step={1}
-                      pattern="\d+"
                     />
                   </Form.Item>
                 )}
@@ -203,17 +200,23 @@ function AddPromotionForm() {
                       {
                         validator: (rule, value) => {
                           const numericValue = parseFloat(value);
-                      
-                          if (isNaN(numericValue) || numericValue < 1 || numericValue > 100) {
-                            return Promise.reject("Please enter a number between 1 and 100");
+                          if (
+                            isNaN(numericValue) ||
+                            numericValue < 1 ||
+                            numericValue > 100
+                          ) {
+                            return Promise.reject(
+                              "Please enter a number between 1 and 100"
+                            );
                           }
-                      
+
                           return Promise.resolve();
                         },
-                      }
+                      },
                     ]}
+                    onChange={handleInputChange} 
                   >
-                    <InputNumber
+                    <Input
                       formatter={(value) => `${value}%`}
                       parser={(value) => value.replace("%")}
                       style={{ width: "50%" }} // Adjust the width as needed
@@ -222,19 +225,24 @@ function AddPromotionForm() {
                         formData.promotion_types !== "percent"
                       }
                       placeholder="percent"
-                      rules={
-                        {
-                          validator: (rule, value) => {
-                            const numericValue = parseFloat(value);
-                        
-                            if (isNaN(numericValue) || numericValue < 1 || numericValue > 100) {
-                              return Promise.reject("Please enter a number between 1 and 100");
-                            }
-                        
-                            return Promise.resolve();
-                          },
-                        }
-                      }
+                      rules={{
+                        validator: (rule, value) => {
+                          const numericValue = parseFloat(value);
+
+                          if (
+                            isNaN(numericValue) ||
+                            numericValue < 1 ||
+                            numericValue > 100
+                          ) {
+                            return Promise.reject(
+                              "Please enter a number between 1 and 100"
+                            );
+                          }
+
+                          return Promise.resolve();
+                        },
+                      }}
+                      onChange={handleInputChange} 
                     />
                   </Form.Item>
                 )}
@@ -249,13 +257,31 @@ function AddPromotionForm() {
             rules={[
               {
                 required: true,
-                type: "number",
                 min: 1,
-                message: "กรุณาระบุจำนวนครั้งการใช้ของโค้ด",
+                message: "กรุณาระบุจำนวนครั้งให้ถูกต้อง",
+              },
+              {
+                validator: (rule, value) => {
+                  const numericValue = parseFloat(value);
+                  if (
+                    isNaN(numericValue) ||
+                    numericValue < 1 ||
+                    numericValue > 1000
+                  ) {
+                    return Promise.reject(
+                      "กรุณาระบุจำนวนครั้งต่ำกว่า 1000"
+                    );
+                  }
+
+                  return Promise.resolve();
+                },
               },
             ]}
           >
-            <Input type="number" style={{ width: "50%" }} />
+            <Input
+              style={{ width: "50%" }}
+              onChange={handleInputChange}
+            />
           </Form.Item>
 
           <Form.Item
