@@ -9,10 +9,10 @@ import dayjs from "dayjs";
 import credit from "../assets/CustomerPhoto/icons/credit.svg";
 import qr from "../assets/CustomerPhoto/icons/qr.svg";
 import greyarrow from "../assets/CustomerPhoto/icons/BackGrey.svg";
-import { message, Steps, Form, Input, DatePicker, TimePicker } from "antd";
-// npm install --save @stripe/react-stripe-js @stripe/stripe-js
+import { message, Steps, Form, Input, DatePicker, TimePicker } from "antd"; 
+import { Elements } from "@stripe/react-stripe-js"; // npm install --save @stripe/react-stripe-js @stripe/stripe-js
+import { Elements } from "@stripe/react-stripe-js"; // npm install --save @stripe/react-stripe-js @stripe/stripe-js
 import { loadStripe } from "@stripe/stripe-js";
-import moment from "moment"; // npm install moment
 
 
 function AllStepCheckOutForm() {
@@ -442,7 +442,9 @@ function AllStepCheckOutForm() {
                 items={items}
               />
             </div>
-            {/* <Elements stripe={stripePromise}>  */}
+            <Elements stripe={stripePromise}> 
+            <Elements stripe={stripePromise}> 
+            
             <div>ชำระเงิน</div>
             <div className="flex justify-evenly mt-4">
               <button
