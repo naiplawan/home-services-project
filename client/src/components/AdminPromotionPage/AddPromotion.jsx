@@ -7,19 +7,22 @@ import {
   Button,
   Col,
   Row,
+  message,
+  InputNumber,
 } from "antd";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
 
 function AddPromotionForm() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     promotion_code: "",
-    promotion_types: "fixed",
+    promotion_types: "",
     promotion_quota: "",
-    promotion_discount_amount: "",
+    promotion_discount: "",
     promotion_expiry_date: null,
     promotion_expiry_time: null,
     promotion_created_date: "",
@@ -52,20 +55,26 @@ function AddPromotionForm() {
         formData.append(key, values[key]);
       }
 
-      const response = await fetch("/api/promotions", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await axios.post(
+        "http://localhost:4000/promotion",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
-      if (response.ok) {
-        console.log("Promotion created successfully!");
+      if (response.status === 200) {
+        message.success("สร้างโปรโมชั่นโค้ดใหม่สำเร็จ");
       } else {
-        console.error("Error creating promotion:", response.statusText);
+        message.error("ไม่สามารถสร้างโปรโมชั่นโค้ดได้");
       }
+      navigate("/admin-promotion");
     } catch (error) {
       console.error("Error creating promotion:", error);
     }
   };
+
+  
 
   const labelStyle = {
     marginTop: "10px",
@@ -79,6 +88,9 @@ function AddPromotionForm() {
 
   return (
     <Form
+      labelCol={{ span: 100 }}
+      wrapperCol={{ span: 24 }}
+      layout="horizontal"
       name="promotion_form"
       initialValues={{
         promotion_types: "fixed",
@@ -108,27 +120,28 @@ function AddPromotionForm() {
         </div>
         <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
           <Form.Item
-            label="Promotion Code"
+            label={<span style={labelStyle}>Promotion Code</span>}
+            colon={false}
             name="promotion_code"
             rules={[
               {
                 required: true,
-                message: "Please input the promotion code!",
+                message: "กรุณาระบุโค้ด",
               },
             ]}
-            style={labelStyle}
           >
             <Input style={{ width: "50%" }} />
           </Form.Item>
 
           <Form.Item
-            label="Promotion Type"
+            label={<span style={labelStyle}>ประเภท</span>}
+            colon={false}
             name="promotion_types"
             initialValue="fixed"
             rules={[
               {
                 required: true,
-                message: "Please select a promotion type!",
+                message: "กรุณาเลือกประเภทของโค้ด",
               },
             ]}
           >
@@ -142,24 +155,28 @@ function AddPromotionForm() {
                 {formData.promotion_types === "fixed" && (
                   <Form.Item
                     noStyle
-                    name="promotion_discount_amount"
+                    name="promotion_discount"
                     rules={[
                       {
                         required: true,
                         type: "number",
                         min: 1,
-                        message:
-                          "Please input the discount amount (at least 1)!",
+                        message: "กรุณาระบุจำนวน",
                       },
                     ]}
                   >
-                    <Input
-                      type="number"
+                    <InputNumber
+                      formatter={(value) =>
+                        `฿ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      }
+                      parser={(value) => value.replace(/฿\s?|(,*)/g, "")}
                       style={{ width: "50%" }} // Adjust the width as needed
                       disabled={
                         formData.promotion_types !== "fixed" &&
                         formData.promotion_types !== "percent"
                       }
+                      step={1}
+                      pattern="\d+"
                     />
                   </Form.Item>
                 )}
@@ -180,17 +197,43 @@ function AddPromotionForm() {
                         required: true,
                         type: "number",
                         min: 1,
-                        message:
-                          "Please input the discount percentage (at least 1)!",
+                        max: 100,
+                        message: "กรอกข้อมูลให้ถูกต้อง",
                       },
+                      {
+                        validator: (rule, value) => {
+                          const numericValue = parseFloat(value);
+                      
+                          if (isNaN(numericValue) || numericValue < 1 || numericValue > 100) {
+                            return Promise.reject("Please enter a number between 1 and 100");
+                          }
+                      
+                          return Promise.resolve();
+                        },
+                      }
                     ]}
                   >
-                     <Input
-                      type="number"
+                    <InputNumber
+                      formatter={(value) => `${value}%`}
+                      parser={(value) => value.replace("%")}
                       style={{ width: "50%" }} // Adjust the width as needed
                       disabled={
                         formData.promotion_types !== "fixed" &&
                         formData.promotion_types !== "percent"
+                      }
+                      placeholder="percent"
+                      rules={
+                        {
+                          validator: (rule, value) => {
+                            const numericValue = parseFloat(value);
+                        
+                            if (isNaN(numericValue) || numericValue < 1 || numericValue > 100) {
+                              return Promise.reject("Please enter a number between 1 and 100");
+                            }
+                        
+                            return Promise.resolve();
+                          },
+                        }
                       }
                     />
                   </Form.Item>
@@ -200,41 +243,29 @@ function AddPromotionForm() {
           </Form.Item>
 
           <Form.Item
-            label="โควต้าการใช้"
+            label={<span style={labelStyle}>โควต้าการใช้</span>}
+            colon={false}
             name="promotion_quota"
             rules={[
               {
                 required: true,
                 type: "number",
                 min: 1,
-                message: "Please input the promotion quota (at least 1)!",
+                message: "กรุณาระบุจำนวนครั้งการใช้ของโค้ด",
               },
             ]}
-            style={labelStyle}
           >
             <Input type="number" style={{ width: "50%" }} />
           </Form.Item>
 
           <Form.Item
-            label="วันหมดอายุ"
+            label={<span style={labelStyle}>วันหมดอายุ</span>}
+            colon={false}
             name="promotion_expiry"
             rules={[
               {
                 required: true,
-                message: "Please select the expiry date and time!",
-              },
-            ]}
-          >
-            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-          </Form.Item>
-
-          <Form.Item
-            label="วันหมดอายุ"
-            name="promotion_expiry"
-            rules={[
-              {
-                required: true,
-                message: "Please select the expiry date and time!",
+                message: "กรุณาระบุวัน-เวลา หมดอายุ",
               },
             ]}
           >
@@ -245,7 +276,7 @@ function AddPromotionForm() {
                   rules={[
                     {
                       required: true,
-                      message: "Please select the expiry date!",
+                      message: "กรุณาระบุวัน",
                     },
                   ]}
                   noStyle
@@ -262,7 +293,7 @@ function AddPromotionForm() {
                   rules={[
                     {
                       required: true,
-                      message: "Please select the expiry time!",
+                      message: "กรุณาระบุเวลา",
                     },
                   ]}
                   noStyle
