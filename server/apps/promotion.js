@@ -9,19 +9,15 @@ const promotionRouter = Router();
 
 promotionRouter.get("/", async (req, res) => {
   try {
-    const { data, error } = await supabase
-      .from("promotion")
-      .select("*")
-      .ilike("promotion_code, promotion_types", `%${keywords}%`);
+    const data = await supabase.from("promotion").select("*");
 
-    if (error) {
-      throw error;
-    }
-
-    res.status(200).json({ success: true, data });
+    return res.json({
+      data,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, error: "Internal Server Error" });
+    res.status(500).json({
+      error: error.message,
+    });
   }
 });
 
@@ -106,6 +102,6 @@ promotionRouter.delete("/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, error: "ไม่สามารถลบได้" });
   }
-})
+});
 
 export default promotionRouter;
