@@ -30,16 +30,16 @@ promotionRouter.get("/:id", async (req, res) => {
       .from("promotion")
       .select("*")
       .eq("promotion_id", promotionId);
-      
-      if (error) {
-        throw error;
-      }
-  
-      res.status(200).json({ success: true, data });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, error: "Internal Server Error" });
+
+    if (error) {
+      throw error;
     }
+
+    res.status(200).json({ success: true, data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
 });
 
 promotionRouter.post("/", async (req, res) => {
@@ -54,6 +54,12 @@ promotionRouter.post("/", async (req, res) => {
     } = req.body;
 
     console.log(req.body);
+
+    const formattedExpiryDate = new Date(req.body.promotion_expiry_date[1]);
+    const formattedExpiryDateAsString = formattedExpiryDate
+      .toISOString()
+      .split("T")[0];
+    const formattedExpiryTime = req.body.promotion_expiry_time[1];
 
     //item
 
@@ -82,8 +88,8 @@ promotionRouter.post("/", async (req, res) => {
         promotion_types,
         promotion_quota,
         promotion_discount,
-        promotion_expiry_date,
-        promotion_expiry_time,
+        promotion_expiry_date: formattedExpiryDateAsString,
+        promotion_expiry_time: formattedExpiryTime,
         promotion_created_date_time: currentDateTime,
         promotion_edited_date_time: currentDateTime,
       },
