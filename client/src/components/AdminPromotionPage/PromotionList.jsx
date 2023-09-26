@@ -158,9 +158,16 @@ function PromotionList() {
                                 {promotion.promotion_quota}/10
                               </p>
                               <p className="w-[30%] ml-[%]  text-red">
-                                {" "}
-                                {promotion.promotion_discount}฿
+                                {console.log(
+                                  "เช็ค type promotion",
+                                  promotion.promotion_types
+                                )}{" "}
+                                {/* ใส่บรรทัดนี้เพื่อแสดงค่า promotion.promotion_type ใน console */}
+                                {promotion.promotion_types === "fixed"
+                                  ? `${promotion.promotion_discount}฿`
+                                  : `${promotion.promotion_discount}%`}
                               </p>
+
                               <p className="w-[50%] ml-[%]">
                                 {" "}
                                 {dateFormat(
