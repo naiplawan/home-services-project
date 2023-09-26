@@ -12,7 +12,7 @@ function PromotionList() {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [promotion_Id, setPromotion_Id] = useState();
-  const [deletePromotionId, setDeletePromotionId] = useState(null); // เปลี่ยนชื่อตัวแปรเป็น deletePromotionId
+  const [deletePromotionId, setDeletePromotionId] = useState(null);
   const navigate = useNavigate();
 
   const getPromotion = async () => {
@@ -37,16 +37,16 @@ function PromotionList() {
 
   const promotionDeleteAlert = (promotionId) => {
     setPromotion_Id(promotionId);
-    setDeletePromotionId(promotionId); // อัปเดตตัวแปร deletePromotionId เมื่อมีการเรียกใช้ promotionDeleteAlert
+    setDeletePromotionId(promotionId);
   };
 
   const handleDelete = () => {
     deletePromotionById(promotion_Id);
-    setDeletePromotionId(null); // รีเซ็ตค่า deletePromotionId เมื่อทำการลบ
+    setDeletePromotionId(null);
   };
 
   const hide = () => {
-    setDeletePromotionId(null); // ให้เคลียร์ค่า deletePromotionId เมื่อทำการซ่อน Alert
+    setDeletePromotionId(null);
   };
 
   useEffect(() => {
@@ -78,11 +78,11 @@ function PromotionList() {
     <div className="bg-bg h-[100%] pb-[4%] pl-60 ">
       <div className="flex flex-col items-center">
         <div className="header-name justify-between flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white text-grey600 pb-[20px] border-b border-grey300">
-          <h1 className="text-black font-semibold text-xl">หมวดหมู่</h1>
+          <h1 className="text-black font-semibold text-xl">Promotion Code</h1>
           <div className="flex">
             <input
               type="text"
-              placeholder="ค้นหาหมวดหมู่..."
+              placeholder="ค้นหา Promotion Code ..."
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               className="px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[400px] "
@@ -155,12 +155,19 @@ function PromotionList() {
                               </p>
                               <p className="w-[20%] ml-[3%]">
                                 {" "}
-                                {promotion.promotion_quota}
+                                {promotion.promotion_quota}/10
                               </p>
                               <p className="w-[30%] ml-[%]  text-red">
-                                {" "}
-                                {promotion.promotion_discount}
+                                {console.log(
+                                  "เช็ค type promotion",
+                                  promotion.promotion_types
+                                )}{" "}
+                                {/* ใส่บรรทัดนี้เพื่อแสดงค่า promotion.promotion_type ใน console */}
+                                {promotion.promotion_types === "fixed"
+                                  ? `${promotion.promotion_discount}฿`
+                                  : `${promotion.promotion_discount}%`}
                               </p>
+
                               <p className="w-[50%] ml-[%]">
                                 {" "}
                                 {dateFormat(
