@@ -120,50 +120,32 @@ function AllStepCheckOutForm() {
     setFormData({ ...formData, ...changedValues });
   };
 
-  const handleFormSubmit = (formValues) => {
-    // Handle form submission logic here
-    console.log("Form values:", formValues);
-
-    // Assuming you want to move to the next step after form submission
-    next();
-  };
-
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
 
   const handlePaymentMethodClick = (method) => {
     setSelectedPaymentMethod(method);
   };
 
-  const handleSubmitStripe = async (e) => {
+  const handleSubmitOrder = async (e, stripe) => {
     e.preventDefault();
-    if (!stripe || !elements) {
+
+    if (!stripe) {
       console.error("Stripe.js has not loaded yet.");
       return;
     }
 
-    const cardElement = elements.getElement(CardElement);
-
-    if (!cardElement) {
-      console.error("CardElement is missing.");
-      return;
-    }
-
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-    });
-
     if (!error) {
       try {
-        const { id } = paymentMethod;
         const response = await axios.post("http://localhost:4000/payment", {
           amount: calculateTotalPrice(), // Pass the total amount here
-          id,
         });
 
         if (response.data.success) {
           console.log("Successful payment");
           setSuccess(true);
+
+          // Call the orderToServer function here to submit the order
+          await orderToServer();
         }
       } catch (error) {
         console.log("Error", error);
@@ -289,10 +271,6 @@ function AllStepCheckOutForm() {
                   wrapperCol={{ span: 19 }}
                   form={form}
                   autoComplete="on"
-                  onFinish={(formValues) => {
-                    // Handle form submission and pass formValues to the next step
-                    handleFormSubmit(formValues);
-                  }}
                 >
                   <h1 className="text-gray300 text-center text-[20px] font-medium mb-[30px]">
                     กรอกข้อมูลบริการ
