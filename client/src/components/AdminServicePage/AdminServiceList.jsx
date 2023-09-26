@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
@@ -9,10 +9,11 @@ import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 
 function AdminServiceList() {
   const [keyword, setKeyword] = useState("");
-  const [service, setServices] = useState([]);
+  const [services, setServices] = useState([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const serviceData = services.data;
 
   const getServices = async () => {
     try {
@@ -23,44 +24,25 @@ function AdminServiceList() {
     }
   };
 
-  console.log(service)
-
   useEffect(() => {
     getServices();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setError(null);
-        const response = await axios.get(
-          `http://localhost:4000/service?keyword=${keyword}`
-        );
-
-        if (response.data.error) {
-          setError("เกิดข้อผิดพลาดในการค้นหา");
-        } else {
-          setServices(response.data.data);
-        }
-      } catch (error) {
-        setError("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
-      }
-    };
-
-    fetchData();
-  }, [keyword]);
-
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
-    const reorderedServices = [...service];
+    const reorderedServices = [...serviceData];
     const [movedService] = reorderedServices.splice(result.source.index, 1);
     reorderedServices.splice(result.destination.index, 0, movedService);
 
-    setServices(reorderedServices);
+    // อัปเดตลำดับใหม่ใน localStorage
+    localStorage.setItem(
+      "serviceOrder",
+      JSON.stringify(reorderedServices.map((item) => item.service_id))
+    );
 
-    // Save the order in localStorage
-    localStorage.setItem("serviceOrder", JSON.stringify(reorderedServices));
+    // อัปเดต state ด้วยลำดับใหม่
+    setServices({ ...services, data: reorderedServices });
   };
 
   // const hideDeleteServiceAlert = () => {
@@ -69,7 +51,7 @@ function AdminServiceList() {
 
   // const deleteServiceById = async (serviceId) => {
   //   try {
-  //     await axios.delete(`http://localhost:4000/service/${serviceId}`);
+  //     await axios.delete(http://localhost:4000/service/${serviceId});
   //     getServices();
   //     hideDeleteServiceAlert();
   //   } catch (error) {
@@ -165,13 +147,10 @@ function AdminServiceList() {
       </header>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <div className="categories-data min-h-screen bg-bg p-[41px] ml-60">
-        {service.length === 0 ? (
+        {services.length === 0 ? (
           <p>Loading...</p>
         ) : (
-          <div
-            className="category-li
-         st w-[100%]"
-          >
+          <div className="category-list w-[100%]">
             <ul>
               <li className="flex w-[100%] text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300 gap-[20px]">
                 <span className="text-grey700 pl-[6%]">ลำดับ</span>
@@ -185,9 +164,8 @@ function AdminServiceList() {
               <Droppable droppableId="service-list">
                 {(provided) => (
                   <ul {...provided.droppableProps} ref={provided.innerRef}>
-                    {service &&
-                      service.data &&
-                      service.data
+                    {serviceData &&
+                      serviceData
                         .filter((serviceItem) =>
                           serviceItem.service_name.includes(keyword)
                         )
@@ -207,7 +185,7 @@ function AdminServiceList() {
                                 <div className="w-20 flex justify-start items-center">
                                   <img
                                     src={drag}
-                                    className="w-72]"
+                                    className="w-72"
                                     alt="Drag"
                                   />
                                 </div>
@@ -288,7 +266,7 @@ function AdminServiceList() {
             hideFunction={hideDeleteConfirmation}
             textAlert="ยืนยันการลบรายการ"
             alertQuestion={`คุณต้องการลบรายการ '${
-              service.data.find(
+              serviceData.find(
                 (serviceItem) => serviceItem.service_id === service_Id
               )?.service_name
             }' ใช่หรือไม่ ?`}
