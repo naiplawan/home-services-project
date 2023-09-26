@@ -27,6 +27,9 @@ function AllStepCheckOutForm() {
   const monthFormat = 'MM/YY';
   
 
+  const monthFormat = 'MM/YY';
+  
+
   const [success, setSuccess] = useState(false);
   const stripePromise = loadStripe('pk_test_51Nu6oIL0v3CrBX83LGIIF7Jg1hTUm7LqnHABeSt8Yz0VTyDHTL4ecgodTtLsbhksXbJbd1t4GO7V10nmhM6QbSlh00vyRy9Gv5')
 
@@ -454,6 +457,7 @@ const handlePaymentMethodClick = (method) => {
                 <button className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-20 p-1 px-1 bg-[#336DF2] rounded-lg">ใช้โค้ด</button>
               </div>
 
+          </Elements>
           </Elements>
 
           </div>
