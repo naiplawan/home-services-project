@@ -115,8 +115,8 @@ function PromotionList() {
                   </span>
                   <span className="text-grey700 mx-[5%]">ราคาที่ลด</span>
                   <span className="text-grey700 mx-[3%]">สร้างเมื่อ</span>
-                  <span className="text-grey700 mx-[11%]">วันหมดอายุ</span>
-                  <span className="text-grey700 mx-[10%] mr-[2%]">Action</span>
+                  <span className="text-grey700 mx-[13%]">วันหมดอายุ</span>
+                  <span className="text-grey700 mx-[6%] mr-[2%]">Action</span>
                 </li>
                 <ul>
                   {data &&
@@ -163,11 +163,13 @@ function PromotionList() {
                               </p>
                               <p className="w-[50%] ml-[%]">
                                 {" "}
-                                {dateFormat(promotion.promotion_expiry_date)}
+                                {dateFormat(
+                                  promotion.promotion_created_date_time
+                                )}
                               </p>
                               <p className="w-[50%] mr-[8%]">
                                 {" "}
-                                {dateFormat(promotion.promotion_expiry_time)}
+                                {dateFormat(promotion.promotion_expiry_date)}
                               </p>
                             </div>
                             {promotion.promotion_id !== deletePromotionId && (
