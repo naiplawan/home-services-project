@@ -21,6 +21,27 @@ promotionRouter.get("/", async (req, res) => {
   }
 });
 
+// ดู promotion แบบเจาะจง id
+promotionRouter.get("/:id", async (req, res) => {
+  try {
+    const promotionId = req.params.id;
+
+    const { data, error } = await supabase
+      .from("promotion")
+      .select("*")
+      .eq("promotion_id", promotionId);
+      
+      if (error) {
+        throw error;
+      }
+  
+      res.status(200).json({ success: true, data });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, error: "Internal Server Error" });
+    }
+});
+
 promotionRouter.post("/", async (req, res) => {
   try {
     const {
