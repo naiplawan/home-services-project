@@ -9,7 +9,11 @@ import dayjs from 'dayjs'
 import credit from "../assets/CustomerPhoto/icons/credit.svg";
 import qr from "../assets/CustomerPhoto/icons/qr.svg";
 import greyarrow from "../assets/CustomerPhoto/icons/BackGrey.svg";
-import { message, Steps, Form, Input, DatePicker, TimePicker } from "antd";
+import { message, Steps, Form, Input, DatePicker, TimePicker } from "antd"; 
+import { loadStripe } from "@stripe/stripe-js";
+import { CardElement, Elements, Stripe } from "@stripe/react-stripe-js"  // npm install --save @stripe/react-stripe-js @stripe/stripe-js
+
+
 
 function AllStepCheckOutForm() {
   const [service, setService] = useState({});
@@ -20,8 +24,12 @@ function AllStepCheckOutForm() {
   const { TextArea } = Input;
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
-  const monthFormat = 'MM/YY';
+  const monthFormat = 'MM/YY';  
 
+  const [success, setSuccess] = useState(false);
+  const stripePromise = loadStripe('pk_test_51Nu6oIL0v3CrBX83LGIIF7Jg1hTUm7LqnHABeSt8Yz0VTyDHTL4ecgodTtLsbhksXbJbd1t4GO7V10nmhM6QbSlh00vyRy9Gv5')
+
+  
   console.log("params.serviceId:", params.serviceId);
   console.log("Service Data:", service);
 
@@ -127,11 +135,53 @@ const handlePaymentMethodClick = (method) => {
     setSelectedPaymentMethod(method);
   };
 
+  const handleSubmitStripe = async (e) => {
+    e.preventDefault();
+    if (!stripe || !elements) {
+      console.error("Stripe.js has not loaded yet.");
+      return;
+    }
+
+    const cardElement = elements.getElement(CardElement);
+
+    if (!cardElement) {
+      console.error("CardElement is missing.");
+      return;
+    }
+
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardElement,
+    });
+
+    if (!error) {
+      try {
+        const { id } = paymentMethod;
+        const response = await axios.post("http://localhost:4000/payment", {
+          amount: calculateTotalPrice(), // Pass the total amount here
+          id,
+        });
+
+        if (response.data.success) {
+          console.log("Successful payment");
+          setSuccess(true);
+        }
+      } catch (error) {
+        console.log("Error", error);
+        message.error("Payment failed. Please try again.");
+      }
+    } else {
+      console.log(error.message);
+      message.error("Payment failed. Please check your card details.");
+    }
+  };
+
   console.log("current is:",current)
   console.log("Form:",formData)
   console.log("Subservices:",selectedSubService)
 
   return (
+    <Elements stripe={stripePromise}> 
     <div className="First-content bg-grey300" content="First-content">
       <Navbar />
       <div className="">
@@ -350,13 +400,8 @@ const handlePaymentMethodClick = (method) => {
             <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
               <Steps current={current} labelPlacement="vertical" items={items} />
             </div>
-            <div
-            className="Last-content  h-full w-[687px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border border-grey300 rounded-lg mt-20"
-            content="Last-content"
-          >
-            <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
-              <Steps current={2} labelPlacement="vertical" items={items} />
-            </div>
+            
+            
             <div>ชำระเงิน</div>
             <div className="flex justify-evenly mt-4">
             <button
@@ -366,7 +411,7 @@ const handlePaymentMethodClick = (method) => {
               onClick={() => handlePaymentMethodClick("qr")}
             >
               <img src={qr} />
-              <p>พร้อมเพ</p>
+              <p>พร้อมเพย์</p>
             </button>
             <button
               className={`w-full border border-[#CCD0D7] rounded-lg p-1 ml-4 flex flex-col justify-center items-center focus:outline-none focus:ring focus:ring-[#336DF2] ${
@@ -394,13 +439,12 @@ const handlePaymentMethodClick = (method) => {
               <div className="ml-4">
               <p>รหัส CVC / CVV<span className="text-[#C82438]">*</span></p>
               <input  type="tel"
-  placeholder="xxx"
-  className="w-full border border-[#CCD0D7] rounded-lg p-0.5"
-  maxlength="3" pattern="([0-9]{3})" required/>
+                placeholder="xxx"
+                className="w-full border border-[#CCD0D7] rounded-lg p-0.5"
+                maxLength="3" pattern="([0-9]{3})" required/>
               </div>
               </div>
               <div className="my-8 w-full h-[1px] border border-[#CCD0D7]"></div>
-              <div className="flex">
               <div>
               <p>Promotion Code</p>
               <input placeholder="กรุณากรอกโค้ดส่วนลด (ถ้ามี)" className="w-full border border-[#CCD0D7] rounded-lg p-1"/>
@@ -408,8 +452,8 @@ const handlePaymentMethodClick = (method) => {
               <div className="pt-6 ml-5">
                 <button className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-20 p-1 px-1 bg-[#336DF2] rounded-lg">ใช้โค้ด</button>
               </div>
-              </div>
-          </div>
+
+        
 
           </div>
         ) : null}
@@ -429,7 +473,7 @@ const handlePaymentMethodClick = (method) => {
             ))}
           </ul>
           <div className="w-[301]px h-[1px] border border-[#CCD0D7] mt-3"></div>
-          <div className="pt-10"><div> {current === 1 || current === 2 || current ===3 ? (
+          <div className="pt-10"><div> {current === 1 || current === 2 || current === 3 ? (
       <div>
         <div className="flex justify-between">
           <div className="text-[#646C80]">วันที่:</div>
@@ -519,20 +563,23 @@ const handlePaymentMethodClick = (method) => {
       )}
       {current === steps.length - 1 && (
         <button
-          type="primary"
-          onClick={() => {
-            message.success('Processing complete!');
-            next();
-          }}
-          className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-45 p-2 px-6 bg-[#336DF2] rounded-lg"
-        >
-          ยืนยันการชำระเงิน
-        </button>
+        type="primary"
+        onClick={(e) => {
+          e.preventDefault(); // Prevent the default form submission
+          message.success('Processing complete!');
+          handleSubmitStripe(e); // Pass the event object
+          next();
+        }}
+        className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-45 p-2 px-6 bg-[#336DF2] rounded-lg"
+      >
+        ยืนยันการชำระเงิน
+      </button>
       )}
     </>
   )}
 </div>
     </div>
+ </Elements>   
 
   );
 }
