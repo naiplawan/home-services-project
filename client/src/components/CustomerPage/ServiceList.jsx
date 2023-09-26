@@ -77,7 +77,7 @@ function ServiceList() {
     // สร้างฟังก์ชัน handleSearch เพื่อเรียก API โดยใช้ค่าปัจจุบันของพารามิเตอร์
     handleSearch();
     getCategory();
-  }, [keywords, selectedCategory, minPriceFilter, maxPriceFilter, orderFilter]);
+  }, [keywords]);
 
   return (
     <>
@@ -180,58 +180,72 @@ function ServiceList() {
         </div>
 
         <section>
-          <div className=" xl:px-[159px]  flex flex-wrap justify-center items-center top-20 pb-20 h-full bg-[#f0f0f0]">
+          <div className="xl:px-[159px] flex flex-wrap justify-center items-center top-20 pb-20 h-full bg-[#f0f0f0]">
             {services &&
               services.data &&
               Array.isArray(services.data) &&
-              services.data.map((service) => (
-                <div
-                  key={service.id}
-                  className="lg:mx-[37px] lg:w-[369px] mt-[48px] w-[25%] h-[35%] rounded-md overflow-hidden border border-[#CCD0D7] m-2"
-                >
-                  <div className="img-display">
-                    <img
-                      src={service.service_photo}
-                      alt={service.sub_service.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-2 md:p-5 bg-white min-h-full">
-                    <div className="bg-[#E7EEFF] text-center px-[10px] inline-block p-1 text-[#0E3FB0] rounded-lg">
-                      <p>{service.category.category_name}</p>
-                    </div>
-                    <h2 className="font-bold text-[20px] mt-3">
-                      {service.service_name}
-                    </h2>
-                    <div className="flex items-center">
-                      <SellBlack />
-                      <p className="ml-2 text-[#646C80] text-sm py-[10px]">
-                        {getMinPrice(service.sub_service) !==
-                        getMaxPrice(service.sub_service)
-                          ? `ค่าบริการประมาณ ${getMinPrice(
-                              service.sub_service
-                            )} - ${getMaxPrice(service.sub_service)} ฿`
-                          : `ค่าบริการประมาณ ${getMinPrice(
-                              service.sub_service
-                            )} ฿`}
-                      </p>
-                    </div>
+              services.data.map((service) => {
+                if (
+                  (!selectedCategory ||
+                    selectedCategory === "All" ||
+                    selectedCategory === service.category.category_name) &&
+                  (!keywords ||
+                    service.service_name
+                      .toLowerCase()
+                      .includes(keywords.toLowerCase()))
+                ) {
+                  return (
+                    <div
+                      key={service.id}
+                      className="lg:mx-[37px] lg:w-[369px] mt-[48px] w-[25%] h-[35%] rounded-md overflow-hidden border border-[#CCD0D7] m-2"
+                    >
+                      <div className="img-display">
+                        <img
+                          src={service.service_photo}
+                          alt={service.sub_service.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="p-2 md:p-5 bg-white min-h-full">
+                        <div className="bg-[#E7EEFF] text-center px-[10px] inline-block p-1 text-[#0E3FB0] rounded-lg">
+                          <p>{service.category.category_name}</p>
+                        </div>
+                        <h2 className="font-bold text-[20px] mt-3">
+                          {service.service_name}
+                        </h2>
+                        <div className="flex items-center">
+                          <SellBlack />
+                          <p className="ml-2 text-[#646C80] text-sm py-[10px]">
+                            {getMinPrice(service.sub_service) !==
+                            getMaxPrice(service.sub_service)
+                              ? `ค่าบริการประมาณ ${getMinPrice(
+                                  service.sub_service
+                                )} - ${getMaxPrice(service.sub_service)} ฿`
+                              : `ค่าบริการประมาณ ${getMinPrice(
+                                  service.sub_service
+                                )} ฿`}
+                          </p>
+                        </div>
 
-                    <div>
-                      <p
-                        className="link text-l font-semibold text-[#336DF2]"
-                        onClick={() =>
-                          navigate(`/checkout/${service.service_id}`)
-                        }
-                      >
-                        เลือกบริการ
-                      </p>
+                        <div>
+                          <p
+                            className="link text-l font-semibold text-[#336DF2]"
+                            onClick={() =>
+                              navigate(`/checkout/${service.service_id}`)
+                            }
+                          >
+                            เลือกบริการ
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  );
+                }
+                return null;
+              })}
           </div>
         </section>
+
         <footer className="h-[284px] bg-[#336DF2] text-center flex justify-center items-center">
           <p className="text-[20px] text-white">
             เพราะเราคือช่าง ผู้ให้บริการเรื่องบ้านอันดับ 1 แบบครบวงจร

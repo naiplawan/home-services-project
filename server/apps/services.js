@@ -18,8 +18,8 @@ serviceRouter.get("/", async (req, res) => {
   try {
     const data = await supabase
       .from("service")
-      .select("*, sub_service(*), category(*)")
-      .ilike("service_name, category_name", `%${keywords}%`);
+      .select("*, sub_service(*), category(*)");
+    // .ilike("service_name, category_name", `%${keywords}%`);
     // ต้องเพิ่ม filter อื่นๆอีก
     // select option category , price range , order filter ( ตามตัวอักษรม ,ยอดนิยม)
 

@@ -12,7 +12,7 @@ function PromotionList() {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [promotion_Id, setPromotion_Id] = useState();
-  const [deletePromotionId, setDeletePromotionId] = useState(null); // เปลี่ยนชื่อตัวแปรเป็น deletePromotionId
+  const [deletePromotionId, setDeletePromotionId] = useState(null);
   const navigate = useNavigate();
 
   const getPromotion = async () => {
@@ -37,16 +37,16 @@ function PromotionList() {
 
   const promotionDeleteAlert = (promotionId) => {
     setPromotion_Id(promotionId);
-    setDeletePromotionId(promotionId); // อัปเดตตัวแปร deletePromotionId เมื่อมีการเรียกใช้ promotionDeleteAlert
+    setDeletePromotionId(promotionId);
   };
 
   const handleDelete = () => {
     deletePromotionById(promotion_Id);
-    setDeletePromotionId(null); // รีเซ็ตค่า deletePromotionId เมื่อทำการลบ
+    setDeletePromotionId(null);
   };
 
   const hide = () => {
-    setDeletePromotionId(null); // ให้เคลียร์ค่า deletePromotionId เมื่อทำการซ่อน Alert
+    setDeletePromotionId(null);
   };
 
   useEffect(() => {
