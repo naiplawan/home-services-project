@@ -98,7 +98,8 @@ function PromotionEdit() {
         promotion_expiry_date: promotion.promotion_expiry_date || "",
         promotion_quota: promotion.promotion_quota || "",
         promotion_expiry_time: promotion.promotion_expiry_time || "",
-        promotion_created_date_time: promotion.promotion_created_date_time || "",
+        promotion_created_date_time:
+          promotion.promotion_created_date_time || "",
         promotion_edited_date_time: promotion.promotion_edited_date_time || "",
       }}
       onFinish={onFinish}
@@ -143,7 +144,7 @@ function PromotionEdit() {
             <Form.Item
               label={<span style={labelStyle}>Promotion Code</span>}
               colon={false}
-            //   name="promotion_code"
+              //   name="promotion_code"
               rules={[
                 {
                   required: true,
@@ -153,6 +154,7 @@ function PromotionEdit() {
             >
               <Input
                 style={{ width: "50%" }}
+                name="promotion_code"
                 value={promotion.promotion_code}
                 onChange={(e) =>
                   setPromotion({ ...promotion, promotion_code: e.target.value })
@@ -171,7 +173,7 @@ function PromotionEdit() {
                 },
               ]}
             >
-              <Radio.Group>
+              <Radio.Group defaultValue={promotion.promotion_types}>
                 <div className="flex flex-row">
                   <Form.Item
                     name="promotion_types"
@@ -281,7 +283,7 @@ function PromotionEdit() {
             <Form.Item
               label={<span style={labelStyle}>โควต้าการใช้</span>}
               colon={false}
-              name="promotion_quota"
+              //   name="promotion_quota"
               rules={[
                 {
                   required: true,
@@ -304,7 +306,18 @@ function PromotionEdit() {
                 },
               ]}
             >
-              <Input style={{ width: "50%" }} suffix="ครั้ง" />
+              <Input
+                style={{ width: "50%" }}
+                suffix="ครั้ง"
+                name="promotion_quota"
+                value={promotion.promotion_quota}
+                onChange={(e) =>
+                  setPromotion({
+                    ...promotion,
+                    promotion_quota: e.target.value,
+                  })
+                }
+              />
             </Form.Item>
 
             <Form.Item
@@ -321,6 +334,13 @@ function PromotionEdit() {
                 <Col span={12}>
                   <Form.Item
                     name="promotion_expiry_date"
+                    value={promotion.promotion_expiry_date}
+                    onChange={(e) =>
+                      setPromotion({
+                        ...promotion,
+                        promotion_expiry_date: e.target.value,
+                      })
+                    }
                     rules={[
                       {
                         required: true,
@@ -353,13 +373,13 @@ function PromotionEdit() {
             <p className="pb-[25px] ">
               <span className="text-grey700">สร้างเมื่อ</span>
               <span className="px-[200px] text-black ">
-                {/* {dateFormat(service.service_created_date)} */}
+                {dateFormat(promotion.promotion_created_date_time)}
               </span>
             </p>
             <p className="pb-[40px] ">
               <span className="text-grey700">แก้ไขล่าสุด</span>
               <span className="px-[190px] text-black ">
-                {/* {dateFormat(service.service_edited_date)} */}
+                {dateFormat(promotion.promotion_edited_date_time)}
               </span>
             </p>
           </div>
