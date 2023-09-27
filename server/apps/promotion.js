@@ -1,11 +1,11 @@
 import { Router } from "express";
 import supabase from "../utils/supabase.js";
-// import multer from "multer";
+import multer from "multer";
 
 const promotionRouter = Router();
 
 // const multer = require("multer");
-// const upload = multer();
+const upload = multer()
 
 promotionRouter.get("/", async (req, res) => {
   try {
@@ -77,7 +77,7 @@ promotionRouter.put("/:id", async (req, res) => {
   }
 });
 
-promotionRouter.post("/", async (req, res) => {
+promotionRouter.post("/",upload.none(), async (req, res) => {
   try {
     const {
       promotion_code,

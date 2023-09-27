@@ -90,7 +90,9 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
 
     console.log("main service", newServiceItem);
 
-    const subServiceItems = req.body.items.map((item) => JSON.parse(item));
+    const subServiceItems = Array.isArray(req.body.items)
+      ? req.body.items.map((item) => JSON.parse(item))
+      : [JSON.parse(req.body.items)];
 
     console.log("sub service data", subServiceItems);
 

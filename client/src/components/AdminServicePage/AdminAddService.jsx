@@ -320,7 +320,7 @@ function AddService() {
                             labelCol={{ span: 24 }}
                             rules={[
                               {
-                                required: index === 0, // Only the first one is required
+                                required: true, // Only the first one is required
                                 message: "โปรดกรอกชื่อรายการ",
                               },
                             ]}
@@ -337,7 +337,7 @@ function AddService() {
                             labelCol={{ span: 24 }}
                             rules={[
                               {
-                                required: index === 0,
+                                required: true,
                                 message: "โปรดกรอกค่าบริการ",
                               },
                             ]}
@@ -365,7 +365,7 @@ function AddService() {
                             labelCol={{ span: 24 }}
                             rules={[
                               {
-                                required: index === 0,
+                                required: true,
                                 message: "โปรดกรอกหน่วยการบริการ",
                               },
                             ]}
