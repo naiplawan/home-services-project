@@ -58,12 +58,14 @@ function ServiceList() {
 
       if (response.data.error) {
         setError("เกิดข้อผิดพลาดในการค้นหา");
+        setServices([]); // ตั้งค่า services เป็นอาร์เรย์ว่างเมื่อเกิดข้อผิดพลาด
       } else {
-        setServices(response.data.data);
+        setServices(response.data.data); // ตั้งค่า state services ด้วยผลลัพธ์ที่ได้จาก API
         console.log("ผลลัพธ์การค้นหา", response.data.data);
       }
     } catch (error) {
       setError("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์", error.message);
+      setServices([]); // ตั้งค่า services เป็นอาร์เรย์ว่างเมื่อเกิดข้อผิดพลาด
     }
   };
 
@@ -182,9 +184,8 @@ function ServiceList() {
         <section>
           <div className="xl:px-[159px] flex flex-wrap justify-center items-center top-20 pb-20 h-full bg-[#f0f0f0]">
             {services &&
-              services.data &&
-              Array.isArray(services.data) &&
-              services.data.map((service) => {
+              Array.isArray(services) &&
+              services.map((service) => {
                 if (
                   (!selectedCategory ||
                     selectedCategory === "All" ||
