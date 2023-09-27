@@ -9,8 +9,11 @@ const upload = multer()
 
 promotionRouter.get("/", async (req, res) => {
   try {
-    const data = await supabase.from("promotion").select("*");
-
+    const { keyword } = req.query;
+    let data = await supabase.from("promotion").select("*");
+    if (keyword) {
+      data = data.filter((promo) => promo.promotion_code === keyword);
+    }
     return res.json({
       data,
     });
@@ -167,3 +170,48 @@ promotionRouter.delete("/:id", async (req, res) => {
 });
 
 export default promotionRouter;
+
+// promotionRouter.put("/:id", async (req, res) => {
+//   try {
+//     const promotionId = req.params.id;
+
+//     // Extract the fields you want to update from the request body
+//     const {
+//       promotion_code,
+//       promotion_types,
+//       promotion_quota,
+//       promotion_discount,
+//       promotion_expiry_date,
+//       promotion_expiry_time,
+//     } = req.body;
+
+//     // Update the fields in the Supabase table
+//     const { data, error } = await supabase
+//       .from("promotion")
+//       .update({
+//         promotion_code,
+//         promotion_types,
+//         promotion_quota,
+//         promotion_discount,
+//         promotion_expiry_date,
+//         promotion_expiry_time,
+//       })
+//       .eq("promotion_id", promotionId);
+
+//     if (error) {
+//       throw error;
+//     }
+
+//     // Check if any rows were updated
+//     if (data && data.length === 0) {
+//       return res
+//         .status(404)
+//         .json({ error: `No promotion with ID ${promotionId} found.` });
+//     }
+
+//     return res.status(200).json({ success: true, data });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ success: false, error: "Internal Server Error" });
+//   }
+// });
