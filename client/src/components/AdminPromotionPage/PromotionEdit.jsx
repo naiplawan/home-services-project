@@ -18,7 +18,7 @@ import axios from "axios";
 import arrow from "../../assets/AdminPhoto/arrow.png";
 
 function PromotionEdit() {
-  const [promotionById, setPromotionById] = useState([]);
+  const [promotion, setPromotion] = useState({});
   const [promotionDetail, setPromotionDetail] = useState(""); //ใช้กับ header
 
   const navigate = useNavigate();
@@ -29,18 +29,17 @@ function PromotionEdit() {
     const result = await axios.get(
       `http://localhost:4000/promotion/${promotionId}`
     );
-    setPromotionById(result.data.data);
+    setPromotion(result.data.data[0]);
     setPromotionDetail(result.data.data[0].promotion_code);
-    console.log(result.data.data);
-    console.log(result.data.data[0].promotion_code);
+
+    console.log(result.data.data[0]);
   };
+
   useEffect(() => {
     getPromotionDetail(params.promotionId);
     console.log(params.promotionId);
   }, []);
 
-
-  console.log("promotion by ID", promotionById)
   const onFinish = async (values) => {
     try {
       console.log(values);
@@ -93,8 +92,14 @@ function PromotionEdit() {
       layout="horizontal"
       name="promotion_form"
       initialValues={{
-        promotion_expiry_date: moment(),
-        promotion_expiry_time: moment(),
+        promotion_code: promotion.prmotion_code || "",
+        promotion_types: promotion.promotion_types || "",
+        promotion_discount: promotion.promotion_discount || "",
+        promotion_expiry_date: promotion.promotion_expiry_date || "",
+        promotion_quota: promotion.promotion_quota || "",
+        promotion_expiry_time: promotion.promotion_expiry_time || "",
+        promotion_created_date_time: promotion.promotion_created_date_time || "",
+        promotion_edited_date_time: promotion.promotion_edited_date_time || "",
       }}
       onFinish={onFinish}
       requiredMark={false}
@@ -133,11 +138,12 @@ function PromotionEdit() {
               </button>
             </div>
           </div>
+          {/* {promotionById.map((promotion) => { */}
           <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
             <Form.Item
               label={<span style={labelStyle}>Promotion Code</span>}
               colon={false}
-              name="promotion_code"
+            //   name="promotion_code"
               rules={[
                 {
                   required: true,
@@ -145,7 +151,13 @@ function PromotionEdit() {
                 },
               ]}
             >
-              <Input style={{ width: "50%" }} />
+              <Input
+                style={{ width: "50%" }}
+                value={promotion.promotion_code}
+                onChange={(e) =>
+                  setPromotion({ ...promotion, promotion_code: e.target.value })
+                }
+              />
             </Form.Item>
 
             <Form.Item
@@ -351,6 +363,7 @@ function PromotionEdit() {
               </span>
             </p>
           </div>
+          ;{/* })} */}
         </div>
       </div>
     </Form>
