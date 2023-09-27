@@ -4,68 +4,112 @@ import axios from "axios";
 import image from "../../assets/CustomerPhoto/imageIndex.js";
 import SellBlack from "../../assets/homepagePhoto/sellBlack.jsx";
 import InputPriceRange from "./InputPriceRange";
-import { useAuth } from "../../contexts/authentication";
+// import { useAuth } from "../../contexts/authentication";
+import { getMaxPrice, getMinPrice } from "../../utils/priceMinMax.js";
 
 function ServiceList() {
   // const params = useParams();
   const navigate = useNavigate();
-  const auth = useAuth();
-  const { logout } = useAuth();
+  // const auth = useAuth();
+  // const { logout } = useAuth();
 
-  //dropdown price range
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
-
-  //filter bar states
+  // ***** About filter *****
   const [keywords, setKeywords] = useState("");
-  // const [categoryFilter, setCategoryFilter] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [minPriceFilter, setMinPriceFilter] = useState(0);
   const [maxPriceFilter, setMaxPriceFilter] = useState(2000);
   const [orderFilter, setOrderFilter] = useState("");
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
 
+  // handler event click [select category]
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
   };
 
+  // handler event click [price range dropdown]
+  const handleDropdownToggle = () => {
+    if (isDropdownVisible) {
+      setMinPriceFilter(0);
+      setMaxPriceFilter(2000);
+    }
+    setDropdownVisible(!isDropdownVisible);
+  };
+  const handlePriceRangeChange = ({ min, max }) => {
+    console.log(`min = ${min}, max = ${max}`);
+    setMinPriceFilter(min);
+    setMaxPriceFilter(max);
+  };
+
+  // handler event click [sorting ยังไม่ได้ทำ]
   const handleSortChange = (event) => {
     setOrderFilter(event.target.value);
   };
 
-  // state ของการเรียกข้อมูล
+  // state ส่วนนี้เกี่ยวกับปุ่ม"ค้นหา"  เงื่อนไขคือผลลัพธ์ของ filter จะเกิดขึ้นเมื่อกดปุ่มค้นหาเท่านั้น
+  const [isSearchClicked, setIsSearchClicked] = useState(false);
+  const [filteredServices, setFilteredServices] = useState([]);
+
+  // handler event click [search click ปุ่มค้นหา]
+  const handleSearchClick = () => {
+    setIsSearchClicked(true);
+    // ทำการกรองข้อมูลและตั้งค่า filteredServices ใหม่ตามเงื่อนไข
+    const newFilteredServices = services.data.filter((service) => {
+      const serviceCategory = service.category.category_name;
+      const serviceName = service.service_name.toLowerCase();
+      const servicePrice = getMinPrice(service.sub_service);
+
+      // กรองตามคำค้นหา
+      const isKeywordMatch =
+        !keywords || serviceName.includes(keywords.toLowerCase());
+
+      // กรองตามหมวดหมู่
+      const isCategoryMatch =
+        !selectedCategory ||
+        selectedCategory === "All" ||
+        selectedCategory === serviceCategory;
+
+      // กรองตามราคา
+      const isPriceMatch =
+        servicePrice >= minPriceFilter && servicePrice <= maxPriceFilter;
+
+      return isCategoryMatch && isKeywordMatch && isPriceMatch;
+    });
+    setFilteredServices(newFilteredServices);
+  };
+
+  // ***** About Data Fetching *****
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
 
-  // ใช้ api category มาเป็นตัวเลือกใน tag option
+  // API for rendering category <select>/<option>
   const getCategory = async () => {
     try {
       const result = await axios("http://localhost:4000/category");
       setCategories(result.data.data);
-      console.log("category จริงอ้ะเป่าาา ", result.data.data);
+      console.log("getCategory มีอะไร ", result.data.data);
     } catch (error) {
       setError("เกิดข้อผิดพลาดในการเรียกข้อมูลหมวดหมู่");
     }
   };
 
-  // ผลลัพธ์เมื่อกดปุ่มค้นหา
+  // API for rendering services
   const handleSearch = async () => {
     try {
       setError(null);
-      await getCategory();
+      // await getCategory();
       const response = await axios.get(
         `http://localhost:4000/service?keywords=${keywords}&categoryFilter=${selectedCategory}&maxPriceFilter=${maxPriceFilter}&minPriceFilter=${minPriceFilter}&orderFilter=${orderFilter}`
       );
 
       if (response.data.error) {
         setError("เกิดข้อผิดพลาดในการค้นหา");
-        setServices([]); // ตั้งค่า services เป็นอาร์เรย์ว่างเมื่อเกิดข้อผิดพลาด
       } else {
-        setServices(response.data.data); // ตั้งค่า state services ด้วยผลลัพธ์ที่ได้จาก API
+        setServices(response.data.data);
         console.log("ผลลัพธ์การค้นหา", response.data.data);
       }
     } catch (error) {
       setError("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์", error.message);
-      setServices([]); // ตั้งค่า services เป็นอาร์เรย์ว่างเมื่อเกิดข้อผิดพลาด
     }
   };
 
@@ -76,10 +120,9 @@ function ServiceList() {
   console.log("เรียงตาม", orderFilter);
 
   useEffect(() => {
-    // สร้างฟังก์ชัน handleSearch เพื่อเรียก API โดยใช้ค่าปัจจุบันของพารามิเตอร์
     handleSearch();
     getCategory();
-  }, [keywords]);
+  }, []);
 
   return (
     <>
@@ -136,10 +179,10 @@ function ServiceList() {
                 <p className="pl-[10px] w-[120px] text-[12px] text-[#646C80]">
                   ราคา
                 </p>
-                <div className="relative inline-block">
+                <div className="price-range-filter relative inline-block">
                   <p
                     className="cursor-pointer w-[150px] mb-1"
-                    onClick={() => setDropdownVisible(!isDropdownVisible)}
+                    onClick={handleDropdownToggle}
                   >
                     {minPriceFilter} - {maxPriceFilter} ฿ ▾
                   </p>
@@ -154,9 +197,7 @@ function ServiceList() {
                           setMinFilter={setMinPriceFilter}
                           maxFilter={maxPriceFilter}
                           setMaxFilter={setMaxPriceFilter}
-                          onChange={({ min, max }) =>
-                            console.log(`min = ${min}, max = ${max}`)
-                          }
+                          onChange={handlePriceRangeChange}
                         />
                       </div>
                     </div>
@@ -174,7 +215,7 @@ function ServiceList() {
                 </select>
               </div>
               <div className="w-[80px]"></div>
-              <button className="btn-primary" onClick={handleSearch}>
+              <button className="btn-primary" onClick={handleSearchClick}>
                 ค้นหา
               </button>
             </div>
@@ -184,17 +225,10 @@ function ServiceList() {
         <section>
           <div className="xl:px-[159px] flex flex-wrap justify-center items-center top-20 pb-20 h-full bg-[#f0f0f0]">
             {services &&
-              Array.isArray(services) &&
-              services.map((service) => {
-                if (
-                  (!selectedCategory ||
-                    selectedCategory === "All" ||
-                    selectedCategory === service.category.category_name) &&
-                  (!keywords ||
-                    service.service_name
-                      .toLowerCase()
-                      .includes(keywords.toLowerCase()))
-                ) {
+              services.data &&
+              Array.isArray(services.data) &&
+              (isSearchClicked ? filteredServices : services.data).map(
+                (service) => {
                   return (
                     <div
                       key={service.id}
@@ -242,8 +276,7 @@ function ServiceList() {
                     </div>
                   );
                 }
-                return null;
-              })}
+              )}
           </div>
         </section>
 
@@ -265,37 +298,3 @@ function ServiceList() {
   );
 }
 export default ServiceList;
-
-// function min Price / max price
-
-function getMinPrice(subServicesArray) {
-  if (subServicesArray.length === 0) {
-    return 0;
-  }
-
-  let minPrice = subServicesArray[0].price_per_unit;
-
-  for (const subService of subServicesArray) {
-    if (subService.price_per_unit < minPrice) {
-      minPrice = subService.price_per_unit;
-    }
-  }
-
-  return minPrice;
-}
-
-function getMaxPrice(subServicesArray) {
-  if (subServicesArray.length === 0) {
-    return 0;
-  }
-
-  let maxPrice = subServicesArray[0].price_per_unit;
-
-  for (const subService of subServicesArray) {
-    if (subService.price_per_unit > maxPrice) {
-      maxPrice = subService.price_per_unit;
-    }
-  }
-
-  return maxPrice;
-}

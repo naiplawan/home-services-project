@@ -34,7 +34,7 @@ function PromotionDetail() {
                 <img
                   src={arrow}
                   className=" h-[40px] w-[40px] cursor-pointer hover:scale-110 transition"
-                  onClick={() => navigate("/admin-category")}
+                  onClick={() => navigate("/admin-promotion")}
                 />
                 <div className="Header-name">
                   <p className="category-text text-xs">Promotion Code</p>
@@ -73,7 +73,10 @@ function PromotionDetail() {
                 <p className="pb-[40px] pt-[20px] ">
                   <span className="text-grey700">ราคาที่ลด</span>
                   <span className="px-[200px] text-[#C82438] ">
-                    -{promotion.promotion_discount.toFixed(2)}฿
+                    -
+                    {promotion.promotion_types === "fixed"
+                      ? `${promotion.promotion_discount}฿`
+                      : `${promotion.promotion_discount}%`}
                   </span>
                 </p>
                 <p className="pb-[40px] pt-[20px] ">

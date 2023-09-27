@@ -143,46 +143,38 @@ function PromotionList() {
                                   `/admin-promotion-detail/${promotion.promotion_id}`
                                 )
                               }
-                              className="flex w-[90%] pl-[%] pt-[1%] text-center" // เพิ่ม items-center เพื่อควบคุมการจัดวางข้อมูลในแถว
+                              className="flex w-[90%] pl-[%] pt-[1%] text-center"
                             >
                               <p className="w-[20%] ml-[%]">
-                                {" "}
                                 {promotion.promotion_code}
                               </p>
                               <p className="w-[20%] ml-[5%]">
-                                {" "}
                                 {promotion.promotion_types}
                               </p>
                               <p className="w-[20%] ml-[3%]">
-                                {" "}
                                 {promotion.promotion_quota}/10
                               </p>
                               <p className="w-[30%] ml-[%]  text-red">
                                 {console.log(
                                   "เช็ค type promotion",
                                   promotion.promotion_types
-                                )}{" "}
-                                {/* ใส่บรรทัดนี้เพื่อแสดงค่า promotion.promotion_type ใน console */}
+                                )}
                                 {promotion.promotion_types === "fixed"
                                   ? `${promotion.promotion_discount}฿`
                                   : `${promotion.promotion_discount}%`}
                               </p>
 
                               <p className="w-[50%] ml-[%]">
-                                {" "}
                                 {dateFormat(
                                   promotion.promotion_created_date_time
                                 )}
                               </p>
                               <p className="w-[50%] mr-[8%]">
-                                {" "}
                                 {dateFormat(promotion.promotion_expiry_date)}
                               </p>
                             </div>
                             {promotion.promotion_id !== deletePromotionId && (
                               <div className="pr-[5%] flex items-center">
-                                {" "}
-                                {/* เพิ่ม items-center เพื่อควบคุมการจัดวางข้อมูลในแถว */}
                                 <img
                                   className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
                                   src={trashIcon}
