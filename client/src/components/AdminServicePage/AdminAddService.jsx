@@ -325,7 +325,8 @@ function AddService() {
                               },
                             ]}
                           >
-                            <Input name="sub_service_name" />
+                            <Input 
+                            name="sub_service_name" />
                           </Form.Item>
                         </div>
                         <div style={{ flex: "1" }}>
@@ -342,17 +343,11 @@ function AddService() {
                               },
                             ]}
                           >
-                            <InputNumber
-                              formatter={(value) =>
-                                `฿ ${value}`.replace(
-                                  /\B(?=(\d{3})+(?!\d))/g,
-                                  ","
-                                )
-                              }
-                              parser={(value) =>
-                                value.replace(/฿\s?|(,*)/g, "")
-                              }
+                            <Input
+                              type="number"
+                              min={0}
                               name="price_per_unit"
+                              suffix="฿"
                             />
                           </Form.Item>
                         </div>
