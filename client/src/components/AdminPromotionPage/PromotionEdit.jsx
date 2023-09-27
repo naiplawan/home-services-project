@@ -40,7 +40,10 @@ function PromotionEdit() {
     console.log(params.promotionId);
   }, []);
 
+  
 
+  console.log("types", promotion.promotion_types);
+  console.log("discount", promotion.promotion_expiry_time);
 
   const onFinish = async (values) => {
     try {
@@ -167,7 +170,7 @@ function PromotionEdit() {
             <Form.Item
               label={<span style={labelStyle}>ประเภท</span>}
               colon={false}
-              name="promotion_types"
+              // name="promotion_types"
               rules={[
                 {
                   required: true,
@@ -175,7 +178,15 @@ function PromotionEdit() {
                 },
               ]}
             >
-              <Radio.Group>
+              <Radio.Group
+                value={promotion.promotion_types}
+                onChange={(e) =>
+                  setPromotion({
+                    ...promotion,
+                    promotion_types: e.target.value,
+                  })
+                }
+              >
                 <div className="flex flex-row">
                   <Form.Item
                     name="promotion_types"
@@ -216,6 +227,13 @@ function PromotionEdit() {
                           ]}
                         >
                           <Input
+                            value={promotion.promotion_discount}
+                            onChange={(e) =>
+                              setPromotion({
+                                ...promotion,
+                                promotion_discount: e.target.value,
+                              })
+                            }
                             style={{ width: "50%" }}
                             suffix="฿"
                             disabled={
@@ -335,14 +353,6 @@ function PromotionEdit() {
               <Row gutter={8}>
                 <Col span={12}>
                   <Form.Item
-                    name="promotion_expiry_date"
-                    value={promotion.promotion_expiry_date}
-                    onChange={(e) =>
-                      setPromotion({
-                        ...promotion,
-                        promotion_expiry_date: e.target.value,
-                      })
-                    }
                     rules={[
                       {
                         required: true,
@@ -351,12 +361,22 @@ function PromotionEdit() {
                     ]}
                     noStyle
                   >
-                    <DatePicker style={{ width: "50%" }} />
+                    <DatePicker
+                      name="promotion_expiry_date"
+                      defaultValue={moment(promotion.promotion_expiry_date)} // Assuming you're using Moment.js for dates
+                      onChange={(date, dateString) =>
+                        setPromotion({
+                          ...promotion,
+                          promotion_expiry_date: dateString, // dateString contains the formatted date string
+                        })
+                      }
+                      style={{ width: "50%" }}
+                    />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    name="promotion_expiry_time"
+                    // name="promotion_expiry_time"
                     rules={[
                       {
                         required: true,
@@ -365,7 +385,20 @@ function PromotionEdit() {
                     ]}
                     noStyle
                   >
-                    <TimePicker format="HH:mm" />
+                    <TimePicker
+                      name="promotion_expiry_time"
+                      value={moment(
+                        promotion.promotion_expiry_time,
+                        "HH:mm"
+                      )}
+                      onChange={(time, timeString) =>
+                        setPromotion({
+                          ...promotion,
+                          promotion_expiry_time: timeString,
+                        })
+                      }
+                      format="HH:mm"
+                    />
                   </Form.Item>
                 </Col>
               </Row>
