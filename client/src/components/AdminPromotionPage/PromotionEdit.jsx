@@ -40,6 +40,8 @@ function PromotionEdit() {
     console.log(params.promotionId);
   }, []);
 
+
+
   const onFinish = async (values) => {
     try {
       console.log(values);
@@ -173,7 +175,7 @@ function PromotionEdit() {
                 },
               ]}
             >
-              <Radio.Group defaultValue={promotion.promotion_types}>
+              <Radio.Group>
                 <div className="flex flex-row">
                   <Form.Item
                     name="promotion_types"
