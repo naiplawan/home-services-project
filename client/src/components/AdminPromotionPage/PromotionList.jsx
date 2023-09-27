@@ -195,7 +195,7 @@ function PromotionList() {
                                   className="cursor-pointer w-[25px] h-[25px]"
                                   onClick={() =>
                                     navigate(
-                                      `/admin-category-edit/${promotion.promotion_id}`
+                                      `/admin-promotion-edit/${promotion.promotion_id}`
                                     )
                                   }
                                 />
