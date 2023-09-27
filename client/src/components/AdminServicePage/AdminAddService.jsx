@@ -320,12 +320,13 @@ function AddService() {
                             labelCol={{ span: 24 }}
                             rules={[
                               {
-                                required: index === 0, // Only the first one is required
+                                required: true, // Only the first one is required
                                 message: "โปรดกรอกชื่อรายการ",
                               },
                             ]}
                           >
-                            <Input name="sub_service_name" />
+                            <Input 
+                            name="sub_service_name" />
                           </Form.Item>
                         </div>
                         <div style={{ flex: "1" }}>
@@ -337,22 +338,16 @@ function AddService() {
                             labelCol={{ span: 24 }}
                             rules={[
                               {
-                                required: index === 0,
+                                required: true,
                                 message: "โปรดกรอกค่าบริการ",
                               },
                             ]}
                           >
-                            <InputNumber
-                              formatter={(value) =>
-                                `฿ ${value}`.replace(
-                                  /\B(?=(\d{3})+(?!\d))/g,
-                                  ","
-                                )
-                              }
-                              parser={(value) =>
-                                value.replace(/฿\s?|(,*)/g, "")
-                              }
+                            <Input
+                              type="number"
+                              min={0}
                               name="price_per_unit"
+                              suffix="฿"
                             />
                           </Form.Item>
                         </div>
@@ -365,7 +360,7 @@ function AddService() {
                             labelCol={{ span: 24 }}
                             rules={[
                               {
-                                required: index === 0,
+                                required: true,
                                 message: "โปรดกรอกหน่วยการบริการ",
                               },
                             ]}

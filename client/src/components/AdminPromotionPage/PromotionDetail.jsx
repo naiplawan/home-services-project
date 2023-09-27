@@ -66,7 +66,8 @@ function PromotionDetail() {
                 <p className="pb-[40px] pt-[20px] ">
                   <span className="text-grey700">ประเภท</span>
                   <span className="px-[215px] text-black ">
-                    {promotion.promotion_types.charAt(0).toUpperCase() + promotion.promotion_types.slice(1).toLowerCase()}
+                    {promotion.promotion_types.charAt(0).toUpperCase() +
+                      promotion.promotion_types.slice(1).toLowerCase()}
                   </span>
                 </p>
                 <p className="pb-[40px] pt-[20px] ">
@@ -78,13 +79,14 @@ function PromotionDetail() {
                 <p className="pb-[40px] pt-[20px] ">
                   <span className="text-grey700">โควต้าการใช้</span>
                   <span className="px-[180px] text-black ">
-                    0/{promotion.promotion_quota}{" "}ครั้ง
+                    0/{promotion.promotion_quota} ครั้ง
                   </span>
                 </p>
                 <p className="pb-[40px] pt-[20px] ">
                   <span className="text-grey700">วันหมดอายุ</span>
                   <span className="px-[185px] text-black ">
-                    {promotion.promotion_expiry_date}{" "}{promotion.promotion_expiry_time}
+                    {promotion.promotion_expiry_date}{" "}
+                    {promotion.promotion_expiry_time}
                   </span>
                 </p>
                 <hr className="py-[20px]" />
