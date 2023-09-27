@@ -134,25 +134,15 @@ function ServiceEditForm() {
       setEditableServiceName(response.data.data.service_name);
       setCurrentImage(response.data.data.service_photo);
       setCurrentCategory(response.data.data.category);
-      // setSubService(response.data.data.service.sub_service)
-      // console.log('?', response.data.data.service.sub_service)
       console.log("what is this", response.data.data);
-      // setSelectedImage(response.data.image_url);
-      // setFileList([
-      //   {
-      //     uid: "-1",
-      //     name: "image.png",
-      //     status: "done",
-      //     url: response.data.image_url,
-      //   },
-      // ]);
+
     } catch (error) {
       console.error("Error fetching service data:", error);
     }
   };
 
   console.log(currentImage);
-  // console.log("updateSubService", updateSubService);
+
 
   // put data API area
   const handleSubmitEdit = async (values) => {
