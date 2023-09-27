@@ -172,7 +172,7 @@ function AllStepCheckOutForm() {
       });
 
       // Handle the response here, e.g., you can log it or perform further actions.
-      console.log(response.data);
+      console.log("server data",response.data);
     } catch (error) {
       // Handle any errors that occur during the request.
       console.error(error);
