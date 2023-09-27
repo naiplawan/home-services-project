@@ -42,6 +42,41 @@ promotionRouter.get("/:id", async (req, res) => {
   }
 });
 
+promotionRouter.put("/:id", async (req, res) => {
+  try {
+    const promotionId = req.params.id;
+
+    const updatedPromotionItem = {
+      promotion_code: req.body.promotion_code,
+      promotion_types: req.body.promotion_types,
+      promotion_quota: req.body.promotion_quota,
+      promotion_discount: req.body.promotion_discount,
+      promotion_expiry_date: req.body.promotion_expiry_date,
+      promotion_expiry_time: req.body.promotion_expiry_time,
+    };
+
+    const { data: updatedPromotionData, error: updatedPromotionError } =
+      await supabase
+        .from("promotion")
+        .update(updatedPromotionItem)
+        .eq("promotion_id", promotionId);
+
+    if (updatedPromotionError) {
+      console.error("Error updating service data", updatedPromotionError);
+      return res
+        .status(500)
+        .json({ message: "Error cannot update data to supabase" });
+    }
+
+    console.log("updated data", updatedPromotionData);
+
+    return res.status(200).send("Promotion is successfully updated");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+});
+
 promotionRouter.post("/", async (req, res) => {
   try {
     const {
