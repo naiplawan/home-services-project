@@ -20,6 +20,7 @@ function ServiceList() {
   const [maxPriceFilter, setMaxPriceFilter] = useState(2000);
   const [orderFilter, setOrderFilter] = useState("");
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [hasClickedSearch, setHasClickedSearch] = useState(false);
 
   // handler event click [select category]
   const handleCategoryChange = (event) => {
@@ -28,7 +29,8 @@ function ServiceList() {
 
   // handler event click [price range dropdown]
   const handleDropdownToggle = () => {
-    if (isDropdownVisible) {
+    // ถ้า dropdown กำลังเปิด และยังไม่ได้คลิกค้นหา ให้รีเซ็ตค่า
+    if (isDropdownVisible && !hasClickedSearch) {
       setMinPriceFilter(0);
       setMaxPriceFilter(2000);
     }
@@ -51,30 +53,31 @@ function ServiceList() {
 
   // handler event click [search click ปุ่มค้นหา]
   const handleSearchClick = () => {
-    setIsSearchClicked(true);
     // ทำการกรองข้อมูลและตั้งค่า filteredServices ใหม่ตามเงื่อนไข
     const newFilteredServices = services.data.filter((service) => {
       const serviceCategory = service.category.category_name;
       const serviceName = service.service_name.toLowerCase();
       const servicePrice = getMinPrice(service.sub_service);
 
-      // กรองตามคำค้นหา
+      // filter search
       const isKeywordMatch =
         !keywords || serviceName.includes(keywords.toLowerCase());
 
-      // กรองตามหมวดหมู่
+      // filter category dropdown
       const isCategoryMatch =
         !selectedCategory ||
         selectedCategory === "All" ||
         selectedCategory === serviceCategory;
 
-      // กรองตามราคา
+      // filter price range
       const isPriceMatch =
         servicePrice >= minPriceFilter && servicePrice <= maxPriceFilter;
 
       return isCategoryMatch && isKeywordMatch && isPriceMatch;
     });
+    setIsSearchClicked(true);
     setFilteredServices(newFilteredServices);
+    setHasClickedSearch(true);
   };
 
   // ***** About Data Fetching *****
