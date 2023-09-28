@@ -52,6 +52,7 @@ function EditedCategoryForm() {
   const handleDelete = async () => {
     try {
       await axios.delete(`http://localhost:4000/category/${categoryId}`);
+      
       alert("ลบหมวดหมู่สำเร็จ");
       navigate("/admin-category");
     } catch (error) {

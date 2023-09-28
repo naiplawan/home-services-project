@@ -16,10 +16,13 @@ import dateFormat from "../../utils/dateFormat.js";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import arrow from "../../assets/AdminPhoto/arrow.png";
+import trash from "../../assets/homepagePhoto/trash.svg";
+import AlertBoxDelete from "../AlertBox.jsx";
 
 function PromotionEdit() {
   // const [promotion, setPromotion] = useState({});
   const [promotionDetail, setPromotionDetail] = useState(""); //ใช้กับ header
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   const [newFormData, setFormData] = useState({
     promotion_code: "",
@@ -31,6 +34,24 @@ function PromotionEdit() {
     promotion_created_date_time: "",
     promotion_edited_date_time: "",
   });
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete`http://localhost:4000/promotion/${promotionId}`;
+      alert("ลบหมวดหมู่สำเร็จ");
+      navigate("/admin-category");
+    } catch (error) {
+      console.error("เกิดข้อผิดพลาดในการลบหมวดหมู่:", error);
+    }
+  };
+
+  const showDeleteConfirmation = () => {
+    setDeleteConfirmation(true);
+  };
+
+  const hideDeleteConfirmation = () => {
+    setDeleteConfirmation(false);
+  };
 
   const navigate = useNavigate();
 
@@ -63,23 +84,26 @@ function PromotionEdit() {
     getPromotionDetail(params.promotionId);
   }, [params.promotionId]);
 
-  console.log('newformData', newFormData)
+  console.log("newformData", newFormData);
 
-
-  const handleSubmitEdit= async () => {
+  const handleSubmitEdit = async () => {
     try {
       console.log("formData", newFormData);
 
       const formData = new FormData();
 
-      formData.append("promotion_code", newFormData.promotion_code)
-      formData.append("promotion_types", newFormData.promotion_types)
-      formData.append("promotion_discount", newFormData.promotion_discount)
-      formData.append("romotion_expiry_date", newFormData.promotion_expiry_date)
-      formData.append("promotion_expiry_time", newFormData.promotion_expiry_time)
-      formData.append("promotion_quota", newFormData.promotion_quota)
-
-
+      formData.append("promotion_code", newFormData.promotion_code);
+      formData.append("promotion_types", newFormData.promotion_types);
+      formData.append("promotion_discount", newFormData.promotion_discount);
+      formData.append(
+        "romotion_expiry_date",
+        newFormData.promotion_expiry_date
+      );
+      formData.append(
+        "promotion_expiry_time",
+        newFormData.promotion_expiry_time
+      );
+      formData.append("promotion_quota", newFormData.promotion_quota);
 
       const response = await axios.put(
         `http://localhost:4000/promotion/${params.promotionId}`,
@@ -198,10 +222,9 @@ function PromotionEdit() {
                   valuePropName="checked"
                   style={{ display: "flex", alignItems: "center" }}
                 >
-                  <Radio 
-                  value="fixed"
-                  className="w-24"
-                  >Fixed</Radio>
+                  <Radio value="fixed" className="w-24">
+                    Fixed
+                  </Radio>
                 </Form.Item>
 
                 <Form.Item
@@ -250,9 +273,9 @@ function PromotionEdit() {
                   valuePropName="checked"
                   style={{ display: "flex", alignItems: "center" }}
                 >
-                  <Radio 
-                   className="w-24"
-                  value="percent">Percent</Radio>
+                  <Radio className="w-24" value="percent">
+                    Percent
+                  </Radio>
                 </Form.Item>
 
                 <Form.Item
@@ -337,16 +360,11 @@ function PromotionEdit() {
             // name="promotion_expiry_date"
             label={<span style={labelStyle}>วันหมดอายุ</span>}
             colon={false}
-           
           >
             <Row gutter={1}>
               <Col span={8}>
-                <Form.Item
-                  noStyle
-             
-                >
+                <Form.Item noStyle>
                   <DatePicker
-                
                     name="promotion_expiry_date"
                     value={moment(newFormData.promotion_expiry_date)} // Assuming you're using Moment.js for dates
                     onChange={(e) =>
@@ -360,10 +378,7 @@ function PromotionEdit() {
                 </Form.Item>
               </Col>
               <Col span={8}>
-                <Form.Item
-             
-                noStyle
-                >
+                <Form.Item noStyle>
                   <TimePicker
                     // name="promotion_expiry_time"
                     value={moment(newFormData.promotion_expiry_time, "HH:mm")}
@@ -374,7 +389,7 @@ function PromotionEdit() {
                       })
                     }
                     format="HH:mm"
-                    style={{ width: "50%" }} 
+                    style={{ width: "50%" }}
                   />
                 </Form.Item>
               </Col>
@@ -396,6 +411,27 @@ function PromotionEdit() {
           </p>
         </div>
       </div>
+      <div
+        className="flex justify-end mr-12 mt-10 text-[#80899C] underline cursor-pointer"
+        onClick={showDeleteConfirmation}
+      >
+        <img
+          className="cursor-pointer w-[25px] h-[25px]  "
+          src={trash}
+          alt="Delete"
+        />{" "}
+        ลบหมวดหมู่
+      </div>
+      {deleteConfirmation && (
+        <AlertBoxDelete
+          deleteFunction={handleDelete}
+          hideFunction={hideDeleteConfirmation}
+          textAlert="ยืนยันการลบรายการ"
+          alertQuestion={`คุณต้องการลบรายการ'${newFormData.promotion_code}ใช่หรือไม่ ?`}
+          primary="ลบรายการ"
+          secondary="ยกเลิก"
+        />
+      )}
     </Form>
   );
 }
