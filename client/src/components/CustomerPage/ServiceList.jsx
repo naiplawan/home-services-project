@@ -4,7 +4,8 @@ import axios from "axios";
 import image from "../../assets/CustomerPhoto/imageIndex.js";
 import SellBlack from "../../assets/homepagePhoto/sellBlack.jsx";
 import InputPriceRange from "./InputPriceRange";
-// import { useAuth } from "../../contexts/authentication";
+import AlertBoxDelete from "../AlertBox.jsx";
+import { useAuth } from "../../contexts/authentication";
 import {
   getMaxPrice,
   getMinPrice,
@@ -12,17 +13,32 @@ import {
 } from "../../utils/serviceList.js";
 
 function ServiceList() {
-  // const params = useParams();
   const navigate = useNavigate();
-  // const auth = useAuth();
-  // const { logout } = useAuth();
+
+  // ***** About Authentication & authorization role *****
+  const auth = useAuth();
+  const { logout } = useAuth();
+  const role = localStorage.getItem("role");
+  const [alertRole, setAlertRole] = useState();
+
+  const handleAlertRole = () => {
+    setAlertRole(true);
+  };
+  const handleLogout = () => {
+    setAlertRole(false);
+    logout();
+  };
+
+  const hide = () => {
+    setAlertRole(false);
+  };
 
   // ***** About filter *****
   const [keywords, setKeywords] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [minPriceFilter, setMinPriceFilter] = useState(0);
   const [maxPriceFilter, setMaxPriceFilter] = useState(2000);
-  const [orderFilter, setOrderFilter] = useState("");
+  const [orderFilter, setOrderFilter] = useState("recommend");
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [hasClickedSearch, setHasClickedSearch] = useState(false);
 
@@ -33,9 +49,8 @@ function ServiceList() {
 
   // handler event click [price range dropdown]
   const handleDropdownToggle = () => {
-    // ถ้า dropdown กำลังเปิด และยังไม่ได้คลิกค้นหา ให้รีเซ็ตค่า
     if (isDropdownVisible && !hasClickedSearch) {
-      // ไม่ต้องรีเซ็ตค่าราคาในกรณีนี้
+      // ไม่ต้องรีเซ็ตค่าราคา
     }
     setDropdownVisible(!isDropdownVisible);
   };
@@ -46,7 +61,6 @@ function ServiceList() {
     setMaxPriceFilter(max);
   };
 
-  // handler event click [sorting]
   // handler event click [sorting]
   const handleSortChange = (event) => {
     const selectedOrder = event.target.value;
@@ -94,7 +108,6 @@ function ServiceList() {
   };
 
   // ***** About Data Fetching *****
-
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
@@ -259,7 +272,7 @@ function ServiceList() {
                         <img
                           src={service.service_photo}
                           alt={service.sub_service.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-[210px] object-cover"
                         />
                       </div>
                       <div className="p-2 md:p-5 bg-white min-h-full">
@@ -267,7 +280,9 @@ function ServiceList() {
                           <p>{service.category.category_name}</p>
                         </div>
                         <h2 className="font-bold text-[20px] mt-3">
-                          {service.service_name}
+                          {service.service_name.length > 30
+                            ? `${service.service_name.substring(0, 30)}...`
+                            : service.service_name}
                         </h2>
                         <div className="flex items-center">
                           <SellBlack />
@@ -282,16 +297,35 @@ function ServiceList() {
                                 )} ฿`}
                           </p>
                         </div>
-
-                        <div>
-                          <p
-                            className="link text-l font-semibold text-[#336DF2]"
-                            onClick={() =>
-                              navigate(`/checkout/${service.service_id}`)
-                            }
-                          >
-                            เลือกบริการ
-                          </p>
+                        <div className="button-authentication">
+                          {auth.isAuthenticated ? (
+                            <div>
+                              {role === "customer" ? (
+                                <button
+                                  className="btn-ghost"
+                                  onClick={() =>
+                                    navigate(`/checkout/${service.service_id}`)
+                                  }
+                                >
+                                  เลือกบริการ
+                                </button>
+                              ) : (
+                                <button
+                                  className="btn-ghost"
+                                  onClick={handleAlertRole}
+                                >
+                                  เลือกบริการ
+                                </button>
+                              )}
+                            </div>
+                          ) : (
+                            <button
+                              className="btn-ghost"
+                              onClick={() => navigate(`/login`)}
+                            >
+                              เลือกบริการ
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -311,11 +345,11 @@ function ServiceList() {
                     key={service.id}
                     className="lg:mx-[37px] lg:w-[369px] mt-[48px] w-[25%] h-[35%] rounded-md overflow-hidden border border-[#CCD0D7] m-2"
                   >
-                    <div className="img-display">
+                    <div className="img-display ">
                       <img
                         src={service.service_photo}
                         alt={service.sub_service.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-[210px] object-cover"
                       />
                     </div>
                     <div className="p-2 md:p-5 bg-white min-h-full">
@@ -323,7 +357,9 @@ function ServiceList() {
                         <p>{service.category.category_name}</p>
                       </div>
                       <h2 className="font-bold text-[20px] mt-3">
-                        {service.service_name}
+                        {service.service_name.length > 30
+                          ? `${service.service_name.substring(0, 30)}...`
+                          : service.service_name}
                       </h2>
                       <div className="flex items-center">
                         <SellBlack />
@@ -339,21 +375,51 @@ function ServiceList() {
                         </p>
                       </div>
 
-                      <div>
-                        <p
-                          className="link text-l font-semibold text-[#336DF2]"
-                          onClick={() =>
-                            navigate(`/checkout/${service.service_id}`)
-                          }
-                        >
-                          เลือกบริการ
-                        </p>
+                      <div className="button-authentication">
+                        {auth.isAuthenticated ? (
+                          <div>
+                            {role === "customer" ? (
+                              <button
+                                className="btn-ghost"
+                                onClick={() =>
+                                  navigate(`/checkout/${service.service_id}`)
+                                }
+                              >
+                                เลือกบริการ
+                              </button>
+                            ) : (
+                              <button
+                                className="btn-ghost"
+                                onClick={handleAlertRole}
+                              >
+                                เลือกบริการ
+                              </button>
+                            )}
+                          </div>
+                        ) : (
+                          <button
+                            className="btn-ghost"
+                            onClick={() => navigate(`/login`)}
+                          >
+                            เลือกบริการ
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
                 ))
               ))}
           </div>
+          {alertRole && (
+            <AlertBoxDelete
+              deleteFunction={handleLogout}
+              hideFunction={hide}
+              textAlert="ไม่สามารถเลือกบริการได้"
+              alertQuestion={`คุณต้องเข้าสู่ระบบเป็น Customer`}
+              primary="ออกจากระบบ"
+              secondary="ยกเลิก"
+            />
+          )}
         </section>
 
         <footer className="h-[284px] bg-[#336DF2] text-center flex justify-center items-center">
