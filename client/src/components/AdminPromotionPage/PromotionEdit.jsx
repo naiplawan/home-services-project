@@ -42,8 +42,8 @@ function PromotionEdit() {
 
   
 
-  console.log("types", promotion.promotion_types);
-  console.log("discount", promotion.promotion_expiry_time);
+  console.log("discount", promotion.promotion_discount);
+
 
   const onFinish = async (values) => {
     try {
@@ -97,7 +97,7 @@ function PromotionEdit() {
       layout="horizontal"
       name="promotion_form"
       initialValues={{
-        promotion_code: promotion.prmotion_code || "",
+        promotion_code: promotion.promotion_code || "",
         promotion_types: promotion.promotion_types || "",
         promotion_discount: promotion.promotion_discount || "",
         promotion_expiry_date: promotion.promotion_expiry_date || "",
@@ -207,7 +207,7 @@ function PromotionEdit() {
                       return getFieldValue("promotion_types") === "fixed" ? (
                         <Form.Item
                           colon={false}
-                          name="promotion_discount"
+                          // name="promotion_discount"
                           rules={[
                             {
                               validator: (rule, value) => {
@@ -266,7 +266,7 @@ function PromotionEdit() {
                       return getFieldValue("promotion_types") === "percent" ? (
                         <Form.Item
                           colon={false}
-                          name="promotion_discount"
+                          // name="promotion_discount"
                           rules={[
                             {
                               validator: (rule, value) => {
@@ -286,6 +286,13 @@ function PromotionEdit() {
                           ]}
                         >
                           <Input
+                            value={promotion.promotion_discount}
+                            onChange={(e) =>
+                              setPromotion({
+                                ...promotion,
+                                promotion_discount: e.target.value,
+                              })
+                            }
                             style={{ width: "50%" }}
                             suffix="%"
                             disabled={

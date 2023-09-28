@@ -16,6 +16,7 @@ import { useState } from "react";
 import axios from "axios";
 
 function AddPromotionForm() {
+  const [form] = Form.useForm();
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
@@ -63,8 +64,12 @@ function AddPromotionForm() {
     lineHeight: "150%", // 24px
   };
 
+  const fixedDiscount = form.getFieldValue("promotion_discount_fixed");
+  const percentDiscount = form.getFieldValue("promotion_discount_percent");
+
   return (
     <Form
+      form={form}
       labelCol={{ span: 100 }}
       wrapperCol={{ span: 24 }}
       layout="horizontal"
@@ -121,8 +126,90 @@ function AddPromotionForm() {
             ]}
           >
             <Radio.Group>
-              <div 
-              className="flex flex-row">
+              <div className="flex flex-row">
+                <Form.Item
+                  name="promotion_types"
+                  valuePropName="checked"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <Radio value="fixed">Fixed</Radio>
+                </Form.Item>
+
+                <Form.Item
+                  colon={false}
+                  name="promotion_discount_fixed"
+                  rules={[
+                    {
+                      validator: (rule, value) => {
+                        const numericValue = parseFloat(value);
+                        if (
+                          isNaN(numericValue) ||
+                          numericValue < 1 ||
+                          numericValue > 1000
+                        ) {
+                          return Promise.reject(
+                            "Please enter a number between 1 and 1000"
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
+                >
+                  <Input style={{ width: "50%" }} suffix="฿" 
+                     />
+                </Form.Item>
+              </div>
+
+              <div className="flex flex-row">
+                <Form.Item
+                  name="promotion_types"
+                  valuePropName="checked"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <Radio value="percent">Percent</Radio>
+                </Form.Item>
+
+                <Form.Item
+                  colon={false}
+                  name="promotion_discount_percent"
+                  rules={[
+                    {
+                      validator: (rule, value) => {
+                        const numericValue = parseFloat(value);
+                        if (
+                          isNaN(numericValue) ||
+                          numericValue < 1 ||
+                          numericValue > 100
+                        ) {
+                          return Promise.reject(
+                            "Please enter a number between 1 and 100"
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
+                >
+                  <Input style={{ width: "50%" }} suffix="%" />
+                </Form.Item>
+              </div>
+            </Radio.Group>
+          </Form.Item>
+
+          <Form.Item
+            label={<span style={labelStyle}>ประเภท</span>}
+            colon={false}
+            name="promotion_types"
+            rules={[
+              {
+                required: true,
+                message: "กรุณาเลือกประเภทของโค้ด",
+              },
+            ]}
+          >
+            <Radio.Group>
+              <div className="flex flex-row">
                 <Form.Item
                   name="promotion_types"
                   valuePropName="checked"
@@ -160,16 +247,25 @@ function AddPromotionForm() {
                           },
                         ]}
                       >
-                        <Input style={{ width: "50%" }} 
-                        suffix="฿"
-                        disabled={getFieldValue("promotion_types") !== "fixed"}/>
+                        <Input
+                          style={{ width: "50%" }}
+                          suffix="฿"
+                          disabled={
+                            getFieldValue("promotion_types") !== "fixed"
+                          }
+                          className={
+                            getFieldValue("promotion_types") !== "fixed"
+                              ? "bg-gray-300 cursor-not-allowed"
+                              : ""
+                          }
+                        />
                       </Form.Item>
                     ) : null;
                   }}
                 </Form.Item>
               </div>
 
-              <div  className="flex flex-row">
+              <div className="flex flex-row">
                 <Form.Item
                   name="promotion_types"
                   valuePropName="checked"
@@ -207,9 +303,18 @@ function AddPromotionForm() {
                           },
                         ]}
                       >
-                        <Input style={{ width: "50%" }}
-                        suffix="%" 
-                        disabled={getFieldValue("promotion_types") !== "percent"}/>
+                        <Input
+                          style={{ width: "50%" }}
+                          suffix="%"
+                          disabled={
+                            getFieldValue("promotion_types") !== "percent"
+                          }
+                          className={
+                            getFieldValue("promotion_types") !== "percent"
+                              ? "bg-gray-300 cursor-not-allowed"
+                              : ""
+                          }
+                        />
                       </Form.Item>
                     ) : null;
                   }}
@@ -244,8 +349,7 @@ function AddPromotionForm() {
               },
             ]}
           >
-            <Input style={{ width: "50%" }} 
-            suffix="ครั้ง"/>
+            <Input style={{ width: "50%" }} suffix="ครั้ง" />
           </Form.Item>
 
           <Form.Item
