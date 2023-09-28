@@ -6,6 +6,7 @@ import SellBlack from "../../assets/homepagePhoto/sellBlack.jsx";
 import InputPriceRange from "./InputPriceRange";
 // import { useAuth } from "../../contexts/authentication";
 import { getMaxPrice, getMinPrice } from "../../utils/priceMinMax.js";
+import { sortServices } from "../../utils/sortService.js";
 
 function ServiceList() {
   // const params = useParams();
@@ -31,27 +32,28 @@ function ServiceList() {
   const handleDropdownToggle = () => {
     // ถ้า dropdown กำลังเปิด และยังไม่ได้คลิกค้นหา ให้รีเซ็ตค่า
     if (isDropdownVisible && !hasClickedSearch) {
-      setMinPriceFilter(0);
-      setMaxPriceFilter(2000);
+      // ไม่ต้องรีเซ็ตค่าราคาในกรณีนี้
     }
     setDropdownVisible(!isDropdownVisible);
   };
+
   const handlePriceRangeChange = ({ min, max }) => {
     console.log(`min = ${min}, max = ${max}`);
     setMinPriceFilter(min);
     setMaxPriceFilter(max);
   };
 
-  // handler event click [sorting ยังไม่ได้ทำ]
+  // handler event click [sorting]
+  // handler event click [sorting]
   const handleSortChange = (event) => {
-    setOrderFilter(event.target.value);
+    const selectedOrder = event.target.value;
+    setOrderFilter(selectedOrder);
   };
 
   // state ส่วนนี้เกี่ยวกับปุ่ม"ค้นหา"  เงื่อนไขคือผลลัพธ์ของ filter จะเกิดขึ้นเมื่อกดปุ่มค้นหาเท่านั้น
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   const [filteredServices, setFilteredServices] = useState([]);
 
-  // handler event click [search click ปุ่มค้นหา]
   const handleSearchClick = () => {
     // ทำการกรองข้อมูลและตั้งค่า filteredServices ใหม่ตามเงื่อนไข
     const newFilteredServices = services.data.filter((service) => {
@@ -75,8 +77,16 @@ function ServiceList() {
 
       return isCategoryMatch && isKeywordMatch && isPriceMatch;
     });
+
+    // เรียงลำดับข้อมูล
+    const sortedServices = sortServices(
+      newFilteredServices,
+      orderFilter,
+      hasClickedSearch
+    );
+
     setIsSearchClicked(true);
-    setFilteredServices(newFilteredServices);
+    setFilteredServices(sortedServices);
     setHasClickedSearch(true);
   };
 
@@ -151,12 +161,12 @@ function ServiceList() {
               <input
                 type="text"
                 placeholder="ค้นหาบริการ"
-                className="px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[318px] "
+                className="search-filter px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[318px] "
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
               />
               <div className="w-[80px]"></div>
-              <div>
+              <div className=" category-option-filter  ">
                 <p className="pl-[10px] w-[120px] text-[12px] text-[#646C80]">
                   หมวดหมู่บริการ
                 </p>
@@ -177,7 +187,7 @@ function ServiceList() {
                     ))}
                 </select>
               </div>
-              <div className="border-[#CCD0D7] border-l border-[1px] h-[44px] "></div>{" "}
+              <div className="line-1 border-[#CCD0D7] border-l border-[1px] h-[44px] "></div>{" "}
               <div>
                 <p className="pl-[10px] w-[120px] text-[12px] text-[#646C80]">
                   ราคา
@@ -207,11 +217,15 @@ function ServiceList() {
                   )}
                 </div>
               </div>
-              <div className="border-[#CCD0D7] border-l border-[1px] h-[44px] "></div>
-              <div>
+              <div className="line-2 border-[#CCD0D7] border-l border-[1px] h-[44px] "></div>
+              <div className="sort-filter">
                 <p className="pl-[10px] text-[12px] text-[#646C80]">เรียงตาม</p>
-                <select className="px-2 bg-white">
-                  <option value="popular">บริการแนะนำ</option>
+                <select
+                  className="px-2 bg-white"
+                  value={orderFilter}
+                  onChange={handleSortChange}
+                >
+                  <option value="recommend">บริการแนะนำ</option>
                   <option value="popular">บริการยอดนิยม</option>
                   <option value="alphabetical">ตามตัวอักษร (Ascending)</option>
                   <option value="alphabetical">ตามตัวอักษร (Descending)</option>
