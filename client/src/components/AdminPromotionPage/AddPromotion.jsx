@@ -20,12 +20,20 @@ function AddPromotionForm() {
   const navigate = useNavigate();
 
   const [inputDisable, setInputDisable] = useState("");
-  const [promotionType, setPromotionType] = useState("fixed");
-
+  const [promotionType, setPromotionType] = useState("");
 
   const onFinish = async (values) => {
     try {
       console.log(values);
+
+      let promotionDiscount;
+
+      if (promotionType === "fixed") {
+        promotionDiscount = values.promotion_discount_fixed;
+      } else if (promotionType === "percent") {
+        promotionDiscount = values.promotion_discount_percent;
+      }
+
       const formData = new FormData();
 
       for (const key in values) {
@@ -40,6 +48,7 @@ function AddPromotionForm() {
 
       formData.append("promotion_expiry_date", formattedExpiryDate);
       formData.append("promotion_expiry_time", formattedExpiryTime);
+      formData.append("promotion_discount", promotionDiscount);
 
       const response = await axios.post(
         "http://localhost:4000/promotion",
@@ -129,11 +138,13 @@ function AddPromotionForm() {
             ]}
           >
             <Radio.Group
-            onChange={(e) => {
-              setPromotionType(e.target.value);
-              setInputDisable(e.target.value === "percent" ? "promotion_types" : "");
-            }}
-            value={promotionType}
+              onChange={(e) => {
+                setPromotionType(e.target.value);
+                setInputDisable(
+                  e.target.value === "percent" ? "promotion_types" : ""
+                );
+              }}
+              value={promotionType}
             >
               <div className="flex flex-row">
                 <Form.Item
@@ -150,21 +161,23 @@ function AddPromotionForm() {
                   colon={false}
                   name="promotion_discount_fixed"
                   rules={[
-                    {
-                      validator: (rule, value) => {
-                        const numericValue = parseFloat(value);
-                        if (
-                          isNaN(numericValue) ||
-                          numericValue < 1 ||
-                          numericValue > 1000
-                        ) {
-                          return Promise.reject(
-                            "Please enter a number between 1 and 1000"
-                          );
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (getFieldValue("promotion_types") === "fixed") {
+                          const numericValue = parseFloat(value);
+                          if (
+                            isNaN(numericValue) ||
+                            numericValue < 1 ||
+                            numericValue > 1000
+                          ) {
+                            return Promise.reject(
+                              "Please enter a number between 1 and 1000"
+                            );
+                          }
                         }
                         return Promise.resolve();
                       },
-                    },
+                    }),
                   ]}
                 >
                   <Input
@@ -190,25 +203,30 @@ function AddPromotionForm() {
                   colon={false}
                   name="promotion_discount_percent"
                   rules={[
-                    {
-                      validator: (rule, value) => {
-                        const numericValue = parseFloat(value);
-                        if (
-                          isNaN(numericValue) ||
-                          numericValue < 1 ||
-                          numericValue > 100
-                        ) {
-                          return Promise.reject(
-                            "Please enter a number between 1 and 100"
-                          );
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (getFieldValue("promotion_types") === "percent") {
+                          const numericValue = parseFloat(value);
+                          if (
+                            isNaN(numericValue) ||
+                            numericValue < 1 ||
+                            numericValue > 100
+                          ) {
+                            return Promise.reject(
+                              "Please enter a number between 1 and 100"
+                            );
+                          }
                         }
                         return Promise.resolve();
                       },
-                    },
+                    }),
                   ]}
                 >
-                  <Input style={{ width: "50%" }} suffix="%" 
-                  disabled={promotionType === "fixed"}/>
+                  <Input
+                    style={{ width: "50%" }}
+                    suffix="%"
+                    disabled={promotionType === "fixed"}
+                  />
                 </Form.Item>
               </div>
             </Radio.Group>
@@ -279,9 +297,7 @@ function AddPromotionForm() {
                   ]}
                   noStyle
                 >
-                  <TimePicker 
-                       style={{ width: "50%" }} 
-                  format="HH:mm" />
+                  <TimePicker style={{ width: "50%" }} format="HH:mm" />
                 </Form.Item>
               </Col>
             </Row>
