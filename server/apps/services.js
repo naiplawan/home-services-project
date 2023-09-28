@@ -795,35 +795,25 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
     const user_id = req.body.user_id;
     const file = req.file;
 
+    console.log(req.file)
+
     const updatedServiceItem = {
       user_id: user_id,
+      service_photo: file,
       service_edited_date: new Date(),
     };
 
     if (file) {
-      const updateResult = await supabase.storage
-        .from("home_service")
-        .update(
-          `service_photo/${Date.now()}${file.originalname}`,
-          file.buffer,
-          {
-            cacheControl: "3600",
-            upsert: false,
-            contentType: file.mimetype,
+            updatedServiceItem["service_photo"] = file.originalname;
           }
-        );
+      
 
-      const servicePhotoUrl = supabase.storage
-        .from("home_service")
-        .getPublicUrl(`service_photo/${Date.now()}${file.originalname}`);
-
-      updatedServiceItem["service_photo"] = servicePhotoUrl;
-    }
-
+   
     const optionalFields = [
       "service_name",
       "category_id",
       "service_created_date",
+      "service_photo"
     ];
 
     optionalFields.forEach((field) => {
