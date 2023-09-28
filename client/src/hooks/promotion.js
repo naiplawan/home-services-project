@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import moment from "moment";
+import { message } from "antd"; 
 
 export const usePromotion = () => {
   const [promotion, setPromotion] = useState({});
@@ -8,12 +9,12 @@ export const usePromotion = () => {
   const getPromotion = async (promotionCode) => {
     try {
       const response = await axios(`http://localhost:4000/checkout?keyword=${promotionCode}`);
-      const data = response.data.data[0];
-      setPromotion(data);
+      setPromotion(response.data.data[0]);
     } catch (error) {
       console.error("Failed to get promotions:", error);
     }
   };
+
   const checkPromotionExpiry = (promotion) => {
     const { promotion_expiry_date, promotion_expiry_time } = promotion;
     const now = moment();
@@ -53,4 +54,4 @@ export const usePromotion = () => {
   };
 
   return { promotion, getPromotion, checkPromotionExpiry, decreaseQuota };
-}
+};

@@ -9,11 +9,10 @@ const upload = multer()
 
 promotionRouter.get("/", async (req, res) => {
   try {
-    const { keyword } = req.query;
-    let data = await supabase.from("promotion").select("*");
-    if (keyword) {
-      data = data.filter((promo) => promo.promotion_code.ilike(`%${keyword}%`));
-    }
+    let data = await supabase
+      .from("promotion")
+      .select("*")
+
     return res.json({
       data,
     });
