@@ -62,6 +62,7 @@ function ServiceEditForm() {
 
   const currentSubService = service.sub_service; // subservice เดิม
 
+
   //state for image
   const [selectedImage, setSelectedImage] = useState(null); //โชว์รูปภาพที่เลือก
   const [fileList, setFileList] = useState([]); //ส่งไปหลังบ้าน
@@ -86,6 +87,7 @@ function ServiceEditForm() {
     setSelectedImage(null);
     setCurrentImage(null);
   };
+
 
   //delete
 
@@ -133,6 +135,7 @@ function ServiceEditForm() {
       setCurrentImage(response.data.data.service_photo);
       setCurrentCategory(response.data.data.category);
       console.log("what is this", response.data.data);
+
     } catch (error) {
       console.error("Error fetching service data:", error);
     }
@@ -140,9 +143,11 @@ function ServiceEditForm() {
 
   console.log(currentImage);
 
+
   // put data API area
   const handleSubmitEdit = async (values) => {
     try {
+
       console.log("Form values:", values);
 
       const subServiceData = values["service.sub_service"];
@@ -153,50 +158,53 @@ function ServiceEditForm() {
           `Sub Service Name: ${sub_service_name}, Unit: ${unit}, Price per Unit: ${price_per_unit}`
         );
       }
-
-      const user_id = localStorage.getItem("user_id");
+    
+      const user_id = localStorage.getItem('user_id');
       const selectedCategoryId = category.data.find(
         (category) => category.category_name === selectedCategory
       )?.category_id;
-
+  
       const formData = new FormData();
-      formData.append("user_id", user_id);
-
+      formData.append('user_id', user_id);
+  
       // Check if service_name has changed
       if (editableServiceName !== service.service_name) {
         formData.append("service_name", editableServiceName);
       } else {
         formData.append("service_name", service.service_name); // Use the fetched value
       }
-
+  
       // Check if category_id has changed
       if (selectedCategoryId !== currentCategory.category_id) {
         formData.append("category_id", selectedCategoryId);
       } else {
         formData.append("category_id", currentCategory.category_id); // Use the fetched value
       }
-
+  
       // Check if file has changed
       if (fileList[0] && fileList[0] !== currentImage) {
         formData.append("file", fileList[0]);
       } else {
         formData.append("file", currentImage); // Use the fetched value
       }
-
+  
       // Check if sub_service has changed
-      if (
-        JSON.stringify(subServiceData) !== JSON.stringify(currentSubService)
-      ) {
+      if (JSON.stringify(subServiceData) !== JSON.stringify(currentSubService)) {
         formData.append("items", JSON.stringify(subServiceData));
       } else {
         formData.append("items", JSON.stringify(currentSubService)); // Use the fetched value
       }
 
+      
       // formData.append("items", JSON.stringify(subServiceData)); //insert and update new one DONE 0/
-
+  
+  
       // Add the unchanged fields
       formData.append("service_created_date", service.service_created_date);
 
+      console.log('formdata', formData);
+
+  
       const response = await axios.put(
         `http://localhost:4000/service/${params.serviceId}`,
         formData,
@@ -204,7 +212,7 @@ function ServiceEditForm() {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
+  
       if (response.status === 200) {
         message.success("Successfully update service");
       } else {
@@ -251,14 +259,14 @@ function ServiceEditForm() {
         wrapperCol={{ span: 24 }}
         layout="horizontal"
         onFinish={handleSubmitEdit}
-        initialValues={{
-          service_name: editableServiceName,
-          category_id: selectedCategory,
-          service: {
-            // sub_service: [],
-            service_photo: currentImage,
-          },
-        }}
+        // initialValues={{
+        //   service_name: editableServiceName,
+        //   category_id: selectedCategory,
+        //   service: {
+        //     // sub_service: [],
+        //     service_photo: currentImage,
+        //   },
+        // }}
       >
         <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
           {/* header */}
@@ -298,12 +306,11 @@ function ServiceEditForm() {
             {/* content */}
             <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
               <Form.Item
-                label={<span style={labelStyle}>ชื่อบริการ</span>}
+                label={<span style={labelStyle}>ชื่อบริการ</span>}             
                 required
-                className="w-48"
               >
                 <Input
-                  className="w-6/12"
+                  style={{ width: "50%" }}
                   name="service_name"
                   type="text"
                   value={editableServiceName}
@@ -337,6 +344,7 @@ function ServiceEditForm() {
               <Form.Item
                 label={<span style={labelStyle}>รูปภาพ</span>}
                 colon={false}
+              
                 required
                 className="mb-10"
               >
@@ -364,6 +372,7 @@ function ServiceEditForm() {
                       maxFileSize={5 * 1024 * 1024}
                       showUploadList={false}
                       className="relative"
+                     
                     >
                       {selectedImage && (
                         <div>

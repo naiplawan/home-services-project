@@ -201,7 +201,8 @@ serviceRouter.put("/:id", async (req, res) => {
       service_edited_date: new Date(),
     };
 
-    const items = JSON.parse(requestBody.items);
+    const items = JSON.parse(req.body.items);
+
 
     const updatedSubServiceItems = {
       sub_service_name: items.sub_service_name,
