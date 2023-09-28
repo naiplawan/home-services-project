@@ -5,7 +5,11 @@ import image from "../../assets/CustomerPhoto/imageIndex.js";
 import SellBlack from "../../assets/homepagePhoto/sellBlack.jsx";
 import InputPriceRange from "./InputPriceRange";
 // import { useAuth } from "../../contexts/authentication";
-import { getMaxPrice, getMinPrice } from "../../utils/priceMinMax.js";
+import {
+  getMaxPrice,
+  getMinPrice,
+  sortServices,
+} from "../../utils/serviceList.js";
 
 function ServiceList() {
   // const params = useParams();
@@ -31,27 +35,28 @@ function ServiceList() {
   const handleDropdownToggle = () => {
     // ถ้า dropdown กำลังเปิด และยังไม่ได้คลิกค้นหา ให้รีเซ็ตค่า
     if (isDropdownVisible && !hasClickedSearch) {
-      setMinPriceFilter(0);
-      setMaxPriceFilter(2000);
+      // ไม่ต้องรีเซ็ตค่าราคาในกรณีนี้
     }
     setDropdownVisible(!isDropdownVisible);
   };
+
   const handlePriceRangeChange = ({ min, max }) => {
     console.log(`min = ${min}, max = ${max}`);
     setMinPriceFilter(min);
     setMaxPriceFilter(max);
   };
 
-  // handler event click [sorting ยังไม่ได้ทำ]
+  // handler event click [sorting]
+  // handler event click [sorting]
   const handleSortChange = (event) => {
-    setOrderFilter(event.target.value);
+    const selectedOrder = event.target.value;
+    setOrderFilter(selectedOrder);
   };
 
   // state ส่วนนี้เกี่ยวกับปุ่ม"ค้นหา"  เงื่อนไขคือผลลัพธ์ของ filter จะเกิดขึ้นเมื่อกดปุ่มค้นหาเท่านั้น
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   const [filteredServices, setFilteredServices] = useState([]);
 
-  // handler event click [search click ปุ่มค้นหา]
   const handleSearchClick = () => {
     // ทำการกรองข้อมูลและตั้งค่า filteredServices ใหม่ตามเงื่อนไข
     const newFilteredServices = services.data.filter((service) => {
@@ -75,12 +80,21 @@ function ServiceList() {
 
       return isCategoryMatch && isKeywordMatch && isPriceMatch;
     });
+
+    // เรียงลำดับข้อมูล
+    const sortedServices = sortServices(
+      newFilteredServices,
+      orderFilter,
+      hasClickedSearch
+    );
+
     setIsSearchClicked(true);
-    setFilteredServices(newFilteredServices);
+    setFilteredServices(sortedServices);
     setHasClickedSearch(true);
   };
 
   // ***** About Data Fetching *****
+
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
@@ -151,12 +165,12 @@ function ServiceList() {
               <input
                 type="text"
                 placeholder="ค้นหาบริการ"
-                className="px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[318px] "
+                className="search-filter px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[318px] "
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
               />
               <div className="w-[80px]"></div>
-              <div>
+              <div className=" category-option-filter  ">
                 <p className="pl-[10px] w-[120px] text-[12px] text-[#646C80]">
                   หมวดหมู่บริการ
                 </p>
@@ -177,7 +191,7 @@ function ServiceList() {
                     ))}
                 </select>
               </div>
-              <div className="border-[#CCD0D7] border-l border-[1px] h-[44px] "></div>{" "}
+              <div className="line-1 border-[#CCD0D7] border-l border-[1px] h-[44px] "></div>{" "}
               <div>
                 <p className="pl-[10px] w-[120px] text-[12px] text-[#646C80]">
                   ราคา
@@ -207,14 +221,18 @@ function ServiceList() {
                   )}
                 </div>
               </div>
-              <div className="border-[#CCD0D7] border-l border-[1px] h-[44px] "></div>
-              <div>
+              <div className="line-2 border-[#CCD0D7] border-l border-[1px] h-[44px] "></div>
+              <div className="sort-filter">
                 <p className="pl-[10px] text-[12px] text-[#646C80]">เรียงตาม</p>
-                <select className="px-2 bg-white">
-                  <option value="popular">บริการแนะนำ</option>
+                <select
+                  className="px-2 bg-white"
+                  value={orderFilter}
+                  onChange={handleSortChange}
+                >
+                  <option value="recommend">บริการแนะนำ</option>
                   <option value="popular">บริการยอดนิยม</option>
-                  <option value="alphabetical">ตามตัวอักษร (Ascending)</option>
-                  <option value="alphabetical">ตามตัวอักษร (Descending)</option>
+                  <option value="ascending">ตามตัวอักษร (Ascending)</option>
+                  <option value="descending">ตามตัวอักษร (Descending)</option>
                 </select>
               </div>
               <div className="w-[80px]"></div>
@@ -230,9 +248,9 @@ function ServiceList() {
             {services &&
               services.data &&
               Array.isArray(services.data) &&
-              (isSearchClicked ? filteredServices : services.data).map(
-                (service) => {
-                  return (
+              (isSearchClicked ? (
+                filteredServices.length > 0 ? (
+                  filteredServices.map((service) => (
                     <div
                       key={service.id}
                       className="lg:mx-[37px] lg:w-[369px] mt-[48px] w-[25%] h-[35%] rounded-md overflow-hidden border border-[#CCD0D7] m-2"
@@ -277,9 +295,64 @@ function ServiceList() {
                         </div>
                       </div>
                     </div>
-                  );
-                }
-              )}
+                  ))
+                ) : (
+                  <div className="text-center h-[500px]">
+                    <h1 className="mt-[100px]">
+                      ขออภัยค่ะ ไม่พบการค้นหาบริการที่ท่านต้องการ
+                    </h1>
+                    <p> หากลูกค้าต้องการบริการใดๆเพิ่มเติม</p>
+                    <p>สามารถติดต่อสอบถามได้ที่ 080-540-6357</p>
+                  </div>
+                )
+              ) : (
+                services.data.map((service) => (
+                  <div
+                    key={service.id}
+                    className="lg:mx-[37px] lg:w-[369px] mt-[48px] w-[25%] h-[35%] rounded-md overflow-hidden border border-[#CCD0D7] m-2"
+                  >
+                    <div className="img-display">
+                      <img
+                        src={service.service_photo}
+                        alt={service.sub_service.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-2 md:p-5 bg-white min-h-full">
+                      <div className="bg-[#E7EEFF] text-center px-[10px] inline-block p-1 text-[#0E3FB0] rounded-lg">
+                        <p>{service.category.category_name}</p>
+                      </div>
+                      <h2 className="font-bold text-[20px] mt-3">
+                        {service.service_name}
+                      </h2>
+                      <div className="flex items-center">
+                        <SellBlack />
+                        <p className="ml-2 text-[#646C80] text-sm py-[10px]">
+                          {getMinPrice(service.sub_service) !==
+                          getMaxPrice(service.sub_service)
+                            ? `ค่าบริการประมาณ ${getMinPrice(
+                                service.sub_service
+                              )} - ${getMaxPrice(service.sub_service)} ฿`
+                            : `ค่าบริการประมาณ ${getMinPrice(
+                                service.sub_service
+                              )} ฿`}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p
+                          className="link text-l font-semibold text-[#336DF2]"
+                          onClick={() =>
+                            navigate(`/checkout/${service.service_id}`)
+                          }
+                        >
+                          เลือกบริการ
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ))}
           </div>
         </section>
 

@@ -152,7 +152,7 @@ function PromotionList() {
                                 {promotion.promotion_types}
                               </p>
                               <p className="w-[20%] ml-[3%]">
-                                {promotion.promotion_quota}/10
+                                /{promotion.promotion_quota}
                               </p>
                               <p className="w-[30%] ml-[%]  text-red">
                                 {console.log(
