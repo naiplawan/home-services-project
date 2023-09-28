@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { Input, Button } from "antd";
+import { usePromotion } from "../hooks/promotion";
 
 const PromotionMockUpPage = () => {
     const [promotionCode, setPromotionCode] = useState("");
-    const [totalPrice, setTotalPrice] = useState(100);
-
-    const handlePromotionCodeChange = (event) => {
-        setPromotionCode(event.target.value);
-    };
+    const { promotion, getPromotion } = usePromotion();
 
     const handleApplyPromotion = () => {
-        // Apply promotion logic here
-        setTotalPrice(50);
+        console.log("handleApplyPromotion called with promotionCode:", promotionCode);
+        getPromotion(promotionCode);
+    };
+
+    const handleInputChange = (e) => {
+        console.log("handleInputChange called with value:", e.target.value);
+        setPromotionCode(e.target.value);
     };
 
     return (
@@ -23,14 +25,14 @@ const PromotionMockUpPage = () => {
                             id="promotion-code"
                             placeholder="Enter promotion code"
                             value={promotionCode}
-                            onChange={handlePromotionCodeChange}
+                            onChange={handleInputChange}
                         />
                         <Button type="primary" onClick={handleApplyPromotion}>
                             Apply
                         </Button>
                         <div className="promotion-total-price">
                             <p>Total Price</p>
-                            <p>{totalPrice}</p>
+                            <p>1000</p>
                         </div>
                     </div>
                 </div>
