@@ -106,6 +106,8 @@ function PromotionEdit() {
     fontStyle: "normal",
     fontWeight: 500,
     lineHeight: "150%", // 24px
+    width: "12.8125rem",
+    textAlign: "left",
   };
 
   // console.log('initial', initialValues)
@@ -155,7 +157,6 @@ function PromotionEdit() {
         </div>
         <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
           <Form.Item
-            // name="promotion_code"
             label={<span style={labelStyle}>Promotion Code</span>}
             colon={false}
             rules={[
@@ -166,7 +167,7 @@ function PromotionEdit() {
             ]}
           >
             <Input
-              style={{ width: "50%" }}
+              className="w-1/2"
               value={newFormData.promotion_code}
               onChange={(e) =>
                 setFormData({ ...newFormData, promotion_code: e.target.value })
@@ -197,7 +198,10 @@ function PromotionEdit() {
                   valuePropName="checked"
                   style={{ display: "flex", alignItems: "center" }}
                 >
-                  <Radio value="fixed">Fixed</Radio>
+                  <Radio 
+                  value="fixed"
+                  className="w-24"
+                  >Fixed</Radio>
                 </Form.Item>
 
                 <Form.Item
@@ -246,7 +250,9 @@ function PromotionEdit() {
                   valuePropName="checked"
                   style={{ display: "flex", alignItems: "center" }}
                 >
-                  <Radio value="percent">Percent</Radio>
+                  <Radio 
+                   className="w-24"
+                  value="percent">Percent</Radio>
                 </Form.Item>
 
                 <Form.Item
@@ -331,25 +337,16 @@ function PromotionEdit() {
             // name="promotion_expiry_date"
             label={<span style={labelStyle}>วันหมดอายุ</span>}
             colon={false}
-            // rules={[
-            //   {
-            //     message: "กรุณาระบุวัน-เวลา หมดอายุ",
-            //   },
-            // ]}
+           
           >
-            <Row gutter={8}>
-              <Col span={12}>
+            <Row gutter={1}>
+              <Col span={8}>
                 <Form.Item
-                  // rules={[
-                  //   {
-                  //     required: true,
-                  //     message: "กรุณาระบุวัน",
-                  //   },
-                  // ]}
                   noStyle
-                  // name="promotion_expiry_date"
+             
                 >
                   <DatePicker
+                
                     name="promotion_expiry_date"
                     value={moment(newFormData.promotion_expiry_date)} // Assuming you're using Moment.js for dates
                     onChange={(e) =>
@@ -362,16 +359,10 @@ function PromotionEdit() {
                   />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col span={8}>
                 <Form.Item
-                  // name="promotion_expiry_time"
-                  // rules={[
-                  //   {
-                  //     required: true,
-                  //     message: "กรุณาระบุเวลา",
-                  //   },
-                  // ]}
-                  noStyle
+             
+                noStyle
                 >
                   <TimePicker
                     // name="promotion_expiry_time"
@@ -383,6 +374,7 @@ function PromotionEdit() {
                       })
                     }
                     format="HH:mm"
+                    style={{ width: "50%" }} 
                   />
                 </Form.Item>
               </Col>

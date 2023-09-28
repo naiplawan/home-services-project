@@ -19,6 +19,8 @@ function AddPromotionForm() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
+  const [inputDisable, setInputDisable] = useState('')
+
   const onFinish = async (values) => {
     try {
       console.log(values);
@@ -63,9 +65,6 @@ function AddPromotionForm() {
     fontWeight: 500,
     lineHeight: "150%", // 24px
   };
-
-  const fixedDiscount = form.getFieldValue("promotion_discount_fixed");
-  const percentDiscount = form.getFieldValue("promotion_discount_percent");
 
   return (
     <Form
@@ -156,7 +155,8 @@ function AddPromotionForm() {
                     },
                   ]}
                 >
-                  <Input style={{ width: "50%" }} suffix="฿" />
+                  <Input style={{ width: "50%" }} suffix="฿" 
+                    disabled={"promotion_types" === "percent"}/>
                 </Form.Item>
               </div>
 
@@ -196,131 +196,6 @@ function AddPromotionForm() {
             </Radio.Group>
           </Form.Item>
 
-          <Form.Item
-            label={<span style={labelStyle}>ประเภท</span>}
-            colon={false}
-            name="promotion_types"
-            rules={[
-              {
-                required: true,
-                message: "กรุณาเลือกประเภทของโค้ด",
-              },
-            ]}
-          >
-            <Radio.Group>
-              <div className="flex flex-row">
-                <Form.Item
-                  name="promotion_types"
-                  valuePropName="checked"
-                  style={{ display: "flex", alignItems: "center" }}
-                >
-                  <Radio value="fixed">Fixed</Radio>
-                </Form.Item>
-
-                <Form.Item
-                  shouldUpdate={(prevValues, currentValues) =>
-                    prevValues.promotion_types !== currentValues.promotion_types
-                  }
-                  noStyle
-                >
-                  {({ getFieldValue }) => {
-                    return getFieldValue("promotion_types") === "fixed" ? (
-                      <Form.Item
-                        colon={false}
-                        name="promotion_discount"
-                        rules={[
-                          {
-                            validator: (rule, value) => {
-                              const numericValue = parseFloat(value);
-                              if (
-                                isNaN(numericValue) ||
-                                numericValue < 1 ||
-                                numericValue > 1000
-                              ) {
-                                return Promise.reject(
-                                  "Please enter a number between 1 and 1000"
-                                );
-                              }
-                              return Promise.resolve();
-                            },
-                          },
-                        ]}
-                      >
-                        <Input
-                          style={{ width: "50%" }}
-                          suffix="฿"
-                          disabled={
-                            getFieldValue("promotion_types") !== "fixed"
-                          }
-                          className={
-                            getFieldValue("promotion_types") !== "fixed"
-                              ? "bg-gray-300 cursor-not-allowed"
-                              : ""
-                          }
-                        />
-                      </Form.Item>
-                    ) : null;
-                  }}
-                </Form.Item>
-              </div>
-
-              <div className="flex flex-row">
-                <Form.Item
-                  name="promotion_types"
-                  valuePropName="checked"
-                  style={{ display: "flex", alignItems: "center" }}
-                >
-                  <Radio value="percent">Percent</Radio>
-                </Form.Item>
-
-                <Form.Item
-                  shouldUpdate={(prevValues, currentValues) =>
-                    prevValues.promotion_types !== currentValues.promotion_types
-                  }
-                  noStyle
-                >
-                  {({ getFieldValue }) => {
-                    return getFieldValue("promotion_types") === "percent" ? (
-                      <Form.Item
-                        colon={false}
-                        name="promotion_discount"
-                        rules={[
-                          {
-                            validator: (rule, value) => {
-                              const numericValue = parseFloat(value);
-                              if (
-                                isNaN(numericValue) ||
-                                numericValue < 1 ||
-                                numericValue > 100
-                              ) {
-                                return Promise.reject(
-                                  "Please enter a number between 1 and 100"
-                                );
-                              }
-                              return Promise.resolve();
-                            },
-                          },
-                        ]}
-                      >
-                        <Input
-                          style={{ width: "50%" }}
-                          suffix="%"
-                          disabled={
-                            getFieldValue("promotion_types") !== "percent"
-                          }
-                          className={
-                            getFieldValue("promotion_types") !== "percent"
-                              ? "bg-gray-300 cursor-not-allowed"
-                              : ""
-                          }
-                        />
-                      </Form.Item>
-                    ) : null;
-                  }}
-                </Form.Item>
-              </div>
-            </Radio.Group>
-          </Form.Item>
 
           <Form.Item
             label={<span style={labelStyle}>โควต้าการใช้</span>}
