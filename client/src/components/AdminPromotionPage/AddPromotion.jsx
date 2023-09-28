@@ -156,8 +156,7 @@ function AddPromotionForm() {
                     },
                   ]}
                 >
-                  <Input style={{ width: "50%" }} suffix="฿" 
-                     />
+                  <Input style={{ width: "50%" }} suffix="฿" />
                 </Form.Item>
               </div>
 

@@ -341,7 +341,6 @@ function ServiceEditForm() {
               <Form.Item
                 label={<span style={labelStyle}>รูปภาพ</span>}
                 colon={false}
-              
                 required
                 className="mb-10"
               >

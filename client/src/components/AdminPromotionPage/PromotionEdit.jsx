@@ -18,53 +18,71 @@ import axios from "axios";
 import arrow from "../../assets/AdminPhoto/arrow.png";
 
 function PromotionEdit() {
-  const [promotion, setPromotion] = useState({});
+  // const [promotion, setPromotion] = useState({});
   const [promotionDetail, setPromotionDetail] = useState(""); //ใช้กับ header
+
+  const [newFormData, setFormData] = useState({
+    promotion_code: "",
+    promotion_types: "",
+    promotion_discount: "",
+    promotion_expiry_date: "",
+    promotion_quota: "",
+    promotion_expiry_time: "",
+    promotion_created_date_time: "",
+    promotion_edited_date_time: "",
+  });
 
   const navigate = useNavigate();
 
   const params = useParams();
 
-  const getPromotionDetail = async (promotionId) => {
-    const result = await axios.get(
-      `http://localhost:4000/promotion/${promotionId}`
-    );
-    setPromotion(result.data.data[0]);
-    setPromotionDetail(result.data.data[0].promotion_code);
-
-    console.log(result.data.data[0]);
-  };
-
   useEffect(() => {
+    const getPromotionDetail = async (promotionId) => {
+      try {
+        const result = await axios.get(
+          `http://localhost:4000/promotion/${promotionId}`
+        );
+        setPromotionDetail(result.data.data[0].promotion_code);
+        setFormData({
+          promotion_code: result.data.data[0].promotion_code,
+          promotion_types: result.data.data[0].promotion_types,
+          promotion_discount: result.data.data[0].promotion_discount,
+          promotion_expiry_date: result.data.data[0].promotion_expiry_date,
+          promotion_quota: result.data.data[0].promotion_quota,
+          promotion_expiry_time: result.data.data[0].promotion_expiry_time,
+          promotion_created_date_time:
+            result.data.data[0].promotion_created_date_time,
+          promotion_edited_date_time:
+            result.data.data[0].promotion_edited_date_time,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     getPromotionDetail(params.promotionId);
-    console.log(params.promotionId);
-  }, []);
+  }, [params.promotionId]);
 
-  
-
-  console.log("discount", promotion.promotion_discount);
+  console.log('newformData', newFormData)
 
 
-  const onFinish = async (values) => {
+  const handleSubmitEdit= async () => {
     try {
-      console.log(values);
+      console.log("formData", newFormData);
+
       const formData = new FormData();
 
-      for (const key in values) {
-        formData.append(key, values[key]);
-      }
-      const formattedExpiryDate = moment(values.promotion_expiry_date).format(
-        "YYYY-MM-DD"
-      );
-      const formattedExpiryTime = moment(values.promotion_expiry_time).format(
-        "HH:mm"
-      );
+      formData.append("promotion_code", newFormData.promotion_code)
+      formData.append("promotion_types", newFormData.promotion_types)
+      formData.append("promotion_discount", newFormData.promotion_discount)
+      formData.append("romotion_expiry_date", newFormData.promotion_expiry_date)
+      formData.append("promotion_expiry_time", newFormData.promotion_expiry_time)
+      formData.append("promotion_quota", newFormData.promotion_quota)
 
-      formData.append("promotion_expiry_date", formattedExpiryDate);
-      formData.append("promotion_expiry_time", formattedExpiryTime);
+
 
       const response = await axios.put(
-        "http://localhost:4000/promotion",
+        `http://localhost:4000/promotion/${params.promotionId}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -90,342 +108,300 @@ function PromotionEdit() {
     lineHeight: "150%", // 24px
   };
 
+  // console.log('initial', initialValues)
+
   return (
     <Form
       labelCol={{ span: 100 }}
       wrapperCol={{ span: 24 }}
       layout="horizontal"
       name="promotion_form"
-      initialValues={{
-        promotion_code: promotion.promotion_code || "",
-        promotion_types: promotion.promotion_types || "",
-        promotion_discount: promotion.promotion_discount || "",
-        promotion_expiry_date: promotion.promotion_expiry_date || "",
-        promotion_quota: promotion.promotion_quota || "",
-        promotion_expiry_time: promotion.promotion_expiry_time || "",
-        promotion_created_date_time:
-          promotion.promotion_created_date_time || "",
-        promotion_edited_date_time: promotion.promotion_edited_date_time || "",
-      }}
-      onFinish={onFinish}
+      // initialValues={formData}
+      onFinish={handleSubmitEdit}
       requiredMark={false}
     >
       <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
-        <div>
-          <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
-            <div className="flex gap-[14px] h-12 w-fit">
-              <img
-                src={arrow}
-                className=" h-[40px] w-[40px] cursor-pointer hover:scale-110 transition"
-                onClick={() => navigate("/admin-promotion")}
-              />
-              <div className="Header-name">
-                <p className="service-text text-xs">Promotion Code</p>
-                <h1
-                  name={promotionDetail}
-                  className="text-black   font-semibold text-xl"
+        <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
+          <div className="flex gap-[14px] h-12 w-fit">
+            <img
+              src={arrow}
+              className=" h-[40px] w-[40px] cursor-pointer hover:scale-110 transition"
+              onClick={() => navigate("/admin-promotion")}
+            />
+            <div className="Header-name">
+              <p className="service-text text-xs">Promotion Code</p>
+              <h1
+                name={promotionDetail}
+                className="text-black   font-semibold text-xl"
+              >
+                {promotionDetail}
+              </h1>
+            </div>
+          </div>
+          <div className="flex">
+            <button
+              className="btn-secondary flex items-center justify-center text-base font-medium w-28 h-11"
+              onClick={() => navigate("/admin-promotion")}
+            >
+              ยกเลิก
+            </button>
+            <button
+              className="btn-primary flex items-center justify-center ml-6 text-base font-medium w-28 h-11"
+              type="submit"
+            >
+              ยืนยัน
+            </button>
+          </div>
+        </div>
+        <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
+          <Form.Item
+            // name="promotion_code"
+            label={<span style={labelStyle}>Promotion Code</span>}
+            colon={false}
+            rules={[
+              {
+                required: true,
+                message: "กรุณาระบุโค้ด",
+              },
+            ]}
+          >
+            <Input
+              style={{ width: "50%" }}
+              value={newFormData.promotion_code}
+              onChange={(e) =>
+                setFormData({ ...newFormData, promotion_code: e.target.value })
+              }
+            />
+          </Form.Item>
+
+          <Form.Item
+            label={<span style={labelStyle}>ประเภท</span>}
+            colon={false}
+            // name="promotion_types"
+            rules={[
+              {
+                required: true,
+                message: "กรุณาเลือกประเภทของโค้ด",
+              },
+            ]}
+          >
+            <Radio.Group
+              value={newFormData.promotion_types}
+              onChange={(e) =>
+                setFormData({ ...newFormData, promotion_types: e.target.value })
+              }
+            >
+              <div className="flex flex-row">
+                <Form.Item
+                  // name="promotion_types"
+                  valuePropName="checked"
+                  style={{ display: "flex", alignItems: "center" }}
                 >
-                  {promotionDetail}
-                </h1>
+                  <Radio value="fixed">Fixed</Radio>
+                </Form.Item>
+
+                <Form.Item
+                  // name="promotion_discount"
+                  colon={false}
+                  rules={[
+                    {
+                      validator: (rule, value) => {
+                        const numericValue = parseFloat(value);
+                        if (
+                          isNaN(numericValue) ||
+                          numericValue < 1 ||
+                          numericValue > 1000
+                        ) {
+                          return Promise.reject(
+                            "Please enter a number between 1 and 1000"
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
+                >
+                  <Input
+                    style={{ width: "50%" }}
+                    suffix="฿"
+                    value={
+                      newFormData.promotion_types === "fixed"
+                        ? newFormData.promotion_discount
+                        : ""
+                    }
+                    onChange={(e) =>
+                      setFormData({
+                        ...newFormData,
+                        promotion_discount: e.target.value,
+                      })
+                    }
+                    disabled={newFormData.promotion_types === "percent"}
+                  />
+                </Form.Item>
               </div>
-            </div>
-            <div className="flex">
-              <button
-                className="btn-secondary flex items-center justify-center text-base font-medium w-28 h-11"
-                onClick={() => navigate("/admin-promotion")}
-              >
-                ยกเลิก
-              </button>
-              <button
-                className="btn-primary flex items-center justify-center ml-6 text-base font-medium w-28 h-11"
-                type="submit"
-              >
-                ยืนยัน
-              </button>
-            </div>
-          </div>
-          {/* {promotionById.map((promotion) => { */}
-          <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
-            <Form.Item
-              label={<span style={labelStyle}>Promotion Code</span>}
-              colon={false}
-              //   name="promotion_code"
-              rules={[
-                {
-                  required: true,
-                  message: "กรุณาระบุโค้ด",
-                },
-              ]}
-            >
-              <Input
-                style={{ width: "50%" }}
-                name="promotion_code"
-                value={promotion.promotion_code}
-                onChange={(e) =>
-                  setPromotion({ ...promotion, promotion_code: e.target.value })
-                }
-              />
-            </Form.Item>
 
-            <Form.Item
-              label={<span style={labelStyle}>ประเภท</span>}
-              colon={false}
-              // name="promotion_types"
-              rules={[
-                {
-                  required: true,
-                  message: "กรุณาเลือกประเภทของโค้ด",
-                },
-              ]}
-            >
-              <Radio.Group
-                value={promotion.promotion_types}
-                onChange={(e) =>
-                  setPromotion({
-                    ...promotion,
-                    promotion_types: e.target.value,
-                  })
-                }
-              >
-                <div className="flex flex-row">
-                  <Form.Item
-                    name="promotion_types"
-                    valuePropName="checked"
-                    style={{ display: "flex", alignItems: "center" }}
-                  >
-                    <Radio value="fixed">Fixed</Radio>
-                  </Form.Item>
+              <div className="flex flex-row">
+                <Form.Item
+                  // name="promotion_types"
+                  valuePropName="checked"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <Radio value="percent">Percent</Radio>
+                </Form.Item>
 
-                  <Form.Item
-                    shouldUpdate={(prevValues, currentValues) =>
-                      prevValues.promotion_types !==
-                      currentValues.promotion_types
-                    }
-                    noStyle
-                  >
-                    {({ getFieldValue }) => {
-                      return getFieldValue("promotion_types") === "fixed" ? (
-                        <Form.Item
-                          colon={false}
-                          // name="promotion_discount"
-                          rules={[
-                            {
-                              validator: (rule, value) => {
-                                const numericValue = parseFloat(value);
-                                if (
-                                  isNaN(numericValue) ||
-                                  numericValue < 1 ||
-                                  numericValue > 1000
-                                ) {
-                                  return Promise.reject(
-                                    "Please enter a number between 1 and 1000"
-                                  );
-                                }
-                                return Promise.resolve();
-                              },
-                            },
-                          ]}
-                        >
-                          <Input
-                            value={promotion.promotion_discount}
-                            onChange={(e) =>
-                              setPromotion({
-                                ...promotion,
-                                promotion_discount: e.target.value,
-                              })
-                            }
-                            style={{ width: "50%" }}
-                            suffix="฿"
-                            disabled={
-                              getFieldValue("promotion_types") !== "fixed"
-                            }
-                          />
-                        </Form.Item>
-                      ) : null;
-                    }}
-                  </Form.Item>
-                </div>
-
-                <div className="flex flex-row">
-                  <Form.Item
-                    name="promotion_types"
-                    valuePropName="checked"
-                    style={{ display: "flex", alignItems: "center" }}
-                  >
-                    <Radio value="percent">Percent</Radio>
-                  </Form.Item>
-
-                  <Form.Item
-                    shouldUpdate={(prevValues, currentValues) =>
-                      prevValues.promotion_types !==
-                      currentValues.promotion_types
-                    }
-                    noStyle
-                  >
-                    {({ getFieldValue }) => {
-                      return getFieldValue("promotion_types") === "percent" ? (
-                        <Form.Item
-                          colon={false}
-                          // name="promotion_discount"
-                          rules={[
-                            {
-                              validator: (rule, value) => {
-                                const numericValue = parseFloat(value);
-                                if (
-                                  isNaN(numericValue) ||
-                                  numericValue < 1 ||
-                                  numericValue > 100
-                                ) {
-                                  return Promise.reject(
-                                    "Please enter a number between 1 and 100"
-                                  );
-                                }
-                                return Promise.resolve();
-                              },
-                            },
-                          ]}
-                        >
-                          <Input
-                            value={promotion.promotion_discount}
-                            onChange={(e) =>
-                              setPromotion({
-                                ...promotion,
-                                promotion_discount: e.target.value,
-                              })
-                            }
-                            style={{ width: "50%" }}
-                            suffix="%"
-                            disabled={
-                              getFieldValue("promotion_types") !== "percent"
-                            }
-                          />
-                        </Form.Item>
-                      ) : null;
-                    }}
-                  </Form.Item>
-                </div>
-              </Radio.Group>
-            </Form.Item>
-
-            <Form.Item
-              label={<span style={labelStyle}>โควต้าการใช้</span>}
-              colon={false}
-              //   name="promotion_quota"
-              rules={[
-                {
-                  required: true,
-                  min: 1,
-                  message: "กรุณาระบุจำนวนครั้งให้ถูกต้อง",
-                },
-                {
-                  validator: (rule, value) => {
-                    const numericValue = parseFloat(value);
-                    if (
-                      isNaN(numericValue) ||
-                      numericValue < 1 ||
-                      numericValue > 1000
-                    ) {
-                      return Promise.reject("กรุณาระบุจำนวนครั้งต่ำกว่า 1000");
-                    }
-
-                    return Promise.resolve();
-                  },
-                },
-              ]}
-            >
-              <Input
-                style={{ width: "50%" }}
-                suffix="ครั้ง"
-                name="promotion_quota"
-                value={promotion.promotion_quota}
-                onChange={(e) =>
-                  setPromotion({
-                    ...promotion,
-                    promotion_quota: e.target.value,
-                  })
-                }
-              />
-            </Form.Item>
-
-            <Form.Item
-              label={<span style={labelStyle}>วันหมดอายุ</span>}
-              colon={false}
-              // name="promotion_expiry"
-              rules={[
-                {
-                  message: "กรุณาระบุวัน-เวลา หมดอายุ",
-                },
-              ]}
-            >
-              <Row gutter={8}>
-                <Col span={12}>
-                  <Form.Item
-                    rules={[
-                      {
-                        required: true,
-                        message: "กรุณาระบุวัน",
+                <Form.Item
+                  // name="promotion_discount"
+                  colon={false}
+                  rules={[
+                    {
+                      validator: (rule, value) => {
+                        const numericValue = parseFloat(value);
+                        if (
+                          isNaN(numericValue) ||
+                          numericValue < 1 ||
+                          numericValue > 100
+                        ) {
+                          return Promise.reject(
+                            "Please enter a number between 1 and 100"
+                          );
+                        }
+                        return Promise.resolve();
                       },
-                    ]}
-                    noStyle
-                  >
-                    <DatePicker
-                      name="promotion_expiry_date"
-                      defaultValue={moment(promotion.promotion_expiry_date)} // Assuming you're using Moment.js for dates
-                      onChange={(date, dateString) =>
-                        setPromotion({
-                          ...promotion,
-                          promotion_expiry_date: dateString, // dateString contains the formatted date string
-                        })
-                      }
-                      style={{ width: "50%" }}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
+                    },
+                  ]}
+                >
+                  <Input
+                    value={
+                      newFormData.promotion_types === "percent"
+                        ? newFormData.promotion_discount
+                        : ""
+                    }
+                    onChange={(e) =>
+                      setFormData({
+                        ...newFormData,
+                        promotion_discount: e.target.value,
+                      })
+                    }
+                    style={{ width: "50%" }}
+                    suffix="%"
+                    disabled={newFormData.promotion_types === "fixed"}
+                  />
+                </Form.Item>
+              </div>
+            </Radio.Group>
+          </Form.Item>
+
+          <Form.Item
+            // name="promotion_quota"
+            label={<span style={labelStyle}>โควต้าการใช้</span>}
+            colon={false}
+            rules={[
+              {
+                // required: true,
+                min: 1,
+                message: "กรุณาระบุจำนวนครั้งให้ถูกต้อง",
+              },
+              {
+                validator: (rule, value) => {
+                  const numericValue = parseFloat(value);
+                  if (
+                    isNaN(numericValue) ||
+                    numericValue < 1 ||
+                    numericValue > 1000
+                  ) {
+                    return Promise.reject("กรุณาระบุจำนวนครั้งต่ำกว่า 1000");
+                  }
+
+                  return Promise.resolve();
+                },
+              },
+            ]}
+          >
+            <Input
+              style={{ width: "50%" }}
+              suffix="ครั้ง"
+              value={newFormData.promotion_quota}
+              onChange={(e) =>
+                setFormData({ ...newFormData, promotion_quota: e.target.value })
+              }
+            />
+          </Form.Item>
+
+          <Form.Item
+            // name="promotion_expiry_date"
+            label={<span style={labelStyle}>วันหมดอายุ</span>}
+            colon={false}
+            // rules={[
+            //   {
+            //     message: "กรุณาระบุวัน-เวลา หมดอายุ",
+            //   },
+            // ]}
+          >
+            <Row gutter={8}>
+              <Col span={12}>
+                <Form.Item
+                  // rules={[
+                  //   {
+                  //     required: true,
+                  //     message: "กรุณาระบุวัน",
+                  //   },
+                  // ]}
+                  noStyle
+                  // name="promotion_expiry_date"
+                >
+                  <DatePicker
+                    name="promotion_expiry_date"
+                    value={moment(newFormData.promotion_expiry_date)} // Assuming you're using Moment.js for dates
+                    onChange={(e) =>
+                      setFormData({
+                        ...newFormData,
+                        promotion_expiry_date: e.target.value,
+                      })
+                    }
+                    style={{ width: "50%" }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  // name="promotion_expiry_time"
+                  // rules={[
+                  //   {
+                  //     required: true,
+                  //     message: "กรุณาระบุเวลา",
+                  //   },
+                  // ]}
+                  noStyle
+                >
+                  <TimePicker
                     // name="promotion_expiry_time"
-                    rules={[
-                      {
-                        required: true,
-                        message: "กรุณาระบุเวลา",
-                      },
-                    ]}
-                    noStyle
-                  >
-                    <TimePicker
-                      name="promotion_expiry_time"
-                      value={moment(
-                        promotion.promotion_expiry_time,
-                        "HH:mm"
-                      )}
-                      onChange={(time, timeString) =>
-                        setPromotion({
-                          ...promotion,
-                          promotion_expiry_time: timeString,
-                        })
-                      }
-                      format="HH:mm"
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form.Item>
+                    value={moment(newFormData.promotion_expiry_time, "HH:mm")}
+                    onChange={(e) =>
+                      setFormData({
+                        ...newFormData,
+                        promotion_expiry_time: e.target.value,
+                      })
+                    }
+                    format="HH:mm"
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form.Item>
 
-            <hr className="mt-10 mb-10 text-grey300 "></hr>
-            <p className="pb-[25px] ">
-              <span className="text-grey700">สร้างเมื่อ</span>
-              <span className="px-[200px] text-black ">
-                {dateFormat(promotion.promotion_created_date_time)}
-              </span>
-            </p>
-            <p className="pb-[40px] ">
-              <span className="text-grey700">แก้ไขล่าสุด</span>
-              <span className="px-[190px] text-black ">
-                {dateFormat(promotion.promotion_edited_date_time)}
-              </span>
-            </p>
-          </div>
-          ;{/* })} */}
+          <hr className="mt-10 mb-10 text-grey300 "></hr>
+          <p className="pb-[25px] ">
+            <span className="text-grey700">สร้างเมื่อ</span>
+            <span className="px-[200px] text-black ">
+              {dateFormat(newFormData.promotion_created_date_time)}
+            </span>
+          </p>
+          <p className="pb-[40px] ">
+            <span className="text-grey700">แก้ไขล่าสุด</span>
+            <span className="px-[190px] text-black ">
+              {dateFormat(newFormData.promotion_edited_date_time)}
+            </span>
+          </p>
         </div>
       </div>
     </Form>
