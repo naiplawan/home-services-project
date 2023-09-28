@@ -185,29 +185,619 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
   }
 });
 
-serviceRouter.put("/:id", async (req, res) => {
+// serviceRouter.put("/:id", async (req, res) => {
+//   try {
+//     const serviceId = req.params.id;
+//     const file = req.file;
+
+//     // if (!file) {
+//     //   return res.status(400).json({ message: "No file uploaded" });
+//     // }
+
+//     const updatedServiceItem = {
+//       service_name: req.body.service_name,
+//       category_id: req.body.category_id,
+//       // service_photo: req.file,
+//       service_edited_date: new Date(),
+//     };
+
+//     const items = JSON.parse(req.body.items);
+
+//     const updatedSubServiceItems = {
+//       sub_service_name: items.sub_service_name,
+//       unit: items.unit,
+//       price_per_unit: items.price_per_unit,
+//     };
+
+//     if (file) {
+//       const updateResult = await supabase.storage
+//         .from("home_service")
+//         .update(
+//           `service_photo/${Date.now()}${file.originalname}`,
+//           file.buffer,
+//           {
+//             cacheControl: "3600",
+//             upsert: false,
+//             contentType: file.mimetype,
+//           }
+//         );
+
+//       const servicePhotoUrl = supabase.storage
+//         .from("home_service")
+//         .getPublicUrl(`service_photo/${Date.now()}${file.originalname}`);
+
+//       updatedServiceItem["service_photo"] = servicePhotoUrl;
+//     }
+
+//     console.log(updatedServiceItem);
+
+//     const { data: updatedServiceData, error: updatedServiceError } =
+//       await supabase
+//         .from("service")
+//         .update(updatedServiceItem)
+//         .eq("service_id", serviceId);
+
+//     if (updatedServiceError) {
+//       console.error("Error updating service data", updatedServiceError);
+//       return res
+//         .status(500)
+//         .json({ message: "Error updating data in supabase" });
+//     }
+
+//     const { data: latestService } = await supabase
+//       .from("service")
+//       .select("service_id")
+//       .order("service_id", { ascending: false })
+//       .limit(1);
+
+//     const service_id = latestService[0].service_id;
+
+//     for (const subServiceItem of updatedSubServiceItems) {
+//       subServiceItem.service_id = service_id; // Add service_id to each subServiceItem
+//     }
+
+//     if (!service_id) {
+//       console.error("Failed to retrieve service_id from database");
+//       return res
+//         .status(500)
+//         .json({ message: "Failed to retrieve service_id from database" });
+//     }
+
+//     // แก้ไขรายการบริการย่อย (sub_service)
+//     const { data: updatedSubServiceData, error: updatedSubServiceError } =
+//       await supabase
+//         .from("sub_service")
+//         .update(updatedSubServiceItems)
+//         .eq("service_id", serviceId);
+
+//     if (serviceError || subServiceError) {
+//       console.error(
+//         "เกิดข้อผิดพลาดในการอัพเดทข้อมูล:",
+//         serviceError || subServiceError
+//       );
+//       res.status(500).json({ error: "เกิดข้อผิดพลาดในการอัพเดทข้อมูล" });
+//     } else {
+//       res.status(200).json({ message: "อัพเดทข้อมูลเรียบร้อย" });
+//     }
+
+//     return res.status(200).send("Service DATA updated successfully");
+//   } catch (error) {
+//     res.status(500).json({
+//       message: "Can't update service data in supabase",
+//     });
+//   }
+// });
+
+// serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
+//   try {
+//     const serviceId = req.params.id;
+//     const user_id = req.body.user_id;
+//     const file = req.file;
+
+//     console.log(req.body);
+
+//     const updatedServiceItem = {
+//       user_id: user_id,
+//       service_photo: file,
+//       service_edited_date: new Date(),
+//     };
+
+//     if (file) {
+//       updatedServiceItem["service_photo"] = file.originalname;
+//     }
+
+//     const optionalFields = [
+//       "service_name",
+//       "category_id",
+//       "service_created_date",
+//     ];
+//     optionalFields.forEach((field) => {
+//       if (req.body[field] !== undefined) {
+//         updatedServiceItem[field] = req.body[field];
+//       }
+//     });
+
+//     let updatedSubServiceItems;
+//     try {
+//       updatedSubServiceItems = JSON.parse(req.body.items);
+
+//       if (!Array.isArray(updatedSubServiceItems)) {
+//         updatedSubServiceItems = [updatedSubServiceItems];
+//       }
+
+//       // Remove sub_service_id from each item
+//       updatedSubServiceItems = updatedSubServiceItems.map((item) => {
+//         const { sub_service_id, ...rest } = item;
+//         return { ...rest, sub_service_quantity: 1 };
+//       });
+
+//       // Continue with your code for inserting/updating sub_service
+//     } catch (error) {
+//       console.error("Error parsing subServiceItems:", error);
+//       return res
+//         .status(400)
+//         .json({ message: "Invalid format for subServiceItems" });
+//     }
+//     if (file) {
+//       // Upload file to Supabase storage
+//       const uploadResult = await supabase.storage
+//         .from("home_service")
+//         .upload(
+//           `service_photo/${Date.now()}${file.originalname}`,
+//           file.buffer,
+//           {
+//             cacheControl: "3600",
+//             upsert: false,
+//             contentType: file.mimetype,
+//           }
+//         );
+//       console.log("uploadresult", uploadResult);
+
+//       if (!uploadResult.error) {
+//         // Get public URL for the uploaded file
+//         const servicePhotourl = `https://tqjclbmprqjrgdrvylqd.supabase.co/storage/v1/object/public/home_service/${uploadResult.data.path}`;
+//         console.log(uploadResult.data.path);
+
+//         // Assign the URL directly to service_photo
+//         updatedServiceItem["service_photo"] = servicePhotourl;
+//       } else {
+//         console.error(
+//           "Error uploading file to Supabase storage",
+//           uploadResult.error
+//         );
+//         return res
+//           .status(500)
+//           .json({ message: "Error uploading file to Supabase storage" });
+//       }
+//     }
+
+//     const { data: updatedServiceData, error: updatedServiceError } =
+//       await supabase
+//         .from("service")
+//         .update(updatedServiceItem)
+//         .eq("service_id", serviceId);
+
+//     if (updatedServiceError) {
+//       console.error("Error updating service data", updatedServiceError);
+//       return res
+//         .status(500)
+//         .json({ message: "Error updating data in supabase" });
+//     }
+
+//     // const { data: latestService } = await supabase
+//     //   .from("service")
+//     //   .select("service_id")
+//     //   .order("service_id", { ascending: false })
+//     //   .limit(1);
+
+//     // const service_id = latestService[0].service_id;
+
+//     // for (const subServiceItem of updatedSubServiceItems) {
+//     //   subServiceItem.service_id = service_id;
+//     // }
+
+//     // if (!service_id) {
+//     //   console.error("Failed to retrieve service_id from database");
+//     //   return res
+//     //     .status(500)
+//     //     .json({ message: "Failed to retrieve service_id from database" });
+//     // }
+
+//     updatedSubServiceItems = updatedSubServiceItems.map((item) => {
+//       if (!item.sub_service_quantity) {
+//         return { ...item, sub_service_quantity: 1 };
+//       }
+//       return item;
+//     });
+
+//     const { data: updatedSubServiceData, error: updatedSubServiceError } =
+//       await supabase
+//         .from("sub_service")
+//         .upsert(updatedSubServiceItems)
+//         .eq("service_id", serviceId);
+
+//     console.log("updatedSubServiceData:", updatedSubServiceData);
+//     console.log("updatedSubServiceError:", updatedSubServiceError);
+
+//     return res.status(200).send("Service DATA updated successfully");
+//   } catch (error) {
+//     console.error("Error updating service data", error);
+//     res.status(500).json({
+//       message: "Error updating service data in supabase",
+//       error: error.message,
+//     });
+//   }
+// });
+
+// serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
+//   try {
+//     const serviceId = req.params.id;
+//     const user_id = req.body.user_id;
+//     const file = req.file;
+
+//     console.log(req.body);
+
+//     const updatedServiceItem = {
+//       user_id: user_id,
+//       service_photo: file,
+//       service_edited_date: new Date(),
+//     };
+
+//     if (file) {
+//       updatedServiceItem["service_photo"] = file.originalname;
+//     }
+
+//     const optionalFields = [
+//       "service_name",
+//       "category_id",
+//       "service_created_date",
+//     ];
+//     optionalFields.forEach((field) => {
+//       if (req.body[field] !== undefined) {
+//         updatedServiceItem[field] = req.body[field];
+//       }
+//     });
+
+//     let updatedSubServiceItems;
+//     try {
+//       updatedSubServiceItems = JSON.parse(req.body.items);
+
+//       if (!Array.isArray(updatedSubServiceItems)) {
+//         updatedSubServiceItems = [updatedSubServiceItems];
+//       }
+
+//       // Ensure sub_service_quantity is set for each item
+//       updatedSubServiceItems = updatedSubServiceItems.map((item) => {
+//         if (!item.sub_service_quantity) {
+//           item.sub_service_quantity = 1;
+//         }
+
+//         // Exclude sub_service_id from the data
+//         const { sub_service_id, ...rest } = item;
+//         return rest;
+//       });
+//       // Continue with your code for inserting/updating sub_service
+//     } catch (error) {
+//       console.error("Error parsing subServiceItems:", error);
+//       return res
+//         .status(400)
+//         .json({ message: "Invalid format for subServiceItems" });
+//     }
+
+//     if (file) {
+//       // Upload file to Supabase storage
+//       const uploadResult = await supabase.storage
+//         .from("home_service")
+//         .upload(
+//           `service_photo/${Date.now()}${file.originalname}`,
+//           file.buffer,
+//           {
+//             cacheControl: "3600",
+//             upsert: false,
+//             contentType: file.mimetype,
+//           }
+//         );
+//       console.log("uploadresult", uploadResult);
+
+//       if (!uploadResult.error) {
+//         // Get public URL for the uploaded file
+//         const servicePhotourl = `https://tqjclbmprqjrgdrvylqd.supabase.co/storage/v1/object/public/home_service/${uploadResult.data.path}`;
+//         console.log(uploadResult.data.path);
+
+//         // Assign the URL directly to service_photo
+//         updatedServiceItem["service_photo"] = servicePhotourl;
+//       } else {
+//         console.error(
+//           "Error uploading file to Supabase storage",
+//           uploadResult.error
+//         );
+//         return res
+//           .status(500)
+//           .json({ message: "Error uploading file to Supabase storage" });
+//       }
+//     }
+
+//     const { data: updatedServiceData, error: updatedServiceError } =
+//       await supabase
+//         .from("service")
+//         .update(updatedServiceItem)
+//         .eq("service_id", serviceId);
+
+//     if (updatedServiceError) {
+//       console.error("Error updating service data", updatedServiceError);
+//       return res
+//         .status(500)
+//         .json({ message: "Error updating data in supabase" });
+//     }
+
+//     updatedSubServiceItems = updatedSubServiceItems.map((item) => {
+//       if (!item.sub_service_quantity) {
+//         return { ...item, sub_service_quantity: 1 };
+//       }
+//       return item;
+//     });
+
+//     const { data: updatedSubServiceData, error: updatedSubServiceError } =
+//       await supabase
+//         .from("sub_service")
+//         .upsert(updatedSubServiceItems)
+//         .eq("service_id", serviceId);
+
+//     console.log("updatedSubServiceData:", updatedSubServiceData);
+//     console.log("updatedSubServiceError:", updatedSubServiceError);
+
+//     return res.status(200).send("Service DATA updated successfully");
+//   } catch (error) {
+//     console.error("Error updating service data", error);
+//     res.status(500).json({
+//       message: "Error updating service data in supabase",
+//       error: error.message,
+//     });
+//   }
+// });
+
+//อันนี้อัพเดทได้ทั้งคู่ แต่ duplicate อันเดิม
+// serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
+//   try {
+//     const serviceId = req.params.id;
+//     const user_id = req.body.user_id;
+//     const file = req.file;
+
+//     const updatedServiceItem = {
+//       user_id: user_id,
+//       service_edited_date: new Date(),
+//     };
+
+//     if (file) {
+//       updatedServiceItem["service_photo"] = file.originalname;
+//     }
+
+//     const optionalFields = [
+//       "service_name",
+//       "category_id",
+//       "service_created_date",
+//     ];
+
+//     optionalFields.forEach((field) => {
+//       if (req.body[field] !== undefined) {
+//         updatedServiceItem[field] = req.body[field];
+//       }
+//     });
+
+//     let updatedSubServiceItems;
+//     try {
+//       updatedSubServiceItems = JSON.parse(req.body.items);
+
+//       if (!Array.isArray(updatedSubServiceItems)) {
+//         updatedSubServiceItems = [updatedSubServiceItems];
+//       }
+
+//       // Ensure sub_service_quantity is set for each item
+//       updatedSubServiceItems = updatedSubServiceItems.map((item) => {
+//         if (!item.sub_service_quantity) {
+//           item.sub_service_quantity = 1;
+//         }
+
+//         // Exclude sub_service_id from the data
+//         const { sub_service_id, ...rest } = item;
+//         return rest;
+//       });
+//     } catch (error) {
+//       console.error("Error parsing subServiceItems:", error);
+//       return res
+//         .status(400)
+//         .json({ message: "Invalid format for subServiceItems" });
+//     }
+
+//     // Update service details
+//     const { data: updatedServiceData, error: updatedServiceError } =
+//       await supabase
+//         .from("service")
+//         .update(updatedServiceItem)
+//         .eq("service_id", serviceId);
+
+//     if (updatedServiceError) {
+//       console.error("Error updating service data", updatedServiceError);
+//       return res
+//         .status(500)
+//         .json({ message: "Error updating data in supabase" });
+//     }
+
+//     const { data: existingSubServiceItems, error: existingSubServiceError } =
+//       await supabase
+//         .from("sub_service")
+//         .select("*")
+//         .eq("service_id", serviceId);
+
+//     if (existingSubServiceError) {
+//       console.error(
+//         "Error fetching existing sub_service items",
+//         existingSubServiceError
+//       );
+//       return res
+//         .status(500)
+//         .json({ message: "Error fetching sub_service items" });
+//     }
+
+//     // Identify which items need to be updated and which are new
+//     const existingSubServiceIds = existingSubServiceItems.map(
+//       (item) => item.sub_service_id
+//     );
+//     const updatedSubServiceIds = updatedSubServiceItems
+//       .filter((item) => item.sub_service_id)
+//       .map((item) => item.sub_service_id);
+//     const newSubServiceItems = updatedSubServiceItems.filter(
+//       (item) => !item.sub_service_id
+//     );
+
+//      const updatedExistingSubServiceItems = updatedSubServiceItems.filter(
+//       (item) => existingSubServiceIds.includes(item.sub_service_id)
+//     );
+
+//     for (const updatedItem of updatedExistingSubServiceItems) {
+//       await supabase.from("sub_service").upsert([
+//         {
+//           ...updatedItem,
+//           service_id: serviceId,
+//         },
+//       ]);
+//     }
+
+//     // Insert new sub_service items
+//     for (const newItem of newSubServiceItems) {
+//       await supabase.from("sub_service").upsert([
+//         {
+//           ...newItem,
+//           service_id: serviceId,
+//         },
+//       ]);
+//     }
+
+//     return res.status(200).send("Service DATA updated successfully");
+//   } catch (error) {
+//     console.error("Error updating service data", error);
+//     res.status(500).json({
+//       message: "Error updating service data in supabase",
+//       error: error.message,
+//     });
+//   }
+// });
+
+// อันนี้อัพเดทได้แค่อันเดียว
+// serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
+//   try {
+//     console.log(req.body)
+//     const serviceId = req.params.id;
+//     const user_id = req.body.user_id;
+//     const file = req.file;
+
+//     const updatedServiceItem = {
+//       user_id: user_id,
+//       service_edited_date: new Date(),
+//     };
+
+//     if (file) {
+//       updatedServiceItem["service_photo"] = file.originalname;
+//     }
+
+//     const optionalFields = [
+//       "service_name",
+//       "category_id",
+//       "service_created_date",
+//     ];
+
+//     optionalFields.forEach((field) => {
+//       if (req.body[field] !== undefined) {
+//         updatedServiceItem[field] = req.body[field];
+//       }
+//     });
+
+//     let updatedSubServiceItems;
+//     try {
+//       updatedSubServiceItems = JSON.parse(req.body.items);
+
+//       if (!Array.isArray(updatedSubServiceItems)) {
+//         updatedSubServiceItems = [updatedSubServiceItems];
+//       }
+
+//       // Ensure sub_service_quantity is set for each item
+//       updatedSubServiceItems = updatedSubServiceItems.map((item) => {
+//         if (!item.sub_service_quantity) {
+//           item.sub_service_quantity = 1;
+//         }
+
+//         // Exclude sub_service_id from the data
+//         const { sub_service_id, ...rest } = item;
+//         return rest;
+//       });
+//     } catch (error) {
+//       console.error("Error parsing subServiceItems:", error);
+//       return res
+//         .status(400)
+//         .json({ message: "Invalid format for subServiceItems" });
+//     }
+
+//     // Begin transaction
+//     const { data: transactionData, error: transactionError } = await supabase
+//       .from("service")
+//       .upsert([
+//         {
+//           ...updatedServiceItem,
+//           service_id: serviceId,
+//         },
+//       ]);
+
+//     if (transactionError) {
+//       console.error("Error updating service data", transactionError);
+//       return res
+//         .status(500)
+//         .json({ message: "Error updating data in supabase" });
+//     }
+
+//     // Delete existing sub_service items
+//     const { error: deleteError } = await supabase
+//       .from("sub_service")
+//       .delete()
+//       .eq("service_id", serviceId);
+
+//     if (deleteError) {
+//       console.error("Error deleting existing sub_service items", deleteError);
+//       return res
+//         .status(500)
+//         .json({ message: "Error deleting existing sub_service items" });
+//     }
+
+//     // Insert new sub_service items
+//     const { data: insertData, error: insertError } = await supabase
+//       .from("sub_service")
+//       .upsert(updatedSubServiceItems);
+
+//     if (insertError) {
+//       console.error("Error inserting sub_service items", insertError);
+//       return res
+//         .status(500)
+//         .json({ message: "Error inserting sub_service items" });
+//     }
+
+//     return res.status(200).send("Service DATA updated successfully");
+//   } catch (error) {
+//     console.error("Error updating service data", error);
+//     res.status(500).json({
+//       message: "Error updating service data in supabase",
+//       error: error.message,
+//     });
+//   }
+// });
+
+serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
   try {
     const serviceId = req.params.id;
+    const user_id = req.body.user_id;
     const file = req.file;
 
-    // if (!file) {
-    //   return res.status(400).json({ message: "No file uploaded" });
-    // }
-
     const updatedServiceItem = {
-      service_name: req.body.service_name,
-      category_id: req.body.category_id,
-      // service_photo: req.file,
+      user_id: user_id,
       service_edited_date: new Date(),
-    };
-
-    const items = JSON.parse(req.body.items);
-
-
-    const updatedSubServiceItems = {
-      sub_service_name: items.sub_service_name,
-      unit: items.unit,
-      price_per_unit: items.price_per_unit,
     };
 
     if (file) {
@@ -230,61 +820,163 @@ serviceRouter.put("/:id", async (req, res) => {
       updatedServiceItem["service_photo"] = servicePhotoUrl;
     }
 
-    console.log(updatedServiceItem);
+    const optionalFields = [
+      "service_name",
+      "category_id",
+      "service_created_date",
+    ];
 
-    const { data: updatedServiceData, error: updatedServiceError } =
-      await supabase
-        .from("service")
-        .update(updatedServiceItem)
-        .eq("service_id", serviceId);
+    optionalFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updatedServiceItem[field] = req.body[field];
+      }
+    });
 
-    if (updatedServiceError) {
-      console.error("Error updating service data", updatedServiceError);
+    let updatedSubServiceItems;
+    try {
+      updatedSubServiceItems = JSON.parse(req.body.items);
+
+      if (!Array.isArray(updatedSubServiceItems)) {
+        updatedSubServiceItems = [updatedSubServiceItems];
+      }
+
+      // Ensure sub_service_quantity is set for each item
+      updatedSubServiceItems = updatedSubServiceItems.map((item) => {
+        if (!item.sub_service_quantity) {
+          item.sub_service_quantity = 1;
+        }
+
+        // Exclude sub_service_id from the data
+        const { sub_service_id, ...rest } = item;
+        return rest;
+      });
+    } catch (error) {
+      console.error("Error parsing subServiceItems:", error);
+      return res
+        .status(400)
+        .json({ message: "Invalid format for subServiceItems" });
+    }
+
+    // Begin transaction
+    await supabase.rpc("start_transaction");
+
+    // Update service information
+    const { data: transactionData, error: transactionError } = await supabase
+      .from("service")
+      .upsert([
+        {
+          ...updatedServiceItem,
+          service_id: serviceId,
+        },
+      ]);
+
+    if (transactionError) {
+      console.error("Error updating service data", transactionError);
+      await supabase.rpc("rollback_transaction");
       return res
         .status(500)
         .json({ message: "Error updating data in supabase" });
     }
 
-    const { data: latestService } = await supabase
-      .from("service")
-      .select("service_id")
-      .order("service_id", { ascending: false })
-      .limit(1);
+    // Retrieve existing sub-service items
+    const { data: existingSubServiceItems, error: fetchError } = await supabase
+      .from("sub_service")
+      .select("*")
+      .eq("service_id", serviceId);
 
-    const service_id = latestService[0].service_id;
-
-    for (const subServiceItem of updatedSubServiceItems) {
-      subServiceItem.service_id = service_id; // Add service_id to each subServiceItem
-    }
-
-    if (!service_id) {
-      console.error("Failed to retrieve service_id from database");
+    if (fetchError) {
+      console.error("Error fetching existing sub_service items", fetchError);
+      await supabase.rpc("rollback_transaction");
       return res
         .status(500)
-        .json({ message: "Failed to retrieve service_id from database" });
+        .json({ message: "Error fetching existing sub_service items" });
     }
 
-    // แก้ไขรายการบริการย่อย (sub_service)
-    const { data: updatedSubServiceData, error: updatedSubServiceError } =
-      await supabase
+    // Compare existing with updated sub-service items
+    const itemsToAdd = updatedSubServiceItems.filter(
+      (updatedItem) =>
+        !existingSubServiceItems.some(
+          (existingItem) =>
+            existingItem.sub_service_id === updatedItem.sub_service_id
+        )
+    );
+
+    const itemsToUpdate = updatedSubServiceItems.filter((updatedItem) =>
+      existingSubServiceItems.some(
+        (existingItem) =>
+          existingItem.sub_service_id === updatedItem.sub_service_id
+      )
+    );
+
+    const itemsToDelete = existingSubServiceItems.filter(
+      (existingItem) =>
+        !updatedSubServiceItems.some(
+          (updatedItem) =>
+            existingItem.sub_service_id === updatedItem.sub_service_id
+        )
+    );
+
+    // Insert new sub-service items
+    for (const item of itemsToAdd) {
+      const { sub_service_id, ...rest } = item;
+
+      rest.service_id = serviceId;
+
+      const { error: insertError } = await supabase
         .from("sub_service")
-        .update(updatedSubServiceItems)
-        .eq("service_id", serviceId);
+        .insert([rest]);
 
-    if (serviceError || subServiceError) {
-      console.error(
-        "เกิดข้อผิดพลาดในการอัพเดทข้อมูล:",
-        serviceError || subServiceError
-      );
-      res.status(500).json({ error: "เกิดข้อผิดพลาดในการอัพเดทข้อมูล" });
-    } else {
-      res.status(200).json({ message: "อัพเดทข้อมูลเรียบร้อย" });
+      if (insertError) {
+        console.error("Error inserting sub_service item", insertError);
+        await supabase.rpc("rollback_transaction");
+        return res
+          .status(500)
+          .json({ message: "Error inserting sub_service item" });
+      }
     }
+
+    // Update existing sub-service items
+    for (const item of itemsToUpdate) {
+      const { sub_service_id, ...rest } = item;
+      const { error: updateError } = await supabase
+        .from("sub_service")
+        .upsert([rest]);
+
+      if (updateError) {
+        console.error("Error updating sub_service item", updateError);
+        await supabase.rpc("rollback_transaction");
+        return res
+          .status(500)
+          .json({ message: "Error updating sub_service item" });
+      }
+    }
+
+    // Delete sub-service items
+    const { error: deleteError } = await supabase
+      .from("sub_service")
+      .delete()
+      .in(
+        "sub_service_id",
+        itemsToDelete.map((item) => item.sub_service_id)
+      );
+
+    if (deleteError) {
+      console.error("Error deleting sub_service items", deleteError);
+      await supabase.rpc("rollback_transaction");
+      return res
+        .status(500)
+        .json({ message: "Error deleting sub_service items" });
+    }
+
+    // Commit transaction
+    await supabase.rpc("commit_transaction");
 
     return res.status(200).send("Service DATA updated successfully");
   } catch (error) {
+    console.error("Error updating service data", error);
     res.status(500).json({
-      message: "Can't update service data in supabase",
+      message: "Error updating service data in supabase",
+      error: error.message,
     });
   }
 });
