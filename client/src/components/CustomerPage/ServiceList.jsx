@@ -5,8 +5,11 @@ import image from "../../assets/CustomerPhoto/imageIndex.js";
 import SellBlack from "../../assets/homepagePhoto/sellBlack.jsx";
 import InputPriceRange from "./InputPriceRange";
 // import { useAuth } from "../../contexts/authentication";
-import { getMaxPrice, getMinPrice } from "../../utils/priceMinMax.js";
-import { sortServices } from "../../utils/sortService.js";
+import {
+  getMaxPrice,
+  getMinPrice,
+  sortServices,
+} from "../../utils/serviceList.js";
 
 function ServiceList() {
   // const params = useParams();
@@ -91,6 +94,7 @@ function ServiceList() {
   };
 
   // ***** About Data Fetching *****
+
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
@@ -227,8 +231,8 @@ function ServiceList() {
                 >
                   <option value="recommend">บริการแนะนำ</option>
                   <option value="popular">บริการยอดนิยม</option>
-                  <option value="alphabetical">ตามตัวอักษร (Ascending)</option>
-                  <option value="alphabetical">ตามตัวอักษร (Descending)</option>
+                  <option value="ascending">ตามตัวอักษร (Ascending)</option>
+                  <option value="descending">ตามตัวอักษร (Descending)</option>
                 </select>
               </div>
               <div className="w-[80px]"></div>
@@ -244,9 +248,9 @@ function ServiceList() {
             {services &&
               services.data &&
               Array.isArray(services.data) &&
-              (isSearchClicked ? filteredServices : services.data).map(
-                (service) => {
-                  return (
+              (isSearchClicked ? (
+                filteredServices.length > 0 ? (
+                  filteredServices.map((service) => (
                     <div
                       key={service.id}
                       className="lg:mx-[37px] lg:w-[369px] mt-[48px] w-[25%] h-[35%] rounded-md overflow-hidden border border-[#CCD0D7] m-2"
@@ -291,9 +295,64 @@ function ServiceList() {
                         </div>
                       </div>
                     </div>
-                  );
-                }
-              )}
+                  ))
+                ) : (
+                  <div className="text-center h-[500px]">
+                    <h1 className="mt-[100px]">
+                      ขออภัยค่ะ ไม่พบการค้นหาบริการที่ท่านต้องการ
+                    </h1>
+                    <p> หากลูกค้าต้องการบริการใดๆเพิ่มเติม</p>
+                    <p>สามารถติดต่อสอบถามได้ที่ 080-540-6357</p>
+                  </div>
+                )
+              ) : (
+                services.data.map((service) => (
+                  <div
+                    key={service.id}
+                    className="lg:mx-[37px] lg:w-[369px] mt-[48px] w-[25%] h-[35%] rounded-md overflow-hidden border border-[#CCD0D7] m-2"
+                  >
+                    <div className="img-display">
+                      <img
+                        src={service.service_photo}
+                        alt={service.sub_service.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-2 md:p-5 bg-white min-h-full">
+                      <div className="bg-[#E7EEFF] text-center px-[10px] inline-block p-1 text-[#0E3FB0] rounded-lg">
+                        <p>{service.category.category_name}</p>
+                      </div>
+                      <h2 className="font-bold text-[20px] mt-3">
+                        {service.service_name}
+                      </h2>
+                      <div className="flex items-center">
+                        <SellBlack />
+                        <p className="ml-2 text-[#646C80] text-sm py-[10px]">
+                          {getMinPrice(service.sub_service) !==
+                          getMaxPrice(service.sub_service)
+                            ? `ค่าบริการประมาณ ${getMinPrice(
+                                service.sub_service
+                              )} - ${getMaxPrice(service.sub_service)} ฿`
+                            : `ค่าบริการประมาณ ${getMinPrice(
+                                service.sub_service
+                              )} ฿`}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p
+                          className="link text-l font-semibold text-[#336DF2]"
+                          onClick={() =>
+                            navigate(`/checkout/${service.service_id}`)
+                          }
+                        >
+                          เลือกบริการ
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ))}
           </div>
         </section>
 

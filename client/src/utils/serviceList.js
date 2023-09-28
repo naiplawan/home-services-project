@@ -1,3 +1,37 @@
+// เป็น function ที่เอาไว้คำนวณราคา sub service เพื่อเอาค่าต่ำสุดกับสูงสุดมาแสดงตรง display
+
+export function getMinPrice(subServicesArray) {
+  if (subServicesArray.length === 0) {
+    return 0;
+  }
+
+  let minPrice = subServicesArray[0].price_per_unit;
+
+  for (const subService of subServicesArray) {
+    if (subService.price_per_unit < minPrice) {
+      minPrice = subService.price_per_unit;
+    }
+  }
+
+  return minPrice;
+}
+
+export function getMaxPrice(subServicesArray) {
+  if (subServicesArray.length === 0) {
+    return 0;
+  }
+
+  let maxPrice = subServicesArray[0].price_per_unit;
+
+  for (const subService of subServicesArray) {
+    if (subService.price_per_unit > maxPrice) {
+      maxPrice = subService.price_per_unit;
+    }
+  }
+
+  return maxPrice;
+}
+
 // function ของการเรียงของมูลใน sort by filter
 
 function sortServices(services, orderFilter) {
@@ -14,10 +48,16 @@ function sortServices(services, orderFilter) {
         return b.popularity - a.popularity;
       });
       break;
-    case "alphabetical":
-      // เรียงตามตัวอักษร (ภาษาไทย)
+    case "ascending":
+      // เรียงตามตัวอักษร (ภาษาไทย asc)
       sortedServices.sort((a, b) => {
         return collator.compare(a.service_name, b.service_name);
+      });
+      break;
+    case "descending":
+      // เรียงตามตัวอักษร (ภาษาไทย desc)
+      sortedServices.sort((a, b) => {
+        return collator.compare(b.service_name, a.service_name);
       });
       break;
     case "recommend":
