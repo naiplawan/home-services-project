@@ -1,27 +1,18 @@
 import { useState } from "react";
 import axios from "axios";
 
-export function usePromotion() {
-  const [promotion, setPromotion] = useState(null);
-  const [usageCount, setUsageCount] = useState(0);
+export const usePromotion = () => {
+  const [promotion, setPromotion] = useState({});
 
   const getPromotion = async (promotionCode) => {
     try {
-      const response = await axios.get(`http://localhost:4000/promotion/?keyword=${promotionCode}`);
-      console.log(response.data);
-      const matchingPromotion = response.data[0];
-      if (matchingPromotion) {
-        setPromotion(matchingPromotion);
-        setUsageCount((count) => count + 1);
-        console.log("Promotion found:", matchingPromotion);
-      } else {
-        setPromotion(null);
-        console.log("Invalid promotion code.");
-      }
+      const response = await axios(`http://localhost:4000/promotion?keyword=${promotionCode}`);
+      const data = response.data.data[0];
+      setPromotion(data);
     } catch (error) {
       console.error("Failed to get promotions:", error);
     }
   };
 
   return { promotion, getPromotion };
-}
+};

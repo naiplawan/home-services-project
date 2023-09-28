@@ -313,27 +313,52 @@ function AllStepCheckOutForm() {
                   </h1>
 
                   <Form.Item
-              label="เวลาที่สะดวกใช้บริการ"
-              className="font-medium text-grey900"
-              name="time"
-            >
-              <TimePicker
-                format="HH:mm"
-                placeholder="กรุณาเลือกเวลา"
-                className="w-[22.5vw] h-[44px] px-4 py-2.5"
-                value={formData.time}
-                onChange={(time) => handleFormChange({ time })}
-                disabledTime={(current) =>
-                  availableTimeSlots
-                    .filter(
-                      (timeSlot) =>
-                        timeSlot.hours() === moment(current).hours()
-                    )
-                    .map((timeSlot) => timeSlot.minutes())
-                    .filter((minute) => !current.includes(minute))
-                }
-              />
-            </Form.Item>
+  label="วันและเวลาที่สะดวกใช้บริการ"
+  className="font-medium text-grey900"
+  name="service_date_time"
+>
+  <DatePicker
+    format="DD/MM/YYYY"
+    placeholder="กรุณาเลือกวัน"
+    className="w-[22.5vw] h-[44px] px-4 py-2.5"
+    value={moment(formData.service_date_time)}
+    onChange={(date) =>
+      handleFormChange({
+        service_date_time: moment(
+          `${date.format("DD/MM/YYYY")} ${formData.service_date_time.format(
+            "HH:mm"
+          )}`,
+          "DD/MM/YYYY HH:mm"
+        ),
+      })
+    }
+    disabledDate={(current) =>
+      current && current < moment().startOf("day")
+    }
+  />
+  <TimePicker
+    format="HH:mm"
+    placeholder="กรุณาเลือกเวลา"
+    className="w-[22.5vw] h-[44px] px-4 py-2.5"
+    value={moment(formData.service_date_time)}
+    onChange={(time) =>
+      handleFormChange({
+        service_date_time: moment(
+          `${formData.service_date_time.format("DD/MM/YYYY")} ${time.format(
+            "HH:mm"
+          )}`,
+          "DD/MM/YYYY HH:mm"
+        ),
+      })
+    }
+    disabledTime={(current) =>
+      availableTimeSlots
+        .filter((timeSlot) => timeSlot.hours() === current.hours())
+        .map((timeSlot) => timeSlot.minutes())
+        .filter((minute) => !current.minutes().includes(minute))
+    }
+  />
+</Form.Item>
 
                   <Form.Item
                     label="ที่อยู่"
@@ -415,14 +440,14 @@ function AllStepCheckOutForm() {
                   <Form.Item
                     label="ระบุข้อมูลเพิ่มเติม"
                     className="font-medium text-grey900"
-                    name="additionalInfo"
+                    name="note"
                   >
                     <TextArea
                       placeholder="กรุณาระบุข้อมูลเพิ่มเติม"
                       autoSize={{ minRows: 3 }}
-                      value={formData.additionalInfo}
+                      value={formData.note}
                       onChange={(e) =>
-                        handleFormChange({ additionalInfo: e.target.value })
+                        handleFormChange({ note: e.target.value })
                       }
                     />
                   </Form.Item>
@@ -558,13 +583,13 @@ function AllStepCheckOutForm() {
                   <div className="flex justify-between">
                     <div className="text-[#646C80]">วันที่:</div>
                     <div className="text-black">
-                      {formData.date ? formData.date.format("DD/MM/YYYY") : ""}
+                      {formData.service_date_time ? formData.service_date_time.format("DD/MM/YYYY") : ""}
                     </div>
                   </div>
                   <div className="flex justify-between">
                     <div className="text-[#646C80]">เวลา:</div>
                     <div className="text-black">
-                      {formData.time ? formData.time.format("HH:mm") : ""}
+                      {formData.service_date_time ? formData.service_date_time.format("HH:mm") : ""}
                     </div>
                   </div>
                   <div className="flex justify-between">
@@ -576,7 +601,7 @@ function AllStepCheckOutForm() {
                   </div>
                   <div className="flex justify-between">
                     <div className="text-[#646C80]">ข้อมูลเพิ่มเติม:</div>
-                    <div className="text-black">{formData.additionalInfo}</div>
+                    <div className="text-black">{formData.note}</div>
                   </div>
                 </div>
               ) : null}
