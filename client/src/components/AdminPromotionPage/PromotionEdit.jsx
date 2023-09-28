@@ -90,7 +90,7 @@ function PromotionEdit() {
       );
 
       if (response.status === 200) {
-        message.success("สร้างโปรโมชั่นโค้ดใหม่สำเร็จ");
+        message.success("แก้ไขโปรโมชั่นสำเร็จ");
       }
       navigate("/admin-promotion");
     } catch (error) {

@@ -53,6 +53,7 @@ promotionRouter.put("/:id",upload.none(), async (req, res) => {
       promotion_discount: req.body.promotion_discount,
       promotion_expiry_date: req.body.promotion_expiry_date,
       promotion_expiry_time: req.body.promotion_expiry_time,
+      promotion_edited_date_time: new Date(),
     };
 
     const { data: updatedPromotionData, error: updatedPromotionError } =
