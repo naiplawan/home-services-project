@@ -16,7 +16,10 @@ import { useState } from "react";
 import axios from "axios";
 
 function AddPromotionForm() {
+  const [form] = Form.useForm();
   const navigate = useNavigate();
+
+  const [inputDisable, setInputDisable] = useState('')
 
   const onFinish = async (values) => {
     try {
@@ -65,6 +68,7 @@ function AddPromotionForm() {
 
   return (
     <Form
+      form={form}
       labelCol={{ span: 100 }}
       wrapperCol={{ span: 24 }}
       layout="horizontal"
@@ -121,8 +125,7 @@ function AddPromotionForm() {
             ]}
           >
             <Radio.Group>
-              <div 
-              className="flex flex-row">
+              <div className="flex flex-row">
                 <Form.Item
                   name="promotion_types"
                   valuePropName="checked"
@@ -132,44 +135,32 @@ function AddPromotionForm() {
                 </Form.Item>
 
                 <Form.Item
-                  shouldUpdate={(prevValues, currentValues) =>
-                    prevValues.promotion_types !== currentValues.promotion_types
-                  }
-                  noStyle
+                  colon={false}
+                  name="promotion_discount_fixed"
+                  rules={[
+                    {
+                      validator: (rule, value) => {
+                        const numericValue = parseFloat(value);
+                        if (
+                          isNaN(numericValue) ||
+                          numericValue < 1 ||
+                          numericValue > 1000
+                        ) {
+                          return Promise.reject(
+                            "Please enter a number between 1 and 1000"
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
                 >
-                  {({ getFieldValue }) => {
-                    return getFieldValue("promotion_types") === "fixed" ? (
-                      <Form.Item
-                        colon={false}
-                        name="promotion_discount"
-                        rules={[
-                          {
-                            validator: (rule, value) => {
-                              const numericValue = parseFloat(value);
-                              if (
-                                isNaN(numericValue) ||
-                                numericValue < 1 ||
-                                numericValue > 1000
-                              ) {
-                                return Promise.reject(
-                                  "Please enter a number between 1 and 1000"
-                                );
-                              }
-                              return Promise.resolve();
-                            },
-                          },
-                        ]}
-                      >
-                        <Input style={{ width: "50%" }} 
-                        suffix="฿"
-                        disabled={getFieldValue("promotion_types") !== "fixed"}/>
-                      </Form.Item>
-                    ) : null;
-                  }}
+                  <Input style={{ width: "50%" }} suffix="฿" 
+                    disabled={"promotion_types" === "percent"}/>
                 </Form.Item>
               </div>
 
-              <div  className="flex flex-row">
+              <div className="flex flex-row">
                 <Form.Item
                   name="promotion_types"
                   valuePropName="checked"
@@ -179,44 +170,32 @@ function AddPromotionForm() {
                 </Form.Item>
 
                 <Form.Item
-                  shouldUpdate={(prevValues, currentValues) =>
-                    prevValues.promotion_types !== currentValues.promotion_types
-                  }
-                  noStyle
+                  colon={false}
+                  name="promotion_discount_percent"
+                  rules={[
+                    {
+                      validator: (rule, value) => {
+                        const numericValue = parseFloat(value);
+                        if (
+                          isNaN(numericValue) ||
+                          numericValue < 1 ||
+                          numericValue > 100
+                        ) {
+                          return Promise.reject(
+                            "Please enter a number between 1 and 100"
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
                 >
-                  {({ getFieldValue }) => {
-                    return getFieldValue("promotion_types") === "percent" ? (
-                      <Form.Item
-                        colon={false}
-                        name="promotion_discount"
-                        rules={[
-                          {
-                            validator: (rule, value) => {
-                              const numericValue = parseFloat(value);
-                              if (
-                                isNaN(numericValue) ||
-                                numericValue < 1 ||
-                                numericValue > 100
-                              ) {
-                                return Promise.reject(
-                                  "Please enter a number between 1 and 100"
-                                );
-                              }
-                              return Promise.resolve();
-                            },
-                          },
-                        ]}
-                      >
-                        <Input style={{ width: "50%" }}
-                        suffix="%" 
-                        disabled={getFieldValue("promotion_types") !== "percent"}/>
-                      </Form.Item>
-                    ) : null;
-                  }}
+                  <Input style={{ width: "50%" }} suffix="%" />
                 </Form.Item>
               </div>
             </Radio.Group>
           </Form.Item>
+
 
           <Form.Item
             label={<span style={labelStyle}>โควต้าการใช้</span>}
@@ -244,8 +223,7 @@ function AddPromotionForm() {
               },
             ]}
           >
-            <Input style={{ width: "50%" }} 
-            suffix="ครั้ง"/>
+            <Input style={{ width: "50%" }} suffix="ครั้ง" />
           </Form.Item>
 
           <Form.Item

@@ -42,7 +42,7 @@ promotionRouter.get("/:id", async (req, res) => {
   }
 });
 
-promotionRouter.put("/:id", async (req, res) => {
+promotionRouter.put("/:id",upload.none(), async (req, res) => {
   try {
     const promotionId = req.params.id;
 
