@@ -19,11 +19,21 @@ function AddPromotionForm() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const [inputDisable, setInputDisable] = useState('')
+  const [inputDisable, setInputDisable] = useState("");
+  const [promotionType, setPromotionType] = useState("");
 
   const onFinish = async (values) => {
     try {
       console.log(values);
+
+      let promotionDiscount;
+
+      if (promotionType === "fixed") {
+        promotionDiscount = values.promotion_discount_fixed;
+      } else if (promotionType === "percent") {
+        promotionDiscount = values.promotion_discount_percent;
+      }
+
       const formData = new FormData();
 
       for (const key in values) {
@@ -38,6 +48,7 @@ function AddPromotionForm() {
 
       formData.append("promotion_expiry_date", formattedExpiryDate);
       formData.append("promotion_expiry_time", formattedExpiryTime);
+      formData.append("promotion_discount", promotionDiscount);
 
       const response = await axios.post(
         "http://localhost:4000/promotion",
@@ -63,7 +74,9 @@ function AddPromotionForm() {
     fontSize: "16px",
     fontStyle: "normal",
     fontWeight: 500,
-    lineHeight: "150%", // 24px
+    lineHeight: "150%",
+    width: "12.8125rem",
+    textAlign: "left", // 24px
   };
 
   return (
@@ -110,7 +123,7 @@ function AddPromotionForm() {
               },
             ]}
           >
-            <Input style={{ width: "50%" }} />
+            <Input className="w-1/2" />
           </Form.Item>
 
           <Form.Item
@@ -124,39 +137,54 @@ function AddPromotionForm() {
               },
             ]}
           >
-            <Radio.Group>
+            <Radio.Group
+              onChange={(e) => {
+                setPromotionType(e.target.value);
+                setInputDisable(
+                  e.target.value === "percent" ? "promotion_types" : ""
+                );
+              }}
+              value={promotionType}
+            >
               <div className="flex flex-row">
                 <Form.Item
                   name="promotion_types"
                   valuePropName="checked"
                   style={{ display: "flex", alignItems: "center" }}
                 >
-                  <Radio value="fixed">Fixed</Radio>
+                  <Radio className="w-24" value="fixed">
+                    Fixed
+                  </Radio>
                 </Form.Item>
 
                 <Form.Item
                   colon={false}
                   name="promotion_discount_fixed"
                   rules={[
-                    {
-                      validator: (rule, value) => {
-                        const numericValue = parseFloat(value);
-                        if (
-                          isNaN(numericValue) ||
-                          numericValue < 1 ||
-                          numericValue > 1000
-                        ) {
-                          return Promise.reject(
-                            "Please enter a number between 1 and 1000"
-                          );
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (getFieldValue("promotion_types") === "fixed") {
+                          const numericValue = parseFloat(value);
+                          if (
+                            isNaN(numericValue) ||
+                            numericValue < 1 ||
+                            numericValue > 1000
+                          ) {
+                            return Promise.reject(
+                              "Please enter a number between 1 and 1000"
+                            );
+                          }
                         }
                         return Promise.resolve();
                       },
-                    },
+                    }),
                   ]}
                 >
-                  <Input style={{ width: "50%" }} suffix="฿" 
-                    disabled={"promotion_types" === "percent"}/>
+                  <Input
+                    style={{ width: "50%" }}
+                    suffix="฿"
+                    disabled={promotionType === "percent"}
+                  />
                 </Form.Item>
               </div>
 
@@ -166,36 +194,43 @@ function AddPromotionForm() {
                   valuePropName="checked"
                   style={{ display: "flex", alignItems: "center" }}
                 >
-                  <Radio value="percent">Percent</Radio>
+                  <Radio className="w-24" value="percent">
+                    Percent
+                  </Radio>
                 </Form.Item>
 
                 <Form.Item
                   colon={false}
                   name="promotion_discount_percent"
                   rules={[
-                    {
-                      validator: (rule, value) => {
-                        const numericValue = parseFloat(value);
-                        if (
-                          isNaN(numericValue) ||
-                          numericValue < 1 ||
-                          numericValue > 100
-                        ) {
-                          return Promise.reject(
-                            "Please enter a number between 1 and 100"
-                          );
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (getFieldValue("promotion_types") === "percent") {
+                          const numericValue = parseFloat(value);
+                          if (
+                            isNaN(numericValue) ||
+                            numericValue < 1 ||
+                            numericValue > 100
+                          ) {
+                            return Promise.reject(
+                              "Please enter a number between 1 and 100"
+                            );
+                          }
                         }
                         return Promise.resolve();
                       },
-                    },
+                    }),
                   ]}
                 >
-                  <Input style={{ width: "50%" }} suffix="%" />
+                  <Input
+                    style={{ width: "50%" }}
+                    suffix="%"
+                    disabled={promotionType === "fixed"}
+                  />
                 </Form.Item>
               </div>
             </Radio.Group>
           </Form.Item>
-
 
           <Form.Item
             label={<span style={labelStyle}>โควต้าการใช้</span>}
@@ -236,8 +271,8 @@ function AddPromotionForm() {
               },
             ]}
           >
-            <Row gutter={8}>
-              <Col span={12}>
+            <Row gutter={1}>
+              <Col span={8}>
                 <Form.Item
                   name="promotion_expiry_date"
                   rules={[
@@ -251,7 +286,7 @@ function AddPromotionForm() {
                   <DatePicker style={{ width: "50%" }} />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col span={8}>
                 <Form.Item
                   name="promotion_expiry_time"
                   rules={[
@@ -262,7 +297,7 @@ function AddPromotionForm() {
                   ]}
                   noStyle
                 >
-                  <TimePicker format="HH:mm" />
+                  <TimePicker style={{ width: "50%" }} format="HH:mm" />
                 </Form.Item>
               </Col>
             </Row>

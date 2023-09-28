@@ -360,7 +360,7 @@ function AddService() {
                             labelCol={{ span: 24 }}
                             rules={[
                               {
-                                required: true,
+                              
                                 message: "โปรดกรอกหน่วยการบริการ",
                               },
                             ]}
