@@ -392,14 +392,14 @@ function AllStepCheckOutForm() {
                   <Form.Item
                     label="ระบุข้อมูลเพิ่มเติม"
                     className="font-medium text-grey900"
-                    name="additionalInfo"
+                    name="note"
                   >
                     <TextArea
                       placeholder="กรุณาระบุข้อมูลเพิ่มเติม"
                       autoSize={{ minRows: 3 }}
-                      value={formData.additionalInfo}
+                      value={formData.note}
                       onChange={(e) =>
-                        handleFormChange({ additionalInfo: e.target.value })
+                        handleFormChange({ note: e.target.value })
                       }
                     />
                   </Form.Item>
@@ -536,13 +536,13 @@ function AllStepCheckOutForm() {
                   <div className="flex justify-between">
                     <div className="text-[#646C80]">วันที่:</div>
                     <div className="text-black">
-                      {formData.date ? formData.date.format("DD/MM/YYYY") : ""}
+                      {formData.service_date_time ? formData.service_date_time.format("DD/MM/YYYY") : ""}
                     </div>
                   </div>
                   <div className="flex justify-between">
                     <div className="text-[#646C80]">เวลา:</div>
                     <div className="text-black">
-                      {formData.time ? formData.time.format("HH:mm") : ""}
+                      {formData.service_date_time ? formData.service_date_time.format("HH:mm") : ""}
                     </div>
                   </div>
                   <div className="flex justify-between">
@@ -554,7 +554,7 @@ function AllStepCheckOutForm() {
                   </div>
                   <div className="flex justify-between">
                     <div className="text-[#646C80]">ข้อมูลเพิ่มเติม:</div>
-                    <div className="text-black">{formData.additionalInfo}</div>
+                    <div className="text-black">{formData.note}</div>
                   </div>
                 </div>
               ) : null}
