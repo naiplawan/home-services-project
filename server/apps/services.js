@@ -804,9 +804,9 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
     };
 
     if (file) {
-            updatedServiceItem["service_photo"] = file.originalname;
-          }
-      
+      updatedServiceItem["service_photo"] = file.originalname;
+    }
+
 
    
     const optionalFields = [
@@ -849,6 +849,35 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
 
     // Begin transaction
     await supabase.rpc("start_transaction");
+
+    if (file) {
+      // Upload file to Supabase storage
+      const uploadResult = await supabase.storage
+        .from("home_service")
+        .upload(`service_photo/${Date.now()}${file.originalname}`, file.buffer, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: file.mimetype,
+        });
+      console.log("uploadresult", uploadResult);
+
+      if (!uploadResult.error) {
+        // Get public URL for the uploaded file
+        const servicePhotourl = `https://tqjclbmprqjrgdrvylqd.supabase.co/storage/v1/object/public/home_service/${uploadResult.data.path}`;
+        console.log(uploadResult.data.path);
+
+        // Assign the URL directly to service_photo
+        updatedServiceItem["service_photo"] = servicePhotourl;
+      } else {
+        console.error(
+          "Error uploading file to Supabase storage",
+          uploadResult.error
+        );
+        return res
+          .status(500)
+          .json({ message: "Error uploading file to Supabase storage" });
+      }
+    }
 
     // Update service information
     const { data: transactionData, error: transactionError } = await supabase
