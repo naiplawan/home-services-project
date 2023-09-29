@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import arrowBlue from "../assets/CustomerPhoto/icons/arrow-blue.svg";
 import arrowBlue from "../assets/CustomerPhoto/icons/arrow-blue.svg";
 import arrowWhite from "../assets/CustomerPhoto/icons/arrow-white.svg";
 import sellblack from "../assets/CustomerPhoto/icons/sellblack.svg";
 import axios from "axios";
-import dayjs from "dayjs";
 import dayjs from "dayjs";
 import credit from "../assets/CustomerPhoto/icons/credit.svg";
 import qr from "../assets/CustomerPhoto/icons/qr.svg";
@@ -15,6 +12,7 @@ import greyarrow from "../assets/CustomerPhoto/icons/BackGrey.svg";
 import { message, Steps, Form, Input, DatePicker, TimePicker } from "antd";
 import { Elements } from "@stripe/react-stripe-js"; // npm install --save @stripe/react-stripe-js @stripe/stripe-js
 import { loadStripe } from "@stripe/stripe-js";
+import { usePromotion } from "../hooks/promotion";
 
 function AllStepCheckOutForm() {
   const [service, setService] = useState({});
@@ -26,6 +24,9 @@ function AllStepCheckOutForm() {
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
   const monthFormat = "MM/YY";
+  const [promotionCode, setPromotionCode] = useState("");
+  const { promotion, getPromotion, checkPromotionExpiry, decreaseQuota } =
+    usePromotion();
 
   const [success, setSuccess] = useState(false);
   const stripePromise = loadStripe(
@@ -47,7 +48,6 @@ function AllStepCheckOutForm() {
     {
       title: "ชำระเงิน",
       content: "Third-content",
-    },
     },
   ];
 
@@ -99,6 +99,32 @@ function AllStepCheckOutForm() {
     }
   };
 
+  const handleApplyPromotion = async () => {
+    console.log(
+      "handleApplyPromotion called with promotionCode:",
+      promotionCode
+    );
+    try {
+      await getPromotion(promotionCode);
+      await checkPromotionExpiry(promotion.promotion_expiry);
+      await decreaseQuota(promotion.promotion_code);
+      message.success("Promotion applied successfully.");
+      console.log("Promotion",promotion.promotion_code)
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
+  const handlePromotionInputChange = (e) => {
+    console.log(
+      "handlePromotionInputChange called with value:",
+      e.target.value
+    );
+    setPromotionCode(e.target.value);
+  };
+
+  console.log("promotion:", promotion);
+
   const handleDecrement = (subServiceId) => {
     const updatedSubService = [...selectedSubService];
     const subServiceIndex = updatedSubService.findIndex(
@@ -124,39 +150,50 @@ function AllStepCheckOutForm() {
     setFormData({ ...formData, ...changedValues });
   };
 
+  const handleFormSubmit = (formValues) => {
+    // Handle form submission logic here
+    console.log("Form values:", formValues);
+
+    // Assuming you want to move to the next step after form submission
+    next();
+  };
+
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
 
-  const handlePaymentMethodClick = (method) => {
   const handlePaymentMethodClick = (method) => {
     setSelectedPaymentMethod(method);
   };
 
-  const handleSubmitOrder = async (e, stripe) => {
-  const handleSubmitOrder = async (e, stripe) => {
+  const handleSubmitStripe = async (e) => {
     e.preventDefault();
-
-    if (!stripe) {
-
-    if (!stripe) {
+    if (!stripe || !elements) {
       console.error("Stripe.js has not loaded yet.");
       return;
     }
 
+    const cardElement = elements.getElement(CardElement);
+
+    if (!cardElement) {
+      console.error("CardElement is missing.");
+      return;
+    }
+
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardElement,
+    });
+
     if (!error) {
       try {
+        const { id } = paymentMethod;
         const response = await axios.post("http://localhost:4000/payment", {
           amount: calculateTotalPrice(), // Pass the total amount here
+          id,
         });
 
         if (response.data.success) {
           console.log("Successful payment");
           setSuccess(true);
-
-          // Call the orderToServer function here to submit the order
-          await orderToServer();
-
-          // Call the orderToServer function here to submit the order
-          await orderToServer();
         }
       } catch (error) {
         console.log("Error", error);
@@ -194,7 +231,6 @@ function AllStepCheckOutForm() {
         ) : (
           <p>No service photo available.</p>
         )}
-        {current !== 3 && ( // Hide Steps on the Summary page
         {current !== 3 && ( // Hide Steps on the Summary page
           <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
             <Steps current={current} labelPlacement="vertical" items={items} />
@@ -274,11 +310,6 @@ function AllStepCheckOutForm() {
                 labelPlacement="vertical"
                 items={items}
               />
-              <Steps
-                current={current}
-                labelPlacement="vertical"
-                items={items}
-              />
             </div>
 
             <div className="flex my-8 lg:mx-[12rem] md:mx-10 justify-between min-h-screen w-[80%] ">
@@ -288,6 +319,10 @@ function AllStepCheckOutForm() {
                   wrapperCol={{ span: 19 }}
                   form={form}
                   autoComplete="on"
+                  onFinish={(formValues) => {
+                    // Handle form submission and pass formValues to the next step
+                    handleFormSubmit(formValues);
+                  }}
                 >
                   <h1 className="text-gray300 text-center text-[20px] font-medium mb-[30px]">
                     กรอกข้อมูลบริการ
@@ -409,19 +444,14 @@ function AllStepCheckOutForm() {
                   <Form.Item
                     label="ระบุข้อมูลเพิ่มเติม"
                     className="font-medium text-grey900"
-                    name="note"
-                    name="note"
+                    name="additionalInfo"
                   >
                     <TextArea
                       placeholder="กรุณาระบุข้อมูลเพิ่มเติม"
                       autoSize={{ minRows: 3 }}
-                      value={formData.note}
+                      value={formData.additionalInfo}
                       onChange={(e) =>
-                        handleFormChange({ note: e.target.value })
-                      }
-                      value={formData.note}
-                      onChange={(e) =>
-                        handleFormChange({ note: e.target.value })
+                        handleFormChange({ additionalInfo: e.target.value })
                       }
                     />
                   </Form.Item>
@@ -435,11 +465,6 @@ function AllStepCheckOutForm() {
             content="Last-content"
           >
             <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
-              <Steps
-                current={current}
-                labelPlacement="vertical"
-                items={items}
-              />
               <Steps
                 current={current}
                 labelPlacement="vertical"
@@ -526,10 +551,11 @@ function AllStepCheckOutForm() {
                 <input
                   placeholder="กรุณากรอกโค้ดส่วนลด (ถ้ามี)"
                   className="w-full border bg-white border-[#CCD0D7] rounded-lg p-1"
+                  onChange={handlePromotionInputChange} 
                 />
               </div>
               <div className="pt-6 ml-5">
-                <button className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-20 p-1 px-1 bg-[#336DF2] rounded-lg">
+                <button className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-20 p-1 px-1 bg-[#336DF2] rounded-lg" onClick={handleApplyPromotion}>
                   ใช้โค้ด
                 </button>
               </div>
@@ -545,7 +571,6 @@ function AllStepCheckOutForm() {
           <ul>
             {calculateTotalPrice().map((item, index) => (
               <li key={index} className="flex justify-between">
-                <p className="text-black">{item.sub_service_name}</p>
                 <p className="text-black">{item.sub_service_name}</p>
                 <p className="text-black">
                   {item.count > 1
@@ -564,13 +589,13 @@ function AllStepCheckOutForm() {
                   <div className="flex justify-between">
                     <div className="text-[#646C80]">วันที่:</div>
                     <div className="text-black">
-                      {formData.service_date_time ? formData.service_date_time.format("DD/MM/YYYY") : ""}
+                      {formData.date ? formData.date.format("DD/MM/YYYY") : ""}
                     </div>
                   </div>
                   <div className="flex justify-between">
                     <div className="text-[#646C80]">เวลา:</div>
                     <div className="text-black">
-                      {formData.service_date_time ? formData.service_date_time.format("HH:mm") : ""}
+                      {formData.time ? formData.time.format("HH:mm") : ""}
                     </div>
                   </div>
                   <div className="flex justify-between">
@@ -582,7 +607,7 @@ function AllStepCheckOutForm() {
                   </div>
                   <div className="flex justify-between">
                     <div className="text-[#646C80]">ข้อมูลเพิ่มเติม:</div>
-                    <div className="text-black">{formData.note}</div>
+                    <div className="text-black">{formData.additionalInfo}</div>
                   </div>
                 </div>
               ) : null}
@@ -600,15 +625,6 @@ function AllStepCheckOutForm() {
             </div>
           </div>
           {current === 3 && (
-            <div>
-              <button
-                className="bg-blue600 w-full h-11 rounded-lg text-white"
-                onClick={() => navigate(`/customer-services-history/:userId`)}
-              >
-                เช็ครายการซ่อม
-              </button>
-            </div>
-          )}
             <div>
               <button
                 className="bg-blue600 w-full h-11 rounded-lg text-white"
@@ -683,4 +699,3 @@ function AllStepCheckOutForm() {
 }
 
 export default AllStepCheckOutForm;
-

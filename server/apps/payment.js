@@ -8,7 +8,6 @@ const paymentRouter = Router();
 const stripeSecretKey = process.env.STRIPE_TEST_KEY;
 const stripeInstance = new stripe(stripeSecretKey);
 
-paymentRouter.use(express.json());
 
 paymentRouter.get("/", (req, res) => {
   res.send("Welcome to Payment router");
