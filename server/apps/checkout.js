@@ -23,9 +23,34 @@ function generateOrderNumber() {
 
 // API route to add new checkout item to checkout table
 checkoutRouter.get("/", async (req, res) => {
-  return res.json({
-    message: `Hello World`,
-  });
+  const { keyword } = req.query;
+  try {
+
+    if (keyword) {
+      const { data, error } = await supabase
+        .from("promotion")
+        .select("*")
+        .ilike("promotion_code", `%${keyword}%`);
+      if (error) {
+        throw error;
+      }
+      return res.json({
+        data,
+      });
+    }
+
+    let { data, error } = await supabase
+      .from("promotion")
+      .select("*")
+
+    return res.json({
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
 });
 
 checkoutRouter.post("/", async (req, res) => {
