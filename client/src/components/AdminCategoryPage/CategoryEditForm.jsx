@@ -5,6 +5,11 @@ import dateFormat from "../../utils/dateFormat.js";
 import arrow from "../../assets/AdminPhoto/arrow.png";
 import trash from "../../assets/homepagePhoto/trash.svg";
 import AlertBoxDelete from "../AlertBox.jsx";
+import {
+ 
+  message,
+
+} from "antd";
 
 function EditedCategoryForm() {
   const [categoryData, setCategoryData] = useState([]);
@@ -41,7 +46,7 @@ function EditedCategoryForm() {
         }
       );
       if (response.status === 200) {
-        alert("แก้ไขหมวดหมู่สำเร็จ");
+        message.success("แก้ไขหมวดหมู่สำเร็จ");
         navigate("/admin-category");
       }
     } catch (error) {
@@ -52,8 +57,7 @@ function EditedCategoryForm() {
   const handleDelete = async () => {
     try {
       await axios.delete(`http://localhost:4000/category/${categoryId}`);
-      
-      alert("ลบหมวดหมู่สำเร็จ");
+      message.success("ลบหมวดหมู่สำเร็จ");
       navigate("/admin-category");
     } catch (error) {
       console.error("เกิดข้อผิดพลาดในการลบหมวดหมู่:", error);
