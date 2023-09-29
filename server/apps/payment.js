@@ -1,37 +1,25 @@
 import { Router } from "express";
+import stripe from "stripe";
 import dotenv from "dotenv";
-import cors from "cors";
-import bodyParser from "body-parser";
-import stripe from "stripe"; // npm install stripe
+
 dotenv.config();
 
 const paymentRouter = Router();
 const stripeSecretKey = process.env.STRIPE_TEST_KEY;
-const stripePublicKey = process.env.STRIPE_PUBLIC_KEY;
 const stripeInstance = new stripe(stripeSecretKey);
 
 
-paymentRouter.use(bodyParser.urlencoded({ extended: true }));
-paymentRouter.use(bodyParser.json());
-paymentRouter.use(cors());
-
 paymentRouter.get("/", (req, res) => {
-  res.send("Welcome to Home Service!");
+  res.send("Welcome to Payment router");
 });
 
-paymentRouter.get("*", (req, res) => {
-  res.status(404).send("Page Not Found");
-});
+paymentRouter.post("/payment", async (req, res) => {
+  const { amount, id } = req.body;
 
-paymentRouter.post("/payment", cors(), async (req, res) => {
-  let { amount, id } = req.body;
   try {
-    const stripeInstance = new stripe(stripeSecretKey);
-
     const payment = await stripeInstance.paymentIntents.create({
       amount,
       currency: "THB",
-      description: "HomeServices",
       payment_method: id,
       confirm: true,
     });
@@ -49,6 +37,10 @@ paymentRouter.post("/payment", cors(), async (req, res) => {
       success: false,
     });
   }
+});
+
+paymentRouter.use("*", (req, res) => {
+  res.status(404).send("Page Not Found");
 });
 
 export default paymentRouter;

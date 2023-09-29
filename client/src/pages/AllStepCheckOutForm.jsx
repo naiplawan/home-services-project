@@ -12,6 +12,7 @@ import greyarrow from "../assets/CustomerPhoto/icons/BackGrey.svg";
 import { message, Steps, Form, Input, DatePicker, TimePicker } from "antd";
 import { Elements } from "@stripe/react-stripe-js"; // npm install --save @stripe/react-stripe-js @stripe/stripe-js
 import { loadStripe } from "@stripe/stripe-js";
+import { usePromotion } from "../hooks/promotion";
 
 function AllStepCheckOutForm() {
   const [service, setService] = useState({});
@@ -23,6 +24,9 @@ function AllStepCheckOutForm() {
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
   const monthFormat = "MM/YY";
+  const [promotionCode, setPromotionCode] = useState("");
+  const { promotion, getPromotion, checkPromotionExpiry, decreaseQuota } =
+    usePromotion();
 
   const [success, setSuccess] = useState(false);
   const stripePromise = loadStripe(
@@ -94,6 +98,32 @@ function AllStepCheckOutForm() {
       setSelectedSubService(updatedSubService);
     }
   };
+
+  const handleApplyPromotion = async () => {
+    console.log(
+      "handleApplyPromotion called with promotionCode:",
+      promotionCode
+    );
+    try {
+      await getPromotion(promotionCode);
+      await checkPromotionExpiry(promotion.promotion_expiry);
+      await decreaseQuota(promotion.promotion_code);
+      message.success("Promotion applied successfully.");
+      console.log("Promotion",promotion.promotion_code)
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
+  const handlePromotionInputChange = (e) => {
+    console.log(
+      "handlePromotionInputChange called with value:",
+      e.target.value
+    );
+    setPromotionCode(e.target.value);
+  };
+
+  console.log("promotion:", promotion);
 
   const handleDecrement = (subServiceId) => {
     const updatedSubService = [...selectedSubService];
@@ -521,10 +551,11 @@ function AllStepCheckOutForm() {
                 <input
                   placeholder="กรุณากรอกโค้ดส่วนลด (ถ้ามี)"
                   className="w-full border bg-white border-[#CCD0D7] rounded-lg p-1"
+                  onChange={handlePromotionInputChange} 
                 />
               </div>
               <div className="pt-6 ml-5">
-                <button className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-20 p-1 px-1 bg-[#336DF2] rounded-lg">
+                <button className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-20 p-1 px-1 bg-[#336DF2] rounded-lg" onClick={handleApplyPromotion}>
                   ใช้โค้ด
                 </button>
               </div>
