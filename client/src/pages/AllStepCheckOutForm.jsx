@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import arrowBlue from "../assets/CustomerPhoto/icons/arrow-blue.svg";
 import arrowBlue from "../assets/CustomerPhoto/icons/arrow-blue.svg";
 import arrowWhite from "../assets/CustomerPhoto/icons/arrow-white.svg";
 import sellblack from "../assets/CustomerPhoto/icons/sellblack.svg";
 import axios from "axios";
+import dayjs from "dayjs";
 import dayjs from "dayjs";
 import credit from "../assets/CustomerPhoto/icons/credit.svg";
 import qr from "../assets/CustomerPhoto/icons/qr.svg";
@@ -44,6 +47,7 @@ function AllStepCheckOutForm() {
     {
       title: "ชำระเงิน",
       content: "Third-content",
+    },
     },
   ];
 
@@ -123,11 +127,15 @@ function AllStepCheckOutForm() {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
 
   const handlePaymentMethodClick = (method) => {
+  const handlePaymentMethodClick = (method) => {
     setSelectedPaymentMethod(method);
   };
 
   const handleSubmitOrder = async (e, stripe) => {
+  const handleSubmitOrder = async (e, stripe) => {
     e.preventDefault();
+
+    if (!stripe) {
 
     if (!stripe) {
       console.error("Stripe.js has not loaded yet.");
@@ -143,6 +151,9 @@ function AllStepCheckOutForm() {
         if (response.data.success) {
           console.log("Successful payment");
           setSuccess(true);
+
+          // Call the orderToServer function here to submit the order
+          await orderToServer();
 
           // Call the orderToServer function here to submit the order
           await orderToServer();
@@ -183,6 +194,7 @@ function AllStepCheckOutForm() {
         ) : (
           <p>No service photo available.</p>
         )}
+        {current !== 3 && ( // Hide Steps on the Summary page
         {current !== 3 && ( // Hide Steps on the Summary page
           <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
             <Steps current={current} labelPlacement="vertical" items={items} />
@@ -257,6 +269,11 @@ function AllStepCheckOutForm() {
             content="Second-content"
           >
             <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
+              <Steps
+                current={current}
+                labelPlacement="vertical"
+                items={items}
+              />
               <Steps
                 current={current}
                 labelPlacement="vertical"
@@ -393,10 +410,15 @@ function AllStepCheckOutForm() {
                     label="ระบุข้อมูลเพิ่มเติม"
                     className="font-medium text-grey900"
                     name="note"
+                    name="note"
                   >
                     <TextArea
                       placeholder="กรุณาระบุข้อมูลเพิ่มเติม"
                       autoSize={{ minRows: 3 }}
+                      value={formData.note}
+                      onChange={(e) =>
+                        handleFormChange({ note: e.target.value })
+                      }
                       value={formData.note}
                       onChange={(e) =>
                         handleFormChange({ note: e.target.value })
@@ -413,6 +435,11 @@ function AllStepCheckOutForm() {
             content="Last-content"
           >
             <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
+              <Steps
+                current={current}
+                labelPlacement="vertical"
+                items={items}
+              />
               <Steps
                 current={current}
                 labelPlacement="vertical"
@@ -519,6 +546,7 @@ function AllStepCheckOutForm() {
             {calculateTotalPrice().map((item, index) => (
               <li key={index} className="flex justify-between">
                 <p className="text-black">{item.sub_service_name}</p>
+                <p className="text-black">{item.sub_service_name}</p>
                 <p className="text-black">
                   {item.count > 1
                     ? `${item.count} ${item.unit}`
@@ -572,6 +600,15 @@ function AllStepCheckOutForm() {
             </div>
           </div>
           {current === 3 && (
+            <div>
+              <button
+                className="bg-blue600 w-full h-11 rounded-lg text-white"
+                onClick={() => navigate(`/customer-services-history/:userId`)}
+              >
+                เช็ครายการซ่อม
+              </button>
+            </div>
+          )}
             <div>
               <button
                 className="bg-blue600 w-full h-11 rounded-lg text-white"
@@ -646,3 +683,4 @@ function AllStepCheckOutForm() {
 }
 
 export default AllStepCheckOutForm;
+
