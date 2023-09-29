@@ -10,6 +10,7 @@ import {
   getMaxPrice,
   getMinPrice,
   sortServices,
+  getCategoryColor,
 } from "../../utils/serviceList.js";
 
 function ServiceList() {
@@ -276,7 +277,11 @@ function ServiceList() {
                         />
                       </div>
                       <div className="p-2 md:p-5 bg-white min-h-full">
-                        <div className="bg-[#E7EEFF] text-center px-[10px] inline-block p-1 text-[#0E3FB0] rounded-lg">
+                        <div
+                          className={`text-center px-[10px] inline-block p-1 rounded-lg ${getCategoryColor(
+                            service.category.category_name
+                          )} `}
+                        >
                           <p>{service.category.category_name}</p>
                         </div>
                         <h2 className="font-bold text-[20px] mt-3 text-black ">
@@ -353,7 +358,11 @@ function ServiceList() {
                       />
                     </div>
                     <div className="p-2 md:p-5 bg-white min-h-full">
-                      <div className="bg-[#E7EEFF] text-center px-[10px] inline-block p-1 text-[#0E3FB0] rounded-lg">
+                      <div
+                        className={`text-center px-[10px] inline-block p-1 rounded-lg ${getCategoryColor(
+                          service.category.category_name
+                        )} `}
+                      >
                         <p>{service.category.category_name}</p>
                       </div>
                       <h2 className="font-bold text-[20px] mt-3 text-black">

@@ -43,9 +43,29 @@ function sortServices(services, orderFilter) {
 
   switch (orderFilter) {
     case "popular":
-      //case นี้โดนละเว้นไว้เนื่องจากต้องใช้สถิติการใช้งานของ user
+      // เรียงตามบริการยอดนิยม
       sortedServices.sort((a, b) => {
-        return b.popularity - a.popularity;
+        const popularServiceNames = [
+          "ล้างแอร์",
+          "ติดตั้งแอร์",
+          "ซ่อมเครื่องซักผ้า",
+        ];
+
+        // ใช้ indexOf เพื่อตรวจสอบว่าชื่อบริการของ a และ b อยู่ใน popularServiceNames หรือไม่
+        const isAPopularServiceNames =
+          popularServiceNames.indexOf(a.service_name) !== -1;
+        const isBPopularServiceNames =
+          popularServiceNames.indexOf(b.service_name) !== -1;
+
+        // กรณีที่ a และ b ต่างกลุ่ม (a เป็น popularService และ b ไม่ใช่)
+        if (isAPopularServiceNames && !isBPopularServiceNames) {
+          return -1;
+        } else if (!isAPopularServiceNames && isBPopularServiceNames) {
+          return 1;
+        } else {
+          // ในกรณีอื่น ๆ ให้เรียงตาม service_name แบบปกติ
+          return collator.compare(a.service_name, b.service_name);
+        }
       });
       break;
     case "ascending":
@@ -64,9 +84,9 @@ function sortServices(services, orderFilter) {
       // เรียงตามบริการที่เราจะแนะนำลูกค้า
       sortedServices.sort((a, b) => {
         const preferredServiceNames = [
-          "Test recommend 1",
-          "Test recommend 2",
-          "Test recommend 3",
+          "ล้างแอร์",
+          "ทำความสะอาดทั่วไป",
+          "ซ่อมแอร์",
         ];
 
         // ใช้ indexOf เพื่อตรวจสอบว่าชื่อบริการของ a และ b อยู่ใน preferredServiceNames หรือไม่
@@ -95,3 +115,16 @@ function sortServices(services, orderFilter) {
 }
 
 export { sortServices };
+
+// function colors categories
+
+export function getCategoryColor(categoryName) {
+  switch (categoryName) {
+    case "บริการห้องครัว":
+      return "bg-[#ECE6FF] text-[#4512B4]";
+    case "บริการห้องน้ำ":
+      return "bg-[#DFF9F6] text-[#00596C]";
+    default:
+      return "bg-[#E7EEFF] text-[#0E3FB0]";
+  }
+}
