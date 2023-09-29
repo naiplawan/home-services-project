@@ -24,12 +24,16 @@ import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
 import image from "../../assets/AdminPhoto/imageIndex.js";
 import { names } from "@ctrl/tinycolor";
+import trash from "../../assets/homepagePhoto/trash.svg";
+
 
 function ServiceEditForm() {
   //render component and package area
   const navigate = useNavigate();
   const params = useParams();
   const { Dragger } = Upload;
+  
+  const { serviceId } = useParams();
 
   //state for category
   const [category, setCategory] = useState([]); //use to map data on category
@@ -49,11 +53,7 @@ function ServiceEditForm() {
     service.service_name
   );
 
-  //state for sub_service
-
-  // const [newSubService, setNewSubService] = useState([]);
-
-  // console.log("newSubService", newSubService);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   const currentSubService = service.sub_service; // subservice เดิม
 
@@ -97,8 +97,6 @@ function ServiceEditForm() {
       setEditableServiceName(response.data.data.service_name);
       setCurrentImage(response.data.data.service_photo);
       setCurrentCategory(response.data.data.category);
-      setSubService(response.data.data.service.sub_service);
-      // console.log('?', response.data.data.service.sub_service)
       console.log("all data", response.data.data);
     } catch (error) {
       console.error("Error fetching service data:", error);
@@ -107,6 +105,24 @@ function ServiceEditForm() {
 
  
 console.log('service before updating', service)
+
+const handleDelete = async () => {
+  try {
+    await axios.delete(`http://localhost:4000/service/${serviceId}`);
+    message.success("ลบserviceสำเร็จ");
+    navigate("/admin-service");
+  } catch (error) {
+    console.error("เกิดข้อผิดพลาดในการลบโปรโมชั่น:", error);
+  }
+};
+
+const showDeleteConfirmation = () => {
+  setDeleteConfirmation(true);
+};
+
+const hideDeleteConfirmation = () => {
+  setDeleteConfirmation(false);
+};
 
   // put data API area
   const handleSubmitEdit = async (values) => {
@@ -200,6 +216,9 @@ console.log('service before updating', service)
 
   return (
     <>
+    <div>
+
+   
       <Form
         labelCol={{ span: 100 }}
         wrapperCol={{ span: 24 }}
@@ -514,16 +533,30 @@ console.log('service before updating', service)
               </p>
             </div>
           </div>
-          <div className="ml-0">
-            <img
-              className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
-              alt="Delete"
-              src={image.trashIcon}
-            />
-            ลบบริการ
-          </div>
         </div>
       </Form>
+      <div
+        className="flex justify-end mr-12 mt-5 text-[#80899C] underline cursor-pointer"
+        onClick={showDeleteConfirmation}
+      >
+        <img
+          className="cursor-pointer w-[25px] h-[25px]  "
+          src={trash}
+          alt="Delete"
+        />{" "}
+        ลบ Promotion Code
+      </div>
+      {deleteConfirmation && (
+        <AlertBoxDelete
+          deleteFunction={handleDelete}
+          hideFunction={hideDeleteConfirmation}
+          textAlert="ยืนยันการลบรายการ"
+          alertQuestion={`คุณต้องการลบรายการ ${service.service_name} ใช่หรือไม่ ?`}
+          primary="ลบรายการ"
+          secondary="ยกเลิก"
+        />
+      )}
+      </div>
     </>
   );
 }
