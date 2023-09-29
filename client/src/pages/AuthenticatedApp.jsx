@@ -18,6 +18,7 @@ import AdminCreatPromotionPage from "./AdminCreatePromoPage.jsx";
 import AdminPromotionPage from "./AdminPromotionPage.jsx";
 import AdminEditPromoPage from "./AdminEditPromoPage.jsx";
 import AdminPromoDetailPage from "./AdminDetailPromoPage.jsx";
+import PromotionMockUpPage from "./PromotionMockUpPage.jsx";
 
 function AuthenticatedApp() {
   const loginRole = localStorage.getItem("role");
@@ -93,6 +94,10 @@ function AuthenticatedApp() {
           <Route
             path="/customer-services-history/:userId"
             element={<CustomerServiceHistoryPage />}
+          />
+          <Route
+            path="/customer-promotion"
+            element={<PromotionMockUpPage />}
           />
         </Routes>
       )}
