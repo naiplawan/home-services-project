@@ -80,9 +80,9 @@ function PromotionDetail() {
                   </span>
                 </p>
                 <p className="pb-[40px] pt-[20px] ">
-                  <span className="text-grey700">โควต้าการใช้</span>
-                  <span className="px-[180px] text-black ">
-                    0/{promotion.promotion_quota} ครั้ง
+                  <span className="text-grey700">โควต้าการใช้คงเหลือ</span>
+                  <span className="px-[125px] text-black ">
+                    {promotion.promotion_quota} ครั้ง
                   </span>
                 </p>
                 <p className="pb-[40px] pt-[20px] ">

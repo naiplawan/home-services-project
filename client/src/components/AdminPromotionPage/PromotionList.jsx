@@ -110,8 +110,8 @@ function PromotionList() {
                 <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300">
                   <span className="text-grey700 mx-[1%]">Promotion Code</span>
                   <span className="text-grey700 mx-[5%]">ประเภท</span>
-                  <span className="text-grey700 mx-[%]">
-                    โควต้าการใช้(ครั้ง)
+                  <span className="text-grey700 mx-[%] ">
+                    โควต้าเหลือ(ครั้ง)
                   </span>
                   <span className="text-grey700 mx-[5%]">ราคาที่ลด</span>
                   <span className="text-grey700 mx-[3%]">สร้างเมื่อ</span>
@@ -152,7 +152,7 @@ function PromotionList() {
                                 {promotion.promotion_types}
                               </p>
                               <p className="w-[20%] ml-[3%]">
-                                /{promotion.promotion_quota}
+                                {promotion.promotion_quota}
                               </p>
                               <p className="w-[30%] ml-[%]  text-red">
                                 {console.log(
