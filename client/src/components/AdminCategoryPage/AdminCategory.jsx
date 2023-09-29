@@ -101,7 +101,7 @@ function AdminCategory() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="bg-bg h-[100%] pb-[4%] pl-60 ">
+      <div className="bg-bg h-[100%] pb-[4%] pl-60 min-h-screen">
         <div className="  flex flex-col items-center  ">
           <div className="header-name justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
             <h1 className="text-black   font-semibold text-xl">หมวดหมู่</h1>

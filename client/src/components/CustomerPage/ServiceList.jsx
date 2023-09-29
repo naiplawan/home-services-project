@@ -37,7 +37,7 @@ function ServiceList() {
   const [keywords, setKeywords] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [minPriceFilter, setMinPriceFilter] = useState(0);
-  const [maxPriceFilter, setMaxPriceFilter] = useState(2000);
+  const [maxPriceFilter, setMaxPriceFilter] = useState(4000);
   const [orderFilter, setOrderFilter] = useState("recommend");
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [hasClickedSearch, setHasClickedSearch] = useState(false);
@@ -178,7 +178,7 @@ function ServiceList() {
               <input
                 type="text"
                 placeholder="ค้นหาบริการ"
-                className="search-filter px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[318px] "
+                className="search-filter text-black  px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[318px] "
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
               />
@@ -188,7 +188,7 @@ function ServiceList() {
                   หมวดหมู่บริการ
                 </p>
                 <select
-                  className="px-2 bg-white text-[16px]"
+                  className="px-2 bg-white text-[16px] text-black font-semibold"
                   value={selectedCategory}
                   onChange={handleCategoryChange}
                 >
@@ -209,7 +209,7 @@ function ServiceList() {
                 <p className="pl-[10px] w-[120px] text-[12px] text-[#646C80]">
                   ราคา
                 </p>
-                <div className="price-range-filter relative inline-block">
+                <div className="price-range-filter relative inline-block text-black font-semibold">
                   <p
                     className="cursor-pointer w-[150px] mb-1"
                     onClick={handleDropdownToggle}
@@ -222,7 +222,7 @@ function ServiceList() {
                       <div className="pt-[15px]">
                         <InputPriceRange
                           min={0}
-                          max={2000}
+                          max={4000}
                           minFilter={minPriceFilter}
                           setMinFilter={setMinPriceFilter}
                           maxFilter={maxPriceFilter}
@@ -238,7 +238,7 @@ function ServiceList() {
               <div className="sort-filter">
                 <p className="pl-[10px] text-[12px] text-[#646C80]">เรียงตาม</p>
                 <select
-                  className="px-2 bg-white"
+                  className="px-2 bg-white text-black font-semibold"
                   value={orderFilter}
                   onChange={handleSortChange}
                 >
@@ -279,7 +279,7 @@ function ServiceList() {
                         <div className="bg-[#E7EEFF] text-center px-[10px] inline-block p-1 text-[#0E3FB0] rounded-lg">
                           <p>{service.category.category_name}</p>
                         </div>
-                        <h2 className="font-bold text-[20px] mt-3">
+                        <h2 className="font-bold text-[20px] mt-3 text-black ">
                           {service.service_name.length > 30
                             ? `${service.service_name.substring(0, 30)}...`
                             : service.service_name}
@@ -356,7 +356,7 @@ function ServiceList() {
                       <div className="bg-[#E7EEFF] text-center px-[10px] inline-block p-1 text-[#0E3FB0] rounded-lg">
                         <p>{service.category.category_name}</p>
                       </div>
-                      <h2 className="font-bold text-[20px] mt-3">
+                      <h2 className="font-bold text-[20px] mt-3 text-black">
                         {service.service_name.length > 30
                           ? `${service.service_name.substring(0, 30)}...`
                           : service.service_name}
