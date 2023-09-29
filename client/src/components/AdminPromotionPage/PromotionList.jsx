@@ -75,7 +75,7 @@ function PromotionList() {
   console.log(data);
 
   return (
-    <div className="bg-bg h-[100%] pb-[4%] pl-60 ">
+    <div className="bg-bg h-[100%] pb-[4%] pl-60  ">
       <div className="flex flex-col items-center">
         <div className="header-name justify-between flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white text-grey600 pb-[20px] border-b border-grey300">
           <h1 className="text-black font-semibold text-xl">Promotion Code</h1>
@@ -105,13 +105,13 @@ function PromotionList() {
           {data.length === 0 ? (
             <p>loading</p>
           ) : (
-            <div className="category-list mt-10 w-[100%]">
+            <div className="category-list mt-10 w-[100%] ">
               <ul>
                 <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300">
                   <span className="text-grey700 mx-[1%]">Promotion Code</span>
                   <span className="text-grey700 mx-[5%]">ประเภท</span>
-                  <span className="text-grey700 mx-[%]">
-                    โควต้าการใช้(ครั้ง)
+                  <span className="text-grey700 mx-[%] ">
+                    โควต้าเหลือ(ครั้ง)
                   </span>
                   <span className="text-grey700 mx-[5%]">ราคาที่ลด</span>
                   <span className="text-grey700 mx-[3%]">สร้างเมื่อ</span>
@@ -134,7 +134,7 @@ function PromotionList() {
                       .map((promotion) => (
                         <li
                           key={promotion.promotion_id}
-                          className="flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200 "
+                          className="flex hover:bg-grey100 bg-white  list-none p-[20px] border-[1px] border-grey200 "
                         >
                           <div className="category-detail cursor-pointer flex justify-between w-[100%] text-black">
                             <div
@@ -152,7 +152,7 @@ function PromotionList() {
                                 {promotion.promotion_types}
                               </p>
                               <p className="w-[20%] ml-[3%]">
-                                /{promotion.promotion_quota}
+                                {promotion.promotion_quota}
                               </p>
                               <p className="w-[30%] ml-[%]  text-red">
                                 {console.log(

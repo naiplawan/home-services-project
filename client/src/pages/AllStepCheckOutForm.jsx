@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import arrowBlue from "../assets/CustomerPhoto/icons/arrow-blue.svg"
+import arrowBlue from "../assets/CustomerPhoto/icons/arrow-blue.svg";
 import arrowWhite from "../assets/CustomerPhoto/icons/arrow-white.svg";
 import sellblack from "../assets/CustomerPhoto/icons/sellblack.svg";
 import axios from "axios";
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
 import credit from "../assets/CustomerPhoto/icons/credit.svg";
 import qr from "../assets/CustomerPhoto/icons/qr.svg";
 import greyarrow from "../assets/CustomerPhoto/icons/BackGrey.svg";
-import { message, Steps, Form, Input, DatePicker, TimePicker } from "antd"; 
+import { message, Steps, Form, Input, DatePicker, TimePicker } from "antd";
 import { Elements } from "@stripe/react-stripe-js"; // npm install --save @stripe/react-stripe-js @stripe/stripe-js
 import { loadStripe } from "@stripe/stripe-js";
-
-
-
 
 function AllStepCheckOutForm() {
   const [service, setService] = useState({});
@@ -25,13 +22,13 @@ function AllStepCheckOutForm() {
   const { TextArea } = Input;
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
-  const monthFormat = 'MM/YY';
-  
+  const monthFormat = "MM/YY";
 
   const [success, setSuccess] = useState(false);
-  const stripePromise = loadStripe('pk_test_51Nu6oIL0v3CrBX83LGIIF7Jg1hTUm7LqnHABeSt8Yz0VTyDHTL4ecgodTtLsbhksXbJbd1t4GO7V10nmhM6QbSlh00vyRy9Gv5')
+  const stripePromise = loadStripe(
+    "pk_test_51Nu6oIL0v3CrBX83LGIIF7Jg1hTUm7LqnHABeSt8Yz0VTyDHTL4ecgodTtLsbhksXbJbd1t4GO7V10nmhM6QbSlh00vyRy9Gv5"
+  );
 
-  
   console.log("params.serviceId:", params.serviceId);
   console.log("Service Data:", service);
 
@@ -47,7 +44,7 @@ function AllStepCheckOutForm() {
     {
       title: "ชำระเงิน",
       content: "Third-content",
-    }
+    },
   ];
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
@@ -133,7 +130,7 @@ function AllStepCheckOutForm() {
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
 
-const handlePaymentMethodClick = (method) => {
+  const handlePaymentMethodClick = (method) => {
     setSelectedPaymentMethod(method);
   };
 
@@ -178,12 +175,12 @@ const handlePaymentMethodClick = (method) => {
     }
   };
 
-  console.log("current is:",current)
-  console.log("Form:",formData)
-  console.log("Subservices:",selectedSubService)
+  console.log("current is:", current);
+  console.log("Form:", formData);
+  console.log("Subservices:", selectedSubService);
 
   return (
-    <div className="First-content bg-grey300" content="First-content">
+    <div className="First-content bg-bg" content="First-content">
       <Navbar />
       <div className="">
         {service.service_photo && service.service_photo ? (
@@ -204,15 +201,15 @@ const handlePaymentMethodClick = (method) => {
         ) : (
           <p>No service photo available.</p>
         )}
-       {current !== 3 && ( // Hide Steps on the Summary page
+        {current !== 3 && ( // Hide Steps on the Summary page
           <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
             <Steps current={current} labelPlacement="vertical" items={items} />
           </div>
         )}
       </div>
-      <div className="flex my-8 lg:mx-[12rem] md:mx-10 justify-between min-h-screen w-[80%]  bg-white ">
+      <div className="flex my-8 lg:mx-[12rem] md:mx-10 justify-between min-h-screen w-[80%]   ">
         {current === 0 ? (
-          <div className="h-full w-[687px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border border-grey300 rounded-lg  bg-white mt-20 ">
+          <div className="h-full w-[900px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border border-grey300 rounded-lg  bg-white mt-20 ">
             <div className="text-[20px] text-[#646C80]">
               เลือกรายการบริการ{service.service_name}
             </div>
@@ -274,16 +271,20 @@ const handlePaymentMethodClick = (method) => {
           </div>
         ) : current === 1 ? (
           <div
-            className="Second-content h-full w-[687px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border border-grey300 rounded-lg mt-20"
+            className="Second-content h-[680px] lg:w-[800px] md:w-[600px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border border-grey300 rounded-lg  bg-white mt-20  "
             content="Second-content"
           >
             <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
-              <Steps current={current} labelPlacement="vertical" items={items} />
+              <Steps
+                current={current}
+                labelPlacement="vertical"
+                items={items}
+              />
             </div>
-            
-            <div className="flex my-8 lg:mx-[12rem] md:mx-10 justify-between min-h-screen w-[80%]">
-              <div className="h-full w-[687px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border border-grey300 rounded-lg mt-20 ">
-              <Form
+
+            <div className="flex my-8 lg:mx-[12rem] md:mx-10 justify-between min-h-screen w-[80%] ">
+              <div className="h-full  w-[900px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between  rounded-lg mt-[-50px] ml-[-200px] md:ml-[-210px] ">
+                <Form
                   labelCol={{ span: 5 }}
                   wrapperCol={{ span: 19 }}
                   form={form}
@@ -293,21 +294,22 @@ const handlePaymentMethodClick = (method) => {
                     handleFormSubmit(formValues);
                   }}
                 >
-                  <h1 className="text-gray300 text-center text-[20px] font-medium">
+                  <h1 className="text-gray300 text-center text-[20px] font-medium mb-[30px]">
                     กรอกข้อมูลบริการ
                   </h1>
 
                   <Form.Item
-                    label="วันที่สะดวกใช้บริการ"
                     className="font-medium text-grey900"
                     name="date"
+                    label="วันที่สะดวกใช้บริการ"
+                    style={{ display: "flex", flexDirection: "column" }}
                   >
                     <DatePicker
                       format="DD/MM/YYYY"
                       placeholder="กรุณาเลือกวันที่"
                       className="w-[22.5vw] h-[44px] px-4 py-2.5"
-                      value={formData.date} 
-    onChange={(date) => handleFormChange({ date })}
+                      value={formData.date}
+                      onChange={(date) => handleFormChange({ date })}
                     />
                   </Form.Item>
 
@@ -320,61 +322,93 @@ const handlePaymentMethodClick = (method) => {
                       format="HH:mm"
                       placeholder="กรุณาเลือกเวลา"
                       className="w-[22.5vw] h-[44px] px-4 py-2.5"
-                      value={formData.time} 
-    onChange={(time) => handleFormChange({ time })}
+                      value={formData.time}
+                      onChange={(time) => handleFormChange({ time })}
                     />
                   </Form.Item>
 
                   <Form.Item
                     label="ที่อยู่"
-                    className="font-medium text-grey900"
+                    className="font-medium  text-grey900"
                     name="address"
                   >
-                    <Input placeholder="กรุณากรอกที่อยู่" allowClear 
-                    value={formData.address} 
-                    onChange={(e) => handleFormChange({ address: e.target.value })}/>
+                    <Input
+                      placeholder="กรุณากรอกที่อยู่"
+                      allowClear
+                      style={{ height: "44px" }}
+                      value={formData.address}
+                      onChange={(e) =>
+                        handleFormChange({ address: e.target.value })
+                      }
+                    />
                   </Form.Item>
 
-                  <div className="w-full flex justify-between mt-4">
+                  <div className="w-full flex-col justify-between mt-4">
                     <Form.Item
                       label="แขวง / ตำบล"
-                      className="font-medium text-grey900"
+                      className="font-medium  text-grey900"
                       name="subdistrict"
                     >
-                      <Input placeholder="กรุณากรอกแขวง / ตำบล" allowClear 
-                      value={formData.subdistrict} 
-                      onChange={(e) => handleFormChange({ subdistrict: e.target.value})}/>
+                      <Input
+                        placeholder="กรุณากรอกแขวง / ตำบล"
+                        allowClear
+                        style={{ height: "44px" }}
+                        value={formData.subdistrict}
+                        onChange={(e) =>
+                          handleFormChange({ subdistrict: e.target.value })
+                        }
+                      />
                     </Form.Item>
                     <Form.Item
                       label="เขต / อำเภอ"
                       className="font-medium text-grey900"
                       name="district"
                     >
-                      <Input placeholder="กรุณากรอกเขต / อำเภอ" allowClear 
-                      value={formData.district} 
-                      onChange={(e) => handleFormChange({ district: e.target.value })}/>
+                      <Input
+                        placeholder="กรุณากรอกเขต / อำเภอ"
+                        allowClear
+                        style={{ height: "44px" }}
+                        value={formData.district}
+                        onChange={(e) =>
+                          handleFormChange({ district: e.target.value })
+                        }
+                      />
                     </Form.Item>
                   </div>
 
-                  <div className="w-full flex justify-between mt-4">
+                  <div className="w-full flex justify-between ml-[95px]">
                     <Form.Item
                       label="จังหวัด"
-                      className="font-medium text-grey900"
+                      className="font-medium  text-grey900"
                       name="province"
                     >
-                      <Input placeholder="กรุณากรอกจังหวัด" allowClear 
-                      value={formData.province} 
-                      onChange={(e) => handleFormChange({ province: e.target.value })}/>
+                      <Input
+                        placeholder="กรุณากรอกจังหวัด"
+                        allowClear
+                        style={{ height: "44px" }}
+                        value={formData.province}
+                        onChange={(e) =>
+                          handleFormChange({ province: e.target.value })
+                        }
+                      />
                     </Form.Item>
-                    <Form.Item
-                      label="รหัสไปรษณีย์"
-                      className="font-medium text-grey900"
-                      name="zipcode"
-                    >
-                      <Input placeholder="กรุณากรอกรหัสไปรษณีย์" allowClear 
-                      value={formData.zipcode} 
-                      onChange={(e) => handleFormChange({ zipcode: e.target.value })}/>
-                    </Form.Item>
+                    <div className="mr-[120px] ">
+                      <Form.Item
+                        label="รหัสไปรษณีย์ :"
+                        className="font-medium  text-grey900"
+                        name="zipcode"
+                      >
+                        <Input
+                          placeholder="กรุณากรอกรหัสไปรษณีย์"
+                          allowClear
+                          style={{ height: "44px", marginLeft: "24px" }}
+                          value={formData.zipcode}
+                          onChange={(e) =>
+                            handleFormChange({ zipcode: e.target.value })
+                          }
+                        />
+                      </Form.Item>
+                    </div>
                   </div>
 
                   <Form.Item
@@ -385,8 +419,10 @@ const handlePaymentMethodClick = (method) => {
                     <TextArea
                       placeholder="กรุณาระบุข้อมูลเพิ่มเติม"
                       autoSize={{ minRows: 3 }}
-                      value={formData.additionalInfo} 
-    onChange={(e) => handleFormChange({ additionalInfo: e.target.value })}
+                      value={formData.additionalInfo}
+                      onChange={(e) =>
+                        handleFormChange({ additionalInfo: e.target.value })
+                      }
                     />
                   </Form.Item>
                 </Form>
@@ -395,76 +431,116 @@ const handlePaymentMethodClick = (method) => {
           </div>
         ) : current === 2 ? (
           <div
-            className="Last-content  h-full w-[687px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border border-grey300 rounded-lg mt-20"
+            className="Last-content  h-full w-[687px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border bg-white border-grey300 rounded-lg mt-20"
             content="Last-content"
           >
             <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
-              <Steps current={current} labelPlacement="vertical" items={items} />
+              <Steps
+                current={current}
+                labelPlacement="vertical"
+                items={items}
+              />
             </div>
-            <Elements stripe={stripePromise}> 
-            
-            <div>ชำระเงิน</div>
-            <div className="flex justify-evenly mt-4">
-            <button
-              className={`w-full border border-[#CCD0D7] rounded-lg p-1 flex flex-col justify-center items-center focus:outline-none focus:ring focus:ring-[#336DF2] ${
-                selectedPaymentMethod === "qr" ? "bg-[#E7EEFF] focus:ring focus:ring-[#336DF2]" : ""
-              }`}
-              onClick={() => handlePaymentMethodClick("qr")}
-            >
-              <img src={qr} />
-              <p>พร้อมเพย์</p>
-            </button>
-            <button
-              className={`w-full border border-[#CCD0D7] rounded-lg p-1 ml-4 flex flex-col justify-center items-center focus:outline-none focus:ring focus:ring-[#336DF2] ${
-                selectedPaymentMethod === "credit" ? "bg-[#E7EEFF] focus:ring focus:ring-[#336DF2]" : ""
-              }`}
-              onClick={() => handlePaymentMethodClick("credit")}
-            >
-              <img src={credit} />
-              <p>บัตรเครดิต</p>
-            </button>
+            <Elements stripe={stripePromise}>
+              <div>ชำระเงิน</div>
+              <div className="flex justify-evenly mt-4">
+                <button
+                  className={`w-full border border-[#CCD0D7] rounded-lg p-1 flex flex-col justify-center items-center focus:outline-none focus:ring focus:ring-[#336DF2] ${
+                    selectedPaymentMethod === "qr"
+                      ? "bg-[#E7EEFF] focus:ring focus:ring-[#336DF2]"
+                      : ""
+                  }`}
+                  onClick={() => handlePaymentMethodClick("qr")}
+                >
+                  <img src={qr} />
+                  <p>พร้อมเพย์</p>
+                </button>
+                <button
+                  className={`w-full border border-[#CCD0D7] rounded-lg p-1 ml-4 flex flex-col justify-center items-center focus:outline-none focus:ring focus:ring-[#336DF2] ${
+                    selectedPaymentMethod === "credit"
+                      ? "bg-[#E7EEFF] focus:ring focus:ring-[#336DF2]"
+                      : ""
+                  }`}
+                  onClick={() => handlePaymentMethodClick("credit")}
+                >
+                  <img src={credit} />
+                  <p>บัตรเครดิต</p>
+                </button>
               </div>
               <div className="mt-5">
-                <p>หมายเลขบัตรเครดิต<span className="text-[#C82438]">*</span></p>
-                <input placeholder="กรุณากรอกหมายเลขบัตรเครดิต" className="w-full border border-[#CCD0D7] rounded-lg p-2" required/>
-                </div>
+                <p>
+                  หมายเลขบัตรเครดิต<span className="text-[#C82438]">*</span>
+                </p>
+                <input
+                  placeholder="กรุณากรอกหมายเลขบัตรเครดิต"
+                  className="w-full border border-[#CCD0D7] bg-white rounded-lg p-2"
+                  required
+                />
+              </div>
               <div className="mt-5">
-              <p>ชื่อบนบัตร<span className="text-[#C82438]">*</span></p>
-              <input placeholder="กรุณากรอกชื่อบนบัตร" className="w-full border border-[#CCD0D7] rounded-lg p-2" required/>
+                <p>
+                  ชื่อบนบัตร<span className="text-[#C82438]">*</span>
+                </p>
+                <input
+                  placeholder="กรุณากรอกชื่อบนบัตร"
+                  className="w-full border bg-white border-[#CCD0D7] rounded-lg p-2"
+                  required
+                />
               </div>
               <div className="flex mt-5">
-              <div>
-              <p>วันหมดอายุ<span className="text-[#C82438]">*</span></p>
-              <DatePicker defaultValue={dayjs('2015/01', monthFormat)} format={monthFormat} picker="month" placeholder="MM/YY" required/>
-              </div>
-              <div className="ml-4">
-              <p>รหัส CVC / CVV<span className="text-[#C82438]">*</span></p>
-              <input  type="tel"
-                placeholder="xxx"
-                className="w-full border border-[#CCD0D7] rounded-lg p-0.5"
-                maxLength="3" pattern="([0-9]{3})" required/>
-              </div>
+                <div>
+                  <p>
+                    วันหมดอายุ<span className="text-[#C82438]">*</span>
+                  </p>
+                  <DatePicker
+                    defaultValue={dayjs("2015/01", monthFormat)}
+                    format={monthFormat}
+                    picker="month"
+                    placeholder="MM/YY"
+                    required
+                  />
+                </div>
+                <div className="ml-4">
+                  <p>
+                    รหัส CVC / CVV
+                    <span className="text-[#C82438] bg-white">*</span>
+                  </p>
+                  <input
+                    type="tel"
+                    placeholder="xxx"
+                    className="w-full border bg-white border-[#CCD0D7] rounded-lg p-0.5"
+                    maxLength="3"
+                    pattern="([0-9]{3})"
+                    required
+                  />
+                </div>
               </div>
               <div className="my-8 w-full h-[1px] border border-[#CCD0D7]"></div>
               <div>
-              <p>Promotion Code</p>
-              <input placeholder="กรุณากรอกโค้ดส่วนลด (ถ้ามี)" className="w-full border border-[#CCD0D7] rounded-lg p-1"/>
+                <p>Promotion Code</p>
+                <input
+                  placeholder="กรุณากรอกโค้ดส่วนลด (ถ้ามี)"
+                  className="w-full border bg-white border-[#CCD0D7] rounded-lg p-1"
+                />
               </div>
               <div className="pt-6 ml-5">
-                <button className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-20 p-1 px-1 bg-[#336DF2] rounded-lg">ใช้โค้ด</button>
+                <button className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-20 p-1 px-1 bg-[#336DF2] rounded-lg">
+                  ใช้โค้ด
+                </button>
               </div>
-
-          </Elements>
-
+            </Elements>
           </div>
         ) : null}
         {/* summary-box */}
-        <div className="h-full w-[562px] py-8 px-6 flex flex-col justify-between border border-grey300 rounded-lg mr-0 top-40 mt-20 ">
-          <div className="summary-box flex-auto text-center pb-3 text-[40px] text-[#646C80]"> {current === 3 ? "ชำระเงินเรียบร้อยแล้ว" : "สรุปรายการ"}</div>
+        <div className="h-full w-[562px] py-8 px-6 flex flex-col justify-between bg-white border border-grey300 rounded-lg mr-0 top-40 mt-20 ">
+          <div className="summary-box flex-auto text-center pb-3 text-[40px] text-[#646C80]">
+            {" "}
+            {current === 3 ? "ชำระเงินเรียบร้อยแล้ว" : "สรุปรายการ"}
+          </div>
           <ul>
             {calculateTotalPrice().map((item, index) => (
               <li key={index} className="flex justify-between">
-                <p className="text-black" >{item.sub_service_name}</p>
+                <p className="text-black">{item.sub_service_name}</p>
                 <p className="text-black">
                   {item.count > 1
                     ? `${item.count} ${item.unit}`
@@ -474,32 +550,42 @@ const handlePaymentMethodClick = (method) => {
             ))}
           </ul>
           <div className="w-[301]px h-[1px] border border-[#CCD0D7] mt-3"></div>
-          <div className="pt-10"><div> {current === 1 || current === 2 || current === 3 ? (
-      <div>
-        <div className="flex justify-between">
-          <div className="text-[#646C80]">วันที่:</div>
-          <div className="text-black">{formData.date ? formData.date.format('DD/MM/YYYY') : ''}</div>
-        </div>
-        <div className="flex justify-between">
-          <div className="text-[#646C80]">เวลา:</div>
-          <div className="text-black">{formData.time ? formData.time.format('HH:mm') : ''}</div>
-        </div>
-        <div className="flex justify-between">
-          <div className="text-[#646C80]">สถานที่:</div>
-          <div className="text-black">{formData.address} {formData.subdistrict} {formData.district} {formData.province} {formData.zipcode}</div>
-        </div>
-        <div className="flex justify-between">
-          <div className="text-[#646C80]">ข้อมูลเพิ่มเติม:</div>
-          <div className="text-black">{formData.additionalInfo}</div>
-        </div>
-      </div>
-    ) : null}</div>
-  </div>
-  <div className="w-[301]px h-[1px] border border-[#CCD0D7] mt-3"></div>
+          <div className="pt-10">
+            <div>
+              {" "}
+              {current === 1 || current === 2 || current === 3 ? (
+                <div>
+                  <div className="flex justify-between">
+                    <div className="text-[#646C80]">วันที่:</div>
+                    <div className="text-black">
+                      {formData.date ? formData.date.format("DD/MM/YYYY") : ""}
+                    </div>
+                  </div>
+                  <div className="flex justify-between">
+                    <div className="text-[#646C80]">เวลา:</div>
+                    <div className="text-black">
+                      {formData.time ? formData.time.format("HH:mm") : ""}
+                    </div>
+                  </div>
+                  <div className="flex justify-between">
+                    <div className="text-[#646C80]">สถานที่:</div>
+                    <div className="text-black">
+                      {formData.address} {formData.subdistrict}{" "}
+                      {formData.district} {formData.province} {formData.zipcode}
+                    </div>
+                  </div>
+                  <div className="flex justify-between">
+                    <div className="text-[#646C80]">ข้อมูลเพิ่มเติม:</div>
+                    <div className="text-black">{formData.additionalInfo}</div>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </div>
+          <div className="w-[301]px h-[1px] border border-[#CCD0D7] mt-3"></div>
           <div className="flex justify-between pt-5 mb-2">
-            
             <div className="text-[16px] text-[#646C80]">รวม</div>
-            <div className="text-black">
+            <div className="text-black font-bold">
               {calculateTotalPrice().reduce(
                 (total, item) => total + item.price_per_unit * item.count,
                 0
@@ -508,81 +594,77 @@ const handlePaymentMethodClick = (method) => {
             </div>
           </div>
           {current === 3 && (
-  <div>
-    <button
-      className="bg-blue600 w-full h-11 rounded-lg text-white"
-      onClick={() => navigate(`/customer-services-history/:userId`)}
-    >
-      เช็ครายการซ่อม
-    </button>
-  </div>
-)}
-
+            <div>
+              <button
+                className="bg-blue600 w-full h-11 rounded-lg text-white"
+                onClick={() => navigate(`/customer-services-history/:userId`)}
+              >
+                เช็ครายการซ่อม
+              </button>
+            </div>
+          )}
         </div>
-
       </div>
       <div className="flex justify-between p-5 sticky bottom-0 z-[100] border-y-grey300 border-x-white border px-40 bg-white">
-  {current === 0 ? (
-    <>
-      <button
-        className="btn-secondary flex items-center justify-center text-base font-medium w-40 p-2 px-6"
-        onClick={() => {
-          // Navigate to "/services-list" when current === 0
-          navigate("/services-list");
-        }}
-      >
-        ย้อนกลับ
-        <img src={arrowBlue} alt="arrow" />
-      </button>
-      <button
-        className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-40 p-2 px-6 bg-[#336DF2] rounded-lg"
-        onClick={next}
-      >
-        ดำเนินการต่อ
-        <img src={arrowWhite} alt="goarrow" />
-      </button>
-    </>
-  ) : (
-    <>
-      {current > 0 && (
-        <button
-          className="btn-secondary flex items-center justify-center text-base font-medium w-40 p-2 px-6"
-          onClick={() => prev()}
-        >
-          ย้อนกลับ
-          <img src={arrowBlue} alt="arrow" />
-        </button>
-      )}
-      {current < steps.length - 1 && (
-        <button
-          className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-40 p-2 px-6 bg-[#336DF2] rounded-lg"
-          onClick={current === 2 ? () => next(onFinish()) : () => next()}
-        >
-          ดำเนินการต่อ
-          <img src={arrowWhite} alt="goarrow" />
-        </button>
-      )}
-      {current === steps.length - 1 && (
-        <button
-        type="primary"
-        onClick={(e) => {
-          e.preventDefault(); // Prevent the default form submission
-          message.success('Processing complete!');
-          handleSubmitStripe(e); // Pass the event object
-          next();
-        }}
-        className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-45 p-2 px-6 bg-[#336DF2] rounded-lg"
-      >
-        ยืนยันการชำระเงิน
-      </button>
-      )}
-    </>
-  )}
-</div>
+        {current === 0 ? (
+          <>
+            <button
+              className="btn-secondary flex items-center justify-center text-base font-medium w-40 p-2 px-6"
+              onClick={() => {
+                // Navigate to "/services-list" when current === 0
+                navigate("/services-list");
+              }}
+            >
+              ย้อนกลับ
+              <img src={arrowBlue} alt="arrow" />
+            </button>
+            <button
+              className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-40 p-2 px-6 bg-[#336DF2] rounded-lg"
+              onClick={next}
+            >
+              ดำเนินการต่อ
+              <img src={arrowWhite} alt="goarrow" />
+            </button>
+          </>
+        ) : (
+          <>
+            {current > 0 && (
+              <button
+                className="btn-secondary flex items-center justify-center text-base font-medium w-40 p-2 px-6"
+                onClick={() => prev()}
+              >
+                ย้อนกลับ
+                <img src={arrowBlue} alt="arrow" />
+              </button>
+            )}
+            {current < steps.length - 1 && (
+              <button
+                className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-40 p-2 px-6 bg-[#336DF2] rounded-lg"
+                onClick={current === 2 ? () => next(onFinish()) : () => next()}
+              >
+                ดำเนินการต่อ
+                <img src={arrowWhite} alt="goarrow" />
+              </button>
+            )}
+            {current === steps.length - 1 && (
+              <button
+                type="primary"
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent the default form submission
+                  message.success("Processing complete!");
+                  handleSubmitStripe(e); // Pass the event object
+                  next();
+                }}
+                className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-45 p-2 px-6 bg-[#336DF2] rounded-lg"
+              >
+                ยืนยันการชำระเงิน
+              </button>
+            )}
+          </>
+        )}
+      </div>
     </div>
-
   );
 }
-
 
 export default AllStepCheckOutForm;
