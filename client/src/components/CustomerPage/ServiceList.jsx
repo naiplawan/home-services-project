@@ -304,7 +304,7 @@ function ServiceList() {
                         </div>
                         <div className="button-authentication">
                           {auth.isAuthenticated ? (
-                            <div>
+                            <div className="mt-[-20px]">
                               {role === "customer" ? (
                                 <button
                                   className="btn-ghost"
@@ -386,7 +386,7 @@ function ServiceList() {
 
                       <div className="button-authentication">
                         {auth.isAuthenticated ? (
-                          <div>
+                          <div className="mt-[-20px]">
                             {role === "customer" ? (
                               <button
                                 className="btn-ghost"
