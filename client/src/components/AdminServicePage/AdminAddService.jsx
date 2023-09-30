@@ -7,6 +7,8 @@ import {
   InputNumber,
   Image,
   Button,
+  Row,
+  Col,
 } from "antd";
 import {
   LoadingOutlined,
@@ -17,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 // import  {useUtils}  from "../../hooks/utils";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
+import Frame from "../../assets/AdminPhoto/Frame.svg";
 
 function AddService() {
   const { Dragger } = Upload;
@@ -142,7 +144,9 @@ function AddService() {
     fontSize: "16px",
     fontStyle: "normal",
     fontWeight: 500,
-    lineHeight: "150%", // 24px
+    lineHeight: "150%", 
+    width: "12.8125rem",
+    textAlign: "left", // 24px
   };
 
   return (
@@ -293,114 +297,153 @@ function AddService() {
             <div className="mb-10 text-grey700 text-base font-medium ">
               รายการบริการย่อย
             </div>
-            <DragDropContext>
-              <Form.List
-                name="items"
-                initialValue={[{ name: "", cost: "", unit: "" }]}
-              >
-                {(fields, { add, remove }) => (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "16px",
-                    }}
-                  >
-                    {fields.map((field, index) => (
-                      <div
-                        key={field.key}
-                        style={{ display: "flex", gap: "16px" }}
-                      >
-                        <div style={{ flex: "1" }}>
-                          <Form.Item
-                            colon={false}
-                            label="ชื่อรายการ"
-                            name={[field.name, "name"]}
-                            labelAlign="top"
-                            labelCol={{ span: 24 }}
-                            rules={[
-                              {
-                                required: true, // Only the first one is required
-                                message: "โปรดกรอกชื่อรายการ",
-                              },
-                            ]}
-                          >
-                            <Input 
-                            name="sub_service_name" />
-                          </Form.Item>
-                        </div>
-                        <div style={{ flex: "1" }}>
-                          <Form.Item
-                            colon={false}
-                            label="ค่าบริการ / 1 หน่วย"
-                            name={[field.name, "cost"]}
-                            labelAlign="top"
-                            labelCol={{ span: 24 }}
-                            rules={[
-                              {
-                                required: true,
-                                message: "โปรดกรอกค่าบริการ",
-                              },
-                            ]}
-                          >
-                            <Input
-                              type="number"
-                              min={0}
-                              name="price_per_unit"
-                              suffix="฿"
-                            />
-                          </Form.Item>
-                        </div>
-                        <div style={{ flex: "1" }}>
-                          <Form.Item
-                            colon={false}
-                            label="หน่วยการบริการ"
-                            name={[field.name, "unit"]}
-                            labelAlign="top"
-                            labelCol={{ span: 24 }}
-                            rules={[
-                              {
-                              
-                                message: "โปรดกรอกหน่วยการบริการ",
-                              },
-                            ]}
-                          >
-                            <Input name="unit" />
-                          </Form.Item>
-                        </div>
+            {/* <Row gutter={12}>
+              <Col span={24}> */}
+                <Form.List
+                  name="items"
+                  initialValue={[{ name: "", cost: "", unit: "" }]}            
+                >
+                  {(fields, { add, remove }) => (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "16px",
+                      }}
+                    >
+                      {fields.map((field, index) => (
                         <div
+                          key={field.key}
                           style={{
-                            flex: "1",
                             display: "flex",
-                            alignItems: "flex-end",
+                            alignItems: "center",
+                            gap: "16px",
+                            width: "100%"
                           }}
                         >
-                          {fields.length > 1 && (
-                            <Form.Item colon={false} label="">
-                              <a
-                                onClick={() => {
-                                  remove(field.name);
-                                }}
-                              >
-                                ลบรายการ
-                              </a>
-                            </Form.Item>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                          <span>
+                            {" "}
+                            <img src={Frame} />
+                          </span>
 
-                    <button
-                      className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
-                      type="button"
-                      onClick={() => add()}
-                    >
-                      + เพิ่มรายการ
-                    </button>
-                  </div>
-                )}
-              </Form.List>
-            </DragDropContext>
+                          <div style={{ width: "50%",}}
+                          >
+                            <Form.Item
+                              colon={false}
+                              label="ชื่อรายการ" 
+                              name={[field.name, "name"]}
+                              labelAlign="top"
+                              labelCol={{ span: 24 }}
+                              rules={[
+                                {
+                                  required: true, // Only the first one is required
+                                  message: "โปรดกรอกชื่อรายการ",
+                                },
+                              ]}    
+                                            
+                            >
+                              <Input name="sub_service_name" />
+                            </Form.Item>
+                          </div>
+
+                          <div   style={{ width: "25%", }}>
+                            <Form.Item
+                              colon={false}
+                              label="ค่าบริการ / 1 หน่วย"
+                              name={[field.name, "cost"]}
+                              labelAlign="top"
+                              labelCol={{ span: 24 }}
+                              rules={[
+                                {
+                                  message: "โปรดกรอกค่าบริการ",
+                                },
+                                {
+                                  validator(_, value) {
+                                    if (value <= 20000) {
+                                      return Promise.resolve();
+                                    }
+                                    return Promise.reject(
+                                      "ค่าบริการต้องไม่เกิน 20000"
+                                    );
+                                  },
+                                },
+                              ]}
+                            >
+                              <Input
+                                type="number"
+                                min={0}
+                                name="price_per_unit"
+                                suffix="฿"
+                              />
+                            </Form.Item>
+                          </div>
+                          <div 
+                          style={{ width: "25%", }}
+                          >
+                            <Form.Item
+                              colon={false}
+                              label="หน่วยการบริการ"
+                              name={[field.name, "unit"]}
+                              labelAlign="top"
+                              labelCol={{ span: 24 }}
+                              rules={[
+                                {
+                                  message: "โปรดกรอกหน่วยการบริการ",
+                                },
+                              ]}
+                            >
+                              <Input name="unit" />
+                            </Form.Item>
+                          </div>
+                          <div
+                            style={{
+                              // flex: "1",
+                              display: "flex",
+                              alignItems: "flex-end",
+                            }}
+                          >
+                            {fields.length > 1 && (
+                              <Form.Item
+                                colon={false}
+                                label=""
+                                style={{ marginBottom: 0,}}
+                              >
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <a
+                                    onClick={() => {
+                                      remove(field.name);
+                                    }}
+                                    style={{
+                                      textDecoration: "underline",
+                                      marginRight: "8px",
+                                    }}
+                                  >
+                                    ลบรายการ
+                                  </a>
+                                </div>
+                              </Form.Item>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+
+                      <button
+                        className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
+                        type="button"
+                        onClick={() => add()}
+                      >
+                        + เพิ่มรายการ
+                      </button>
+                    </div>
+                  )}
+                </Form.List>
+              {/* </Col>
+            </Row> */}
           </div>
         </div>
       </Form>
