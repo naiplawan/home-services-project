@@ -174,7 +174,7 @@ function ServiceEditForm() {
       );
 
       if (response.status === 200) {
-        message.success("Successfully update service");
+        message.success("แก้ไข service สำเร็จ!");
       } else {
         message.error("Cannot update service");
       }
@@ -211,7 +211,7 @@ function ServiceEditForm() {
     fontWeight: 500,
     lineHeight: "150%",
     width: "12.8125rem",
-    textAlign: "left",  
+    textAlign: "left",
   };
 
   return (
@@ -269,6 +269,7 @@ function ServiceEditForm() {
               {/* content */}
               <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
                 <Form.Item
+                  colon={false}
                   label={<span style={labelStyle}>ชื่อบริการ</span>}
                   required
                 >
@@ -388,64 +389,94 @@ function ServiceEditForm() {
                   initialValue={service.sub_service}
                 >
                   {(subServices, { add, remove }) => (
+                    
                     <>
                       {service.sub_service &&
                         subServices.map(({ key, name, ...restField }) => (
-                          <Space
+                          <div
                             key={key}
-                            style={{ display: "flex", marginBottom: 8 }}
-                            align="baseline"
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "16px",
+                              width: "100%"
+                            }}                                                 
                           >
-                            <Form.Item
-                              {...restField}
-                              name={[name, "sub_service_name"]}
-                              label="ชื่อรายการ"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "กรุณากรอกชื่อรายการ",
-                                },
-                              ]}
-                            >
-                              <Input
-                                className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
-                                placeholder="ชื่อรายการ"
-                              />
-                            </Form.Item>
-                            <Form.Item
-                              {...restField}
-                              name={[name, "price_per_unit"]}
-                              label="ค่าบริการ / 1 หน่วย"
-                            >
-                              <Input
-                                type="number"
-                                min="0"
-                                max="20000"
-                                step="any"
-                                className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
-                                placeholder="ค่าบริการ / 1 หน่วย"
-                              />
-                            </Form.Item>
-                            <Form.Item
-                              {...restField}
-                              name={[name, "unit"]}
-                              label="หน่วยการบริการ"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "กรุณากรอกหน่วยการบริการ",
-                                },
-                              ]}
-                            >
-                              <Input
-                                className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
-                                placeholder="หน่วยการบริการ"
-                                name="unit"
-                              />
-                            </Form.Item>
+                            <div style={{ width: "50%" }}>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "sub_service_name"]}
+                                label="ชื่อรายการ"
+                                labelAlign="top"
+                                labelCol={{ span: 24 }}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "กรุณากรอกชื่อรายการ",
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                                  placeholder="ชื่อรายการ"
+                                />
+                              </Form.Item>
+                            </div>
+                            <div style={{ width: "25%" }}>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "price_per_unit"]}
+                                label="ค่าบริการ / 1 หน่วย"
+                                labelAlign="top"
+                                labelCol={{ span: 24 }}
+                                rules={[
+                                  
+                                  {
+                                    validator(_, value) {
+                                      if (value <= 20000) {
+                                        return Promise.resolve();
+                                      }
+                                      return Promise.reject(
+                                        "ค่าบริการต้องไม่เกิน 20000"
+                                      );
+                                    },
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  max="20000"
+                                  step="any"
+                                  className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                                  placeholder="ค่าบริการ / 1 หน่วย"
+                                />
+                              </Form.Item>
+                            </div>
+                            <div style={{ width: "25%" }}>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "unit"]}
+                                label="หน่วยการบริการ"
+                                labelAlign="top"
+                                labelCol={{ span: 24 }}
+                                rules={[
+                                  {
+                                  
+                                    message: "กรุณากรอกหน่วยการบริการ",
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
+                                  placeholder="หน่วยการบริการ"
+                                  name="unit"
+                                />
+                              </Form.Item>
+                            </div>
                             <div
                               style={{
-                                flex: "1",
+                               width: "10%",
                                 display: "flex",
                                 alignItems: "flex-end",
                               }}
@@ -470,7 +501,7 @@ function ServiceEditForm() {
                                 </a>
                               </Form.Item>
                             </div>
-                          </Space>
+                          </div>
                         ))}
                       <button
                         className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"

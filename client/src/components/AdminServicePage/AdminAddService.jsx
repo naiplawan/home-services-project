@@ -244,9 +244,22 @@ function AddService() {
                 name="file"
                 accept=".png,.jpg,.jpeg"
                 beforeUpload={(file) => {
-                  setFileList([file]);
-                  handleFileChange(file);
-                  return false;
+                  const isImage = file.type.startsWith("image/");
+                  const isLt5M = file.size / 1024 / 1024 < 5;
+              
+                  if (!isImage) {
+                    message.error("โปรดอัพโหลดไฟล์รูปภาพเท่านั้น");
+                  }
+              
+                  if (!isLt5M) {
+                    message.error("ขนาดไฟล์รูปภาพต้องไม่เกิน 5MB");
+                  }
+              
+                  if (isImage && isLt5M) {
+                    handleFileChange(file);
+                  }
+              
+                  return false; // Prevent default upload behavior
                 }}
                 maxFileSize={5 * 1024 * 1024}
                 showUploadList={false}
@@ -397,7 +410,7 @@ function AddService() {
                           </div>
                           <div
                             style={{
-                              // flex: "1",
+                              width: "10%",
                               display: "flex",
                               alignItems: "flex-end",
                             }}
