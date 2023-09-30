@@ -294,35 +294,6 @@ function AddPromotionForm() {
                       required: true,
                       message: "กรุณาระบุวัน",
                     },
-                    // {
-                    //   validator: (_, value) => {
-                    //     const selectedDateTime = moment(value)
-                    //       .hour(moment(selectedTime).hour())
-                    //       .minute(moment(selectedTime).minute());
-
-                    //     const now = moment();
-                    //     if (selectedDateTime.isBefore(now)) {
-                    //       return Promise.reject(
-                    //         "Expiry date and time must be in the future"
-                    //       );
-                    //     }
-
-                    //     return Promise.resolve();
-                    //   },
-                    // },
-                    // {
-                    //   validator: (_, value) => {
-                    //     const selectedDate = moment(value);
-                    //     const now = moment().startOf("day");
-                    //     if (selectedDate.isBefore(now)) {
-                    //       return Promise.reject(
-                    //         "Expiry date must be in the future"
-                    //       );
-                    //     }
-
-                    //     return Promise.resolve();
-                    //   },
-                    // },
                   ]}
                   noStyle
                 >

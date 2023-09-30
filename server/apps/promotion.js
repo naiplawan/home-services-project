@@ -1,16 +1,17 @@
 import { Router } from "express";
 import supabase from "../utils/supabase.js";
 import multer from "multer";
-import moment from "moment";
 
 const promotionRouter = Router();
 
 // const multer = require("multer");
-const upload = multer();
+const upload = multer()
 
 promotionRouter.get("/", async (req, res) => {
   try {
-    let data = await supabase.from("promotion").select("*");
+    let data = await supabase
+      .from("promotion")
+      .select("*")
 
     return res.json({
       data,
@@ -43,7 +44,7 @@ promotionRouter.get("/:id", async (req, res) => {
   }
 });
 
-promotionRouter.put("/:id", upload.none(), async (req, res) => {
+promotionRouter.put("/:id",upload.none(), async (req, res) => {
   try {
     const promotionId = req.params.id;
 
