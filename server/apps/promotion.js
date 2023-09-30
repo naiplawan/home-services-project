@@ -93,12 +93,10 @@ promotionRouter.post("/", upload.none(), async (req, res) => {
 
     console.log(req.body);
 
-    const formattedExpiryDate = moment(req.body.promotion_expiry_date[1]);
-    const formattedExpiryDateAsString =
-      formattedExpiryDate.format("YYYY-MM-DD");
-    const formattedExpiryTime = moment(req.body.promotion_expiry_time[1]);
-    const formattedExpiryTimeAsString =
-      formattedExpiryTime.format("HH:MM");
+    const formattedExpiryDate = req.body.promotion_expiry_date[1];
+   
+    const formattedExpiryTime = req.body.promotion_expiry_time[1];
+ 
 
     //item
 
@@ -127,8 +125,8 @@ promotionRouter.post("/", upload.none(), async (req, res) => {
         promotion_types,
         promotion_quota,
         promotion_discount,
-        promotion_expiry_date: formattedExpiryDateAsString,
-        promotion_expiry_time:  formattedExpiryTimeAsString,
+        promotion_expiry_date: formattedExpiryDate,
+        promotion_expiry_time:  formattedExpiryTime,
         promotion_created_date_time: currentDateTime,
         promotion_edited_date_time: currentDateTime,
       },
