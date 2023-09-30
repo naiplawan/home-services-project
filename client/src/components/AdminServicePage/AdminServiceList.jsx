@@ -97,20 +97,31 @@ function AdminServiceList() {
     setDeleteConfirmation(false);
   };
 
-  const getCategoryColor = (categoryId) => {
-    switch (categoryId % 5) {
-      case 0:
-        return "bg-blue100 text-blue800";
-      case 1:
-        return "bg-amber text-brown";
-      case 2:
-        return "bg-lime text-green900";
-      case 3:
-        return "bg-purple100 text-purple900";
+  // const getCategoryColor = (categoryId) => {
+  //   switch (categoryId % 5) {
+  //     case 0:
+  //       return "bg-blue100 text-blue800";
+  //     case 1:
+  //       return "bg-amber text-brown";
+  //     case 2:
+  //       return "bg-lime text-green900";
+  //     case 3:
+  //       return "bg-purple100 text-purple900";
+  //     default:
+  //       return "bg-pink text-red";
+  //   }
+  // };
+
+  function getCategoryColor(categoryName) {
+    switch (categoryName) {
+      case "บริการห้องครัว":
+        return "bg-[#ECE6FF] text-[#4512B4]";
+      case "บริการห้องน้ำ":
+        return "bg-[#DFF9F6] text-[#00596C]";
       default:
-        return "bg-pink text-red";
+        return "bg-[#E7EEFF] text-[#0E3FB0]";
     }
-  };
+  }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -153,12 +164,12 @@ function AdminServiceList() {
           <div className="category-list w-[100%]">
             <ul>
               <li className="flex w-[100%] text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300 gap-[20px]">
-                <span className="text-grey700 pl-[6%]">ลำดับ</span>
-                <span className="text-grey700 pl-[5%]">ชื่อหมวดบริการ</span>
-                <span className="text-grey700 pl-[9%]">หมวดหมู่</span>
-                <span className="text-grey700 pl-[12%]">สร้างเมื่อ</span>
-                <span className="text-grey700 pl-[13%]">แก้ไขล่าสุด</span>
-                <span className="text-grey700 pl-[9%]">Action</span>
+                <span className="text-grey700 pl-[7%]">ลำดับ</span>
+                <span className="text-grey700 pl-[4%]">ชื่อหมวดบริการ</span>
+                <span className="text-grey700 pl-[11%]">หมวดหมู่</span>
+                <span className="text-grey700 pl-[10%]">สร้างเมื่อ</span>
+                <span className="text-grey700 pl-[17%]">แก้ไขล่าสุด</span>
+                <span className="text-grey700 pl-[15%]">Action</span>
               </li>
 
               <Droppable droppableId="service-list">
@@ -180,35 +191,35 @@ function AdminServiceList() {
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
-                                className="flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
+                                className="flex hover:bg-grey100 bg-white list-none p-[5px] border-[1px] border-grey200"
                               >
-                                <div className="w-20 flex justify-start items-center">
+                                <div className="ml-[1%] flex justify-start items-center ">
                                   <img
                                     src={drag}
-                                    className="w-72"
+                                    className="w-[42px]"
                                     alt="Drag"
                                   />
                                 </div>
                                 <div className="service-detail cursor-pointer flex justify-between w-[100%] text-black h-[88px] items-center">
                                   <div
-                                    className={`w-[100%] rounded-lg justify-center flex ${
-                                      serviceItem.category?.category_name
-                                        ? getCategoryColor(
-                                            serviceItem.category.category_id
-                                          )
-                                        : ""
-                                    }`}
+                                    className="w-[100%]  rounded-lg flex  "
                                     onClick={() =>
                                       navigate(
                                         `/admin-service-detail/${serviceItem.service_id}`
                                       )
                                     }
                                   >
-                                    <div className="w-[5%]">{index + 1}</div>
+                                    <div className="w-[5%] ml-[13%]">
+                                      {index + 1}
+                                    </div>
                                     <div className="w-[40%] ml-16 font-light">
                                       {serviceItem.service_name}
                                     </div>
-                                    <span className="w-[30%] ml-[5%]">
+                                    <span
+                                      className={`text-center px-[10px] inline-block p-1 rounded-lg ${getCategoryColor(
+                                        serviceItem.category.category_name
+                                      )} `}
+                                    >
                                       {serviceItem.category?.category_name}
                                     </span>
                                   </div>
