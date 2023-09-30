@@ -192,11 +192,11 @@ function PromotionEdit() {
         name="promotion_form"
         initialValues={{
           promotion_expiry_date: newFormData.promotion_expiry_date
-          ? moment(newFormData.promotion_expiry_date)
-          : null,
-        promotion_expiry_time: newFormData.promotion_expiry_time
-          ? moment(newFormData.promotion_expiry_time, "HH:mm")
-          : null,
+            ? moment(newFormData.promotion_expiry_date)
+            : null,
+          promotion_expiry_time: newFormData.promotion_expiry_time
+            ? moment(newFormData.promotion_expiry_time, "HH:mm")
+            : null,
           // ... (other initial values)
         }}
         onFinish={handleSubmitEdit}
