@@ -42,6 +42,21 @@ function PromotionEdit() {
 
   const params = useParams();
 
+  const isFutureTime = (current) => {
+    const now = moment().startOf("day");
+    const currentTime = moment();
+    const selectedTime = moment(current);
+    return (
+      selectedTime.isAfter(now) ||
+      (selectedTime.isSame(now, "day") && selectedTime.isAfter(currentTime))
+    );
+  };
+
+  const isFutureDate = (current) => {
+    const now = moment().startOf("day");
+    return current && current.isAfter(now);
+  };
+
   useEffect(() => {
     const getPromotionDetail = async (promotionId) => {
       try {
@@ -387,6 +402,10 @@ function PromotionEdit() {
                         })
                       }
                       style={{ width: "50%" }}
+                      format="YYYY-MM-DD"
+                      disabledDate={(current) =>
+                        current && current < moment().startOf("day")
+                      }
                     />
                   </Form.Item>
                 </Col>
