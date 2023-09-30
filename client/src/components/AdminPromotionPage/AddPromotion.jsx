@@ -51,6 +51,8 @@ function AddPromotionForm() {
   const onFinish = async (values) => {
     try {
       console.log(values);
+      console.log("Selected Date:", selectedDate.format("YYYY-MM-DD"));
+      console.log("Selected Time:", selectedTime.format("HH:mm"));
 
       let promotionDiscount;
 
@@ -65,11 +67,11 @@ function AddPromotionForm() {
       for (const key in values) {
         formData.append(key, values[key]);
       }
-      const formattedExpiryDate = moment(selectedDate).format("YYYY-MM-DD");
-      const formattedExpiryTime = moment(selectedTime).format("HH:mm");
+      // const formattedExpiryDate = moment(selectedDate).format("YYYY-MM-DD");
+      // const formattedExpiryTime = moment(selectedTime).format("HH:mm");
 
-      formData.append("promotion_expiry_date", formattedExpiryDate);
-      formData.append("promotion_expiry_time", formattedExpiryTime);
+      formData.append("promotion_expiry_date", selectedDate);
+      formData.append("promotion_expiry_time", selectedTime);
       formData.append("promotion_discount", promotionDiscount);
 
       const response = await axios.post(
@@ -292,35 +294,35 @@ function AddPromotionForm() {
                       required: true,
                       message: "กรุณาระบุวัน",
                     },
-                    {
-                      validator: (_, value) => {
-                        const selectedDateTime = moment(value)
-                          .hour(moment(selectedTime).hour())
-                          .minute(moment(selectedTime).minute());
+                    // {
+                    //   validator: (_, value) => {
+                    //     const selectedDateTime = moment(value)
+                    //       .hour(moment(selectedTime).hour())
+                    //       .minute(moment(selectedTime).minute());
 
-                        const now = moment();
-                        if (selectedDateTime.isBefore(now)) {
-                          return Promise.reject(
-                            "Expiry date and time must be in the future"
-                          );
-                        }
+                    //     const now = moment();
+                    //     if (selectedDateTime.isBefore(now)) {
+                    //       return Promise.reject(
+                    //         "Expiry date and time must be in the future"
+                    //       );
+                    //     }
 
-                        return Promise.resolve();
-                      },
-                    },
-                    {
-                      validator: (_, value) => {
-                        const selectedDate = moment(value);
-                        const now = moment().startOf("day");
-                        if (selectedDate.isBefore(now)) {
-                          return Promise.reject(
-                            "Expiry date must be in the future"
-                          );
-                        }
+                    //     return Promise.resolve();
+                    //   },
+                    // },
+                    // {
+                    //   validator: (_, value) => {
+                    //     const selectedDate = moment(value);
+                    //     const now = moment().startOf("day");
+                    //     if (selectedDate.isBefore(now)) {
+                    //       return Promise.reject(
+                    //         "Expiry date must be in the future"
+                    //       );
+                    //     }
 
-                        return Promise.resolve();
-                      },
-                    },
+                    //     return Promise.resolve();
+                    //   },
+                    // },
                   ]}
                   noStyle
                 >
@@ -349,23 +351,23 @@ function AddPromotionForm() {
                     value={selectedTime}
                     onChange={handleTimeChange}
                     format="HH:mm"
-                    disabledHours={() => {
-                      const now = moment();
-                      const currentHour = now.hour();
-                      return Array.from({ length: currentHour }, (_, i) => i);
-                    }}
-                    disabledMinutes={(selectedHour) => {
-                      const now = moment();
-                      const currentHour = now.hour();
-                      if (selectedHour === currentHour) {
-                        const currentMinute = now.minute();
-                        return Array.from(
-                          { length: currentMinute },
-                          (_, i) => i
-                        );
-                      }
-                      return [];
-                    }}
+                    // disabledHours={() => {
+                    //   const now = moment();
+                    //   const currentHour = now.hour();
+                    //   return Array.from({ length: currentHour }, (_, i) => i);
+                    // }}
+                    // disabledMinutes={(selectedHour) => {
+                    //   const now = moment();
+                    //   const currentHour = now.hour();
+                    //   if (selectedHour === currentHour) {
+                    //     const currentMinute = now.minute();
+                    //     return Array.from(
+                    //       { length: currentMinute },
+                    //       (_, i) => i
+                    //     );
+                    //   }
+                    //   return [];
+                    // }}
                   />
                 </Form.Item>
               </Col>
