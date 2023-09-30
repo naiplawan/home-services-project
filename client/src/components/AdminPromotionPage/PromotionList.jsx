@@ -170,7 +170,14 @@ function PromotionList() {
                                 )}
                               </p>
                               <p className="w-[50%] mr-[8%]">
-                                {dateFormat(promotion.promotion_expiry_date)}
+                                {console.log(
+                                  "เช็ค วันหมดอายุโค้ด",
+                                  promotion.promotion_expiry_date
+                                )}
+
+                                {dateFormat(
+                                  `${promotion.promotion_expiry_date} ${promotion.promotion_expiry_time}`
+                                )}
                               </p>
                             </div>
                             {promotion.promotion_id !== deletePromotionId && (

@@ -88,8 +88,9 @@ function PromotionDetail() {
                 <p className="pb-[40px] pt-[20px] ">
                   <span className="text-grey700">วันหมดอายุ</span>
                   <span className="px-[185px] text-black ">
-                    {promotion.promotion_expiry_date}{" "}
-                    {promotion.promotion_expiry_time}
+                    {dateFormat(
+                      `${promotion.promotion_expiry_date} ${promotion.promotion_expiry_time}`
+                    )}
                   </span>
                 </p>
                 <hr className="py-[20px]" />
