@@ -22,6 +22,32 @@ function AddPromotionForm() {
   const [inputDisable, setInputDisable] = useState("");
   const [promotionType, setPromotionType] = useState("");
 
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const handleTimeChange = (time) => {
+    setSelectedTime(time);
+  };
+
+  const isFutureTime = (current) => {
+    const now = moment().startOf("day");
+    const currentTime = moment();
+    const selectedTime = moment(current);
+    return (
+      selectedTime.isAfter(now) ||
+      (selectedTime.isSame(now, "day") && selectedTime.isAfter(currentTime))
+    );
+  };
+
+  const isFutureDate = (current) => {
+    const now = moment().startOf("day");
+    return current && current.isAfter(now);
+  };
+
   const onFinish = async (values) => {
     try {
       console.log(values);
@@ -39,12 +65,8 @@ function AddPromotionForm() {
       for (const key in values) {
         formData.append(key, values[key]);
       }
-      const formattedExpiryDate = moment(values.promotion_expiry_date).format(
-        "YYYY-MM-DD"
-      );
-      const formattedExpiryTime = moment(values.promotion_expiry_time).format(
-        "HH:mm"
-      );
+      const formattedExpiryDate = moment(selectedDate).format("YYYY-MM-DD");
+      const formattedExpiryTime = moment(selectedTime).format("HH:mm");
 
       formData.append("promotion_expiry_date", formattedExpiryDate);
       formData.append("promotion_expiry_time", formattedExpiryTime);
@@ -86,10 +108,6 @@ function AddPromotionForm() {
       wrapperCol={{ span: 24 }}
       layout="horizontal"
       name="promotion_form"
-      initialValues={{
-        promotion_expiry_date: moment(),
-        promotion_expiry_time: moment(),
-      }}
       onFinish={onFinish}
       requiredMark={false}
     >
@@ -264,37 +282,6 @@ function AddPromotionForm() {
           <Form.Item
             label={<span style={labelStyle}>วันหมดอายุ</span>}
             colon={false}
-            // name="promotion_expiry"
-            rules={[
-              {
-                message: "กรุณาระบุวัน-เวลา หมดอายุ",
-              },
-              {
-                validator: (_, value) => {
-                  const selectedDateTime = moment(value)
-                    .hour(moment(values.promotion_expiry_time).hour())
-                    .minute(moment(values.promotion_expiry_time).minute());
-          
-                  const now = moment();
-                  if (selectedDateTime.isBefore(now)) {
-                    return Promise.reject("Expiry date and time must be in the future");
-                  }
-          
-                  return Promise.resolve();
-                },
-              },
-              {
-                validator: (_, value) => {
-                  const selectedDate = moment(value);
-                  const now = moment().startOf('day');
-                  if (selectedDate.isBefore(now)) {
-                    return Promise.reject("Expiry date must be in the future");
-                  }
-          
-                  return Promise.resolve();
-                },
-              },
-            ]}
           >
             <Row gutter={1}>
               <Col span={8}>
@@ -305,11 +292,46 @@ function AddPromotionForm() {
                       required: true,
                       message: "กรุณาระบุวัน",
                     },
-                    
+                    {
+                      validator: (_, value) => {
+                        const selectedDateTime = moment(value)
+                          .hour(moment(selectedTime).hour())
+                          .minute(moment(selectedTime).minute());
+
+                        const now = moment();
+                        if (selectedDateTime.isBefore(now)) {
+                          return Promise.reject(
+                            "Expiry date and time must be in the future"
+                          );
+                        }
+
+                        return Promise.resolve();
+                      },
+                    },
+                    {
+                      validator: (_, value) => {
+                        const selectedDate = moment(value);
+                        const now = moment().startOf("day");
+                        if (selectedDate.isBefore(now)) {
+                          return Promise.reject(
+                            "Expiry date must be in the future"
+                          );
+                        }
+
+                        return Promise.resolve();
+                      },
+                    },
                   ]}
                   noStyle
                 >
-                  <DatePicker style={{ width: "50%" }} />
+                  <DatePicker
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    format="YYYY-MM-DD"
+                    disabledDate={(current) =>
+                      current && current < moment().startOf("day")
+                    }
+                  />
                 </Form.Item>
               </Col>
               <Col span={8}>
@@ -323,7 +345,28 @@ function AddPromotionForm() {
                   ]}
                   noStyle
                 >
-                  <TimePicker style={{ width: "50%" }} format="HH:mm" />
+                  <TimePicker
+                    value={selectedTime}
+                    onChange={handleTimeChange}
+                    format="HH:mm"
+                    disabledHours={() => {
+                      const now = moment();
+                      const currentHour = now.hour();
+                      return Array.from({ length: currentHour }, (_, i) => i);
+                    }}
+                    disabledMinutes={(selectedHour) => {
+                      const now = moment();
+                      const currentHour = now.hour();
+                      if (selectedHour === currentHour) {
+                        const currentMinute = now.minute();
+                        return Array.from(
+                          { length: currentMinute },
+                          (_, i) => i
+                        );
+                      }
+                      return [];
+                    }}
+                  />
                 </Form.Item>
               </Col>
             </Row>
