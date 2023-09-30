@@ -5,7 +5,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 // import Moment from "react-moment";
 
-function ListHistory () {
+function OrderHistory () {
     const params = useParams();
     const [order, setOrder] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -126,4 +126,4 @@ function ListHistory () {
     );
 }
 
-export default ListHistory;
+export default OrderHistory;

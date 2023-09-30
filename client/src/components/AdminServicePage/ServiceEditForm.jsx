@@ -38,6 +38,7 @@ function ServiceEditForm() {
   const [category, setCategory] = useState([]); //use to map data on category
   const [selectedCategory, setSelectedCategory] = useState(""); //this state store the select category
   const [currentCategory, setCurrentCategory] = useState([]); // the category from serviceID(the data before editng)
+  const [selectedCategoryID, setSelectedCategoryID] = useState(""); // fetch categoryId > category_name to display dropdown list
   console.log("เปลี่ยนแคท", currentCategory, typeof currentCategory);
   console.log(selectedCategory);
 
@@ -92,11 +93,14 @@ function ServiceEditForm() {
       const response = await axios.get(
         `http://localhost:4000/service/${serviceId}`
       );
+      const serviceData = response.data.data; // object of service data
       setService(response.data.data);
       setEditableServiceName(response.data.data.service_name);
       setCurrentImage(response.data.data.service_photo);
       setCurrentCategory(response.data.data.category);
       console.log("all data", response.data.data);
+      // Set the selectedCategoryID to the category ID from the database
+      setSelectedCategoryID(serviceData.category_id); 
     } catch (error) {
       console.error("Error fetching service data:", error);
     }
@@ -288,16 +292,16 @@ function ServiceEditForm() {
                   required
                 >
                   <Select
-                    value={selectedCategory}
+                    value={selectedCategoryID} // change setSelectedCategory > selectedCategoryID
                     style={{ width: "50%" }}
                     name="category_id"
-                    onChange={(value) => setSelectedCategory(value)}
+                    onChange={(value) => setSelectedCategoryID(value)} // change setSelectedCategory > selectedCategoryID
                   >
                     {category.data &&
                       category.data.map((categoryItem) => (
                         <Select.Option
                           key={categoryItem.category_id}
-                          value={categoryItem.category_name}
+                          value={categoryItem.category_id} // change category.name > category.id
                         >
                           {categoryItem.category_name}
                         </Select.Option>

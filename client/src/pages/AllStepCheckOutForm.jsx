@@ -15,6 +15,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { usePromotion } from "../hooks/promotion";
 
 function AllStepCheckOutForm() {
+  const userId = localStorage.getItem("user_id");
   const [service, setService] = useState({});
   const [form] = Form.useForm();
   const params = useParams();
@@ -628,7 +629,7 @@ function AllStepCheckOutForm() {
             <div>
               <button
                 className="bg-blue600 w-full h-11 rounded-lg text-white"
-                onClick={() => navigate(`/customer-services-history/:userId`)}
+                onClick={() => navigate(`/customer-ordered-list/${userId}`)}
               >
                 เช็ครายการซ่อม
               </button>
