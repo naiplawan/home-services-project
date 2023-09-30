@@ -31,7 +31,7 @@ function PromotionList() {
       getPromotion();
       hide();
     } catch (error) {
-      setError("เกิดข้อผิดพลาดในการลบหมวดหมู่");
+      console.log("เกิดข้อผิดพลาดในการลบโปรโมชั่น");
     }
   };
 
