@@ -46,8 +46,8 @@ function sortServices(services, orderFilter) {
       // เรียงตามบริการยอดนิยม
       sortedServices.sort((a, b) => {
         const popularServiceNames = [
+          "ทำความสะอาดทั่วไป",
           "ล้างแอร์",
-          "ติดตั้งแอร์",
           "ซ่อมเครื่องซักผ้า",
         ];
 
