@@ -195,7 +195,6 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
 
     const updatedServiceItem = {
       user_id: user_id,
-      service_photo: file,
       service_edited_date: new Date(),
     };
 
@@ -203,8 +202,6 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
       updatedServiceItem["service_photo"] = file.originalname;
     }
 
-
-   
     const optionalFields = [
       "service_name",
       "category_id",

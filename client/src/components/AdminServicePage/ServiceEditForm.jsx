@@ -26,13 +26,12 @@ import image from "../../assets/AdminPhoto/imageIndex.js";
 import { names } from "@ctrl/tinycolor";
 import trash from "../../assets/homepagePhoto/trash.svg";
 
-
 function ServiceEditForm() {
   //render component and package area
   const navigate = useNavigate();
   const params = useParams();
   const { Dragger } = Upload;
-  
+
   const { serviceId } = useParams();
 
   //state for category
@@ -103,26 +102,25 @@ function ServiceEditForm() {
     }
   };
 
- 
-console.log('service before updating', service)
+  console.log("service before updating", service);
 
-const handleDelete = async () => {
-  try {
-    await axios.delete(`http://localhost:4000/service/${serviceId}`);
-    message.success("ลบserviceสำเร็จ");
-    navigate("/admin-service");
-  } catch (error) {
-    console.error("เกิดข้อผิดพลาดในการลบโปรโมชั่น:", error);
-  }
-};
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:4000/service/${serviceId}`);
+      message.success("ลบserviceสำเร็จ");
+      navigate("/admin-service");
+    } catch (error) {
+      console.error("เกิดข้อผิดพลาดในการลบโปรโมชั่น:", error);
+    }
+  };
 
-const showDeleteConfirmation = () => {
-  setDeleteConfirmation(true);
-};
+  const showDeleteConfirmation = () => {
+    setDeleteConfirmation(true);
+  };
 
-const hideDeleteConfirmation = () => {
-  setDeleteConfirmation(false);
-};
+  const hideDeleteConfirmation = () => {
+    setDeleteConfirmation(false);
+  };
 
   // put data API area
   const handleSubmitEdit = async (values) => {
@@ -176,7 +174,7 @@ const hideDeleteConfirmation = () => {
       );
 
       if (response.status === 200) {
-        message.success("Successfully update service");
+        message.success("แก้ไข service สำเร็จ!");
       } else {
         message.error("Cannot update service");
       }
@@ -211,351 +209,352 @@ const hideDeleteConfirmation = () => {
     fontSize: "16px",
     fontStyle: "normal",
     fontWeight: 500,
-    lineHeight: "150%", // 24px
+    lineHeight: "150%",
+    width: "12.8125rem",
+    textAlign: "left",
   };
 
   return (
     <>
-    <div>
-
-   
-      <Form
-        labelCol={{ span: 100 }}
-        wrapperCol={{ span: 24 }}
-        layout="horizontal"
-        onFinish={handleSubmitEdit}
-        initialValues={{
-          service_name: editableServiceName,
-          category_id: selectedCategory,
-          service: {
-            // sub_service: [],
-            service_photo: currentImage,
-          },
-        }}
-      >
-        <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
-          <div key={service.service_id}>
-            {/* header */}
-            <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
-              <div className="flex gap-[14px] h-12 w-fit">
-                <img
-                  src={arrow}
-                  className=" h-[40px] w-[40px] cursor-pointer hover:scale-110 transition"
-                  onClick={() => navigate("/admin-service")}
-                />
-                <div className="Header-name">
-                  <p className="service-text text-xs">บริการ</p>
-                  <h1
-                    name={service.serviceDetail}
-                    className="text-black   font-semibold text-xl"
-                  >
-                    {service.service_name}
-                  </h1>
-                </div>
-              </div>
-              <div className="flex">
-                <button
-                  className="btn-secondary flex items-center justify-center text-base font-medium w-28 h-11"
-                  onClick={() => navigate("/admin-service")}
-                >
-                  ยกเลิก
-                </button>
-                <button
-                  className="btn-primary flex items-center justify-center ml-6 text-base font-medium w-28 h-11"
-                  type="submit"
-                >
-                  ยืนยัน
-                </button>
-              </div>
-            </div>
-            {/* content */}
-            <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
-              <Form.Item
-                label={<span style={labelStyle}>ชื่อบริการ</span>}
-                required
-              >
-                <Input
-                  style={{ width: "50%" }}
-                  name="service_name"
-                  type="text"
-                  value={editableServiceName}
-                  onChange={(e) => setEditableServiceName(e.target.value)}
-                />
-              </Form.Item>
-
-              <Form.Item
-                label={<span style={labelStyle}>หมวดหมู่</span>}
-                colon={false}
-                required
-              >
-                <Select
-                  value={selectedCategory}
-                  style={{ width: "50%" }}
-                  name="category_id"
-                  onChange={(value) => setSelectedCategory(value)}
-                >
-                  {category.data &&
-                    category.data.map((categoryItem) => (
-                      <Select.Option
-                        key={categoryItem.category_id}
-                        value={categoryItem.category_name}
-                      >
-                        {categoryItem.category_name}
-                      </Select.Option>
-                    ))}
-                </Select>
-              </Form.Item>
-
-              <Form.Item
-                label={<span style={labelStyle}>รูปภาพ</span>}
-                colon={false}
-                required
-                className="mb-10"
-              >
-                {/* {" "} */}
-                <div className="w-3/4 h-40 relative">
-                  {currentImage && (
-                    <div>
-                      <img
-                        src={currentImage}
-                        alt="selected image"
-                        style={{ maxWidth: "50%", maxHeight: "100%" }}
-                      />
-                    </div>
-                  )}
-
-                  {!currentImage && (
-                    <Upload.Dragger
-                      style={{ width: "50%" }}
-                      name="file"
-                      accept=".png,.jpg,.jpeg"
-                      beforeUpload={(file) => {
-                        handleFileChange(file);
-                        return false; // Prevent default upload behavior
-                      }}
-                      maxFileSize={5 * 1024 * 1024}
-                      showUploadList={false}
-                      className="relative"
+      <div>
+        <Form
+          labelCol={{ span: 100 }}
+          wrapperCol={{ span: 24 }}
+          layout="horizontal"
+          onFinish={handleSubmitEdit}
+          initialValues={{
+            service_name: editableServiceName,
+            category_id: selectedCategory,
+            service: {
+              // sub_service: [],
+              service_photo: currentImage,
+            },
+          }}
+        >
+          <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
+            <div key={service.service_id}>
+              {/* header */}
+              <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
+                <div className="flex gap-[14px] h-12 w-fit">
+                  <img
+                    src={arrow}
+                    className=" h-[40px] w-[40px] cursor-pointer hover:scale-110 transition"
+                    onClick={() => navigate("/admin-service")}
+                  />
+                  <div className="Header-name">
+                    <p className="service-text text-xs">บริการ</p>
+                    <h1
+                      name={service.serviceDetail}
+                      className="text-black   font-semibold text-xl"
                     >
-                      {selectedImage && (
-                        <div>
-                          <Image
-                            src={selectedImage}
-                            alt="uploaded"
-                            width={144}
-                          />
-                        </div>
-                      )}
-                      <div>
-                        {!selectedImage && (
-                          <>
-                            <InboxOutlined style={{ fontSize: "36px" }} />
-                            <p className="ant-upload-text">
-                              <span className="text-blue600 text-base not-italic font-semibold underline">
-                                อัพโหลดรูปภาพ
-                              </span>{" "}
-                              หรือ ลากและวางที่นี่
-                            </p>
-                            <p className="ant-upload-hint">
-                              PNG, JPG ขนาดไม่เกิน 5MB
-                            </p>
-                          </>
-                        )}
-                      </div>
-                    </Upload.Dragger>
-                  )}
-                  <div
-                    className="flex justify-between"
-                    style={{ width: "50%" }}
-                  >
-                    <div className="text-grey700 text-xs z-0 mt-1">
-                      ขนาดภาพที่แนะนำ: 1440 x 225 PX
-                    </div>
-                    <div className=" text-blue500 text-base not-italic font-semibold underline">
-                      {" "}
-                      <a onClick={handleDeleteImage}>ลบรูปภาพ</a>
-                    </div>
+                      {service.service_name}
+                    </h1>
                   </div>
                 </div>
-              </Form.Item>
-
-              <hr className="mt-10 mb-10 text-grey300" />
-
-              {/* {service.sub_service.length > 0 && ( */}
-              <div className="mb-10 text-grey700 text-base font-medium ">
-                รายการบริการย่อย
+                <div className="flex">
+                  <button
+                    className="btn-secondary flex items-center justify-center text-base font-medium w-28 h-11"
+                    onClick={() => navigate("/admin-service")}
+                  >
+                    ยกเลิก
+                  </button>
+                  <button
+                    className="btn-primary flex items-center justify-center ml-6 text-base font-medium w-28 h-11"
+                    type="submit"
+                  >
+                    ยืนยัน
+                  </button>
+                </div>
               </div>
-              <Form.List
-                name="service.sub_service"
-                initialValue={service.sub_service}
-              >
-                {(subServices, { add, remove }) => (
-                  <>
-                    {service.sub_service &&
-                      subServices.map(({ key, name, ...restField }) => (
-                        <Space
-                          key={key}
-                          style={{ display: "flex", marginBottom: 8 }}
-                          align="baseline"
-                        >
-                          <Form.Item
-                            {...restField}
-                            name={[name, "sub_service_name"]}
-                            label="ชื่อรายการ"
-                            rules={[
-                              {
-                                required: true,
-                                message: "กรุณากรอกชื่อรายการ",
-                              },
-                            ]}
-                            // initialValue={
-                            //   currentSubService[key]?.sub_service_name
-                            // }
-                          >
-                            <Input
-                              className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
-                              placeholder="ชื่อรายการ"
-                              // value={currentSubService.sub_service_name}
-                              // onChange={(e) => {
-                              //   setNewSubService({
-                              //     sub_service_: e.target.value,
-                              //   });
-                              // }}
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "price_per_unit"]}
-                            label="ค่าบริการ / 1 หน่วย"
-                            // rules={[
-                            //   {
-                             
-                            //     message: "กรุณากรอกค่าบริการ / 1 หน่วย",
-                            //   },
-                            //   {
-                            //     message: "กรุณากรอกตัวเลข",
-                            //   },
-                            // ]}
-                            // initialValue={
-                            //   currentSubService[key]?.price_per_unit
-                            // }
-                          >
-                            <Input
-                              type="number"
-                              min="0"
-                              max="20000"
-                              step="any"
-                              className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
-                              placeholder="ค่าบริการ / 1 หน่วย"
-                              // value={currentSubService.price_per_unit}
-                              // onChange={(e) => {
-                              //   setNewSubService({
-                              //     price_per_unit: e.target.value,
-                              //   });
-                              // }}                    
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "unit"]}
-                            label="หน่วยการบริการ"
-                            rules={[
-                              {
-                                required: true,
-                                message: "กรุณากรอกหน่วยการบริการ",
-                              },
-                            ]}
-                            // initialValue={currentSubService[key]?.unit}
-                          >
-                            <Input
-                              className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
-                              placeholder="หน่วยการบริการ"
-                              name="unit"
-                              // value={currentSubService.unit}
-                              
-                            />
-                          </Form.Item>
-                          <div
-                            style={{
-                              flex: "1",
-                              display: "flex",
-                              alignItems: "flex-end",
-                            }}
-                          >
-                            <Form.Item colon={false} label="">
-                              <a
-                                className=" text-blue600 text-base not-italic font-semibold underline"
-                                onClick={() => {
-                                  if (subServices.length > 1) {
-                                    remove(name);
-                                  } else {
-                                    notification.error({
-                                      message: "Error",
-                                      description:
-                                        "ต้องมีรายการย่อยอย่างน้อย  1 รายการ",
-                                      duration: 5, // Set duration (in seconds)
-                                    });
-                                  }
-                                }}
-                              >
-                                ลบรายการ
-                              </a>
-                            </Form.Item>
-                          </div>
-                        </Space>
-                      ))}
-                    <button
-                      className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
-                      type="button"
-                      onClick={() => {
-                        add();
-                        // Add a new empty object to newSubService
-                      }}
-                    >
-                      + เพิ่มรายการ
-                    </button>
-                  </>
-                )}
-              </Form.List>
+              {/* content */}
+              <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
+                <Form.Item
+                  colon={false}
+                  label={<span style={labelStyle}>ชื่อบริการ</span>}
+                  required
+                >
+                  <Input
+                    style={{ width: "50%" }}
+                    name="service_name"
+                    type="text"
+                    value={editableServiceName}
+                    onChange={(e) => setEditableServiceName(e.target.value)}
+                  />
+                </Form.Item>
 
-              <hr className="mt-10 mb-10 text-grey300 "></hr>
-              <p className="pb-[25px] ">
-                <span className="text-grey700">สร้างเมื่อ</span>
-                <span className="px-[200px] text-black ">
-                  {dateFormat(service.service_created_date)}
-                </span>
-              </p>
-              <p className="pb-[40px] ">
-                <span className="text-grey700">แก้ไขล่าสุด</span>
-                <span className="px-[190px] text-black ">
-                  {dateFormat(service.service_edited_date)}
-                </span>
-              </p>
+                <Form.Item
+                  label={<span style={labelStyle}>หมวดหมู่</span>}
+                  colon={false}
+                  required
+                >
+                  <Select
+                    value={selectedCategory}
+                    style={{ width: "50%" }}
+                    name="category_id"
+                    onChange={(value) => setSelectedCategory(value)}
+                  >
+                    {category.data &&
+                      category.data.map((categoryItem) => (
+                        <Select.Option
+                          key={categoryItem.category_id}
+                          value={categoryItem.category_name}
+                        >
+                          {categoryItem.category_name}
+                        </Select.Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+
+                <Form.Item
+                  label={<span style={labelStyle}>รูปภาพ</span>}
+                  colon={false}
+                  required
+                  className="mb-10"
+                >
+                  {/* {" "} */}
+                  <div className="w-3/4 h-40 relative">
+                    {currentImage && (
+                      <div>
+                        <img
+                          src={currentImage}
+                          alt="selected image"
+                          style={{ maxWidth: "50%", maxHeight: "100%" }}
+                        />
+                      </div>
+                    )}
+
+                    {!currentImage && (
+                      <Upload.Dragger
+                        style={{ width: "50%" }}
+                        name="file"
+                        accept=".png,.jpg,.jpeg"
+                        beforeUpload={(file) => {
+                          handleFileChange(file);
+                          return false; // Prevent default upload behavior
+                        }}
+                        maxFileSize={5 * 1024 * 1024}
+                        showUploadList={false}
+                        className="relative"
+                      >
+                        {selectedImage && (
+                          <div>
+                            <Image
+                              src={selectedImage}
+                              alt="uploaded"
+                              width={144}
+                            />
+                          </div>
+                        )}
+                        <div>
+                          {!selectedImage && (
+                            <>
+                              <InboxOutlined style={{ fontSize: "36px" }} />
+                              <p className="ant-upload-text">
+                                <span className="text-blue600 text-base not-italic font-semibold underline">
+                                  อัพโหลดรูปภาพ
+                                </span>{" "}
+                                หรือ ลากและวางที่นี่
+                              </p>
+                              <p className="ant-upload-hint">
+                                PNG, JPG ขนาดไม่เกิน 5MB
+                              </p>
+                            </>
+                          )}
+                        </div>
+                      </Upload.Dragger>
+                    )}
+                    <div
+                      className="flex justify-between"
+                      style={{ width: "50%" }}
+                    >
+                      <div className="text-grey700 text-xs z-0 mt-1">
+                        ขนาดภาพที่แนะนำ: 1440 x 225 PX
+                      </div>
+                      <div className=" text-blue500 text-base not-italic font-semibold underline">
+                        {" "}
+                        <a onClick={handleDeleteImage}>ลบรูปภาพ</a>
+                      </div>
+                    </div>
+                  </div>
+                </Form.Item>
+
+                <hr className="mt-10 mb-10 text-grey300" />
+
+                {/* {service.sub_service.length > 0 && ( */}
+                <div className="mb-10 text-grey700 text-base font-medium ">
+                  รายการบริการย่อย
+                </div>
+                <Form.List
+                  name="service.sub_service"
+                  initialValue={service.sub_service}
+                >
+                  {(subServices, { add, remove }) => (
+                    
+                    <>
+                      {service.sub_service &&
+                        subServices.map(({ key, name, ...restField }) => (
+                          <div
+                            key={key}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "16px",
+                              width: "100%"
+                            }}                                                 
+                          >
+                            <div style={{ width: "50%" }}>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "sub_service_name"]}
+                                label="ชื่อรายการ"
+                                labelAlign="top"
+                                labelCol={{ span: 24 }}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "กรุณากรอกชื่อรายการ",
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                                  placeholder="ชื่อรายการ"
+                                />
+                              </Form.Item>
+                            </div>
+                            <div style={{ width: "25%" }}>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "price_per_unit"]}
+                                label="ค่าบริการ / 1 หน่วย"
+                                labelAlign="top"
+                                labelCol={{ span: 24 }}
+                                rules={[
+                                  
+                                  {
+                                    validator(_, value) {
+                                      if (value <= 20000) {
+                                        return Promise.resolve();
+                                      }
+                                      return Promise.reject(
+                                        "ค่าบริการต้องไม่เกิน 20000"
+                                      );
+                                    },
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  type="number"
+                                  min="0"
+                                  max="20000"
+                                  step="any"
+                                  className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                                  placeholder="ค่าบริการ / 1 หน่วย"
+                                />
+                              </Form.Item>
+                            </div>
+                            <div style={{ width: "25%" }}>
+                              <Form.Item
+                                {...restField}
+                                name={[name, "unit"]}
+                                label="หน่วยการบริการ"
+                                labelAlign="top"
+                                labelCol={{ span: 24 }}
+                                rules={[
+                                  {
+                                  
+                                    message: "กรุณากรอกหน่วยการบริการ",
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
+                                  placeholder="หน่วยการบริการ"
+                                  name="unit"
+                                />
+                              </Form.Item>
+                            </div>
+                            <div
+                              style={{
+                               width: "10%",
+                                display: "flex",
+                                alignItems: "flex-end",
+                              }}
+                            >
+                              <Form.Item colon={false} label="">
+                                <a
+                                  className=" text-blue600 text-base not-italic font-semibold underline"
+                                  onClick={() => {
+                                    if (subServices.length > 1) {
+                                      remove(name);
+                                    } else {
+                                      notification.error({
+                                        message: "Error",
+                                        description:
+                                          "ต้องมีรายการย่อยอย่างน้อย  1 รายการ",
+                                        duration: 5, // Set duration (in seconds)
+                                      });
+                                    }
+                                  }}
+                                >
+                                  ลบรายการ
+                                </a>
+                              </Form.Item>
+                            </div>
+                          </div>
+                        ))}
+                      <button
+                        className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
+                        type="button"
+                        onClick={() => {
+                          add();
+                          // Add a new empty object to newSubService
+                        }}
+                      >
+                        + เพิ่มรายการ
+                      </button>
+                    </>
+                  )}
+                </Form.List>
+
+                <hr className="mt-10 mb-10 text-grey300 "></hr>
+                <p className="pb-[25px] ">
+                  <span className="text-grey700">สร้างเมื่อ</span>
+                  <span className="px-[200px] text-black ">
+                    {dateFormat(service.service_created_date)}
+                  </span>
+                </p>
+                <p className="pb-[40px] ">
+                  <span className="text-grey700">แก้ไขล่าสุด</span>
+                  <span className="px-[190px] text-black ">
+                    {dateFormat(service.service_edited_date)}
+                  </span>
+                </p>
+              </div>
             </div>
           </div>
+        </Form>
+        <div
+          className="flex justify-end mr-12 mt-5 text-[#80899C] underline cursor-pointer"
+          onClick={showDeleteConfirmation}
+        >
+          <img
+            className="cursor-pointer w-[25px] h-[25px]  "
+            src={trash}
+            alt="Delete"
+          />{" "}
+          ลบ Promotion Code
         </div>
-      </Form>
-      <div
-        className="flex justify-end mr-12 mt-5 text-[#80899C] underline cursor-pointer"
-        onClick={showDeleteConfirmation}
-      >
-        <img
-          className="cursor-pointer w-[25px] h-[25px]  "
-          src={trash}
-          alt="Delete"
-        />{" "}
-        ลบ Promotion Code
-      </div>
-      {deleteConfirmation && (
-        <AlertBoxDelete
-          deleteFunction={handleDelete}
-          hideFunction={hideDeleteConfirmation}
-          textAlert="ยืนยันการลบรายการ"
-          alertQuestion={`คุณต้องการลบรายการ ${service.service_name} ใช่หรือไม่ ?`}
-          primary="ลบรายการ"
-          secondary="ยกเลิก"
-        />
-      )}
+        {deleteConfirmation && (
+          <AlertBoxDelete
+            deleteFunction={handleDelete}
+            hideFunction={hideDeleteConfirmation}
+            textAlert="ยืนยันการลบรายการ"
+            alertQuestion={`คุณต้องการลบรายการ ${service.service_name} ใช่หรือไม่ ?`}
+            primary="ลบรายการ"
+            secondary="ยกเลิก"
+          />
+        )}
       </div>
     </>
   );

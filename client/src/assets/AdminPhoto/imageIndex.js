@@ -12,6 +12,7 @@ import bluePlusSymbol from "./blue-plus-symbol.png";
 import minus from "./minus.png";
 import orderIcon from "./orderIcon.svg";
 import logoHomeService from "../HouseIcon.svg";
+import Frame from "../AdminPhoto/Frame.svg"
 
 const image = {
   editIcon,
@@ -28,6 +29,7 @@ const image = {
   minus,
   orderIcon,
   logoHomeService,
+  Frame
 };
 
 export default image;

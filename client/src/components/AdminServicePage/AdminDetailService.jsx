@@ -90,7 +90,7 @@ function AdminDetailService() {
   }, [params.serviceId]);
 
   return (
-    <div className="bg-grey100 h-[100%] pb-[4%] pl-60 ">
+    <div className="bg-grey100 min-h-screen pb-[4%] pl-60 ">
       <div key={service.service_id}>
         <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
           <div className="flex">
