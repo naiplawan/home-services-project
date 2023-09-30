@@ -4,7 +4,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 // import Moment from "react-moment";
 
-function RepairList () {
+function OrderList () {
     const params = useParams();
     const [order, setOrder] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -136,4 +136,4 @@ function RepairList () {
     );
 }
 
-export default RepairList;
+export default OrderList;

@@ -12,8 +12,8 @@ import AdminEditCategory from "./AdminEditCategory.jsx";
 import AdminCreateServicePage from "./AdminCreateServicePage.jsx";
 import CustomerServiceListDisplay from "./CustomerServiceListDisplay.jsx";
 import AllStepCheckOutForm from "./AllStepCheckOutForm.jsx";
-import CustomerServiceListPage from "./CustomerServiceList.jsx";
-import CustomerServiceHistoryPage from "./CustomerServiceHistory.jsx";
+import CustomerOrderListPage from "./CustomerOrderListPage.jsx";
+import CustomerOrderHistoryPage from "./CustomerOrderHistoryPage.jsx";
 import AdminCreatPromotionPage from "./AdminCreatePromoPage.jsx";
 import AdminPromotionPage from "./AdminPromotionPage.jsx";
 import AdminEditPromoPage from "./AdminEditPromoPage.jsx";
@@ -90,13 +90,13 @@ function AuthenticatedApp() {
             element={<AllStepCheckOutForm />}
           />
           <Route
-            path="/customer-services-list/:userId"
-            element={<CustomerServiceListPage />}
+            path="/customer-ordered-list/:userId"
+            element={<CustomerOrderListPage />}
           />
 
           <Route
-            path="/customer-services-history/:userId"
-            element={<CustomerServiceHistoryPage />}
+            path="/customer-ordered-history/:userId"
+            element={<CustomerOrderHistoryPage />}
           />
           <Route
             path="/customer-promotion"

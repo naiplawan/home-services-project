@@ -24,7 +24,7 @@ function SideNavbar () {
                 </div>
                 <div 
                     className="flex w-full justify-between my-2 items-center h-10 cursor-pointer hover:bg-grey100 hover:bg-opacity-50 hover:text-grey950"
-                    onClick={() => navigate(`/customer-services-list/${userId}`)}
+                    onClick={() => navigate(`/customer-ordered-list/${userId}`)}
                 >
                     <img className="w-6 h-6 ml-6" alt="Time" src={orderIcon} />
                     <p className="w-full text-grey950 font-normal no-underline ml-4 ">
@@ -33,7 +33,7 @@ function SideNavbar () {
                 </div>
                 <div 
                     className="flex w-full justify-between items-center h-10 my-2 cursor-pointer hover:bg-grey100 hover:bg-opacity-50 hover:text-grey950" 
-                    onClick={() => navigate(`/customer-services-history/${userId}`)}
+                    onClick={() => navigate(`/customer-ordered-history/${userId}`)}
                 >
                     <img className="w-6 h-6 ml-6" alt="Time" src={image.time} />
                     <p className="w-full text-grey950 font-normal no-underline ml-4 ">
