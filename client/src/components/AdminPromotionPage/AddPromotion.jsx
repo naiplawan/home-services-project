@@ -269,6 +269,31 @@ function AddPromotionForm() {
               {
                 message: "กรุณาระบุวัน-เวลา หมดอายุ",
               },
+              {
+                validator: (_, value) => {
+                  const selectedDateTime = moment(value)
+                    .hour(moment(values.promotion_expiry_time).hour())
+                    .minute(moment(values.promotion_expiry_time).minute());
+          
+                  const now = moment();
+                  if (selectedDateTime.isBefore(now)) {
+                    return Promise.reject("Expiry date and time must be in the future");
+                  }
+          
+                  return Promise.resolve();
+                },
+              },
+              {
+                validator: (_, value) => {
+                  const selectedDate = moment(value);
+                  const now = moment().startOf('day');
+                  if (selectedDate.isBefore(now)) {
+                    return Promise.reject("Expiry date must be in the future");
+                  }
+          
+                  return Promise.resolve();
+                },
+              },
             ]}
           >
             <Row gutter={1}>
@@ -280,6 +305,7 @@ function AddPromotionForm() {
                       required: true,
                       message: "กรุณาระบุวัน",
                     },
+                    
                   ]}
                   noStyle
                 >
