@@ -5,11 +5,7 @@ import dateFormat from "../../utils/dateFormat.js";
 import arrow from "../../assets/AdminPhoto/arrow.png";
 import trash from "../../assets/homepagePhoto/trash.svg";
 import AlertBoxDelete from "../AlertBox.jsx";
-import {
- 
-  message,
-
-} from "antd";
+import { message } from "antd";
 
 function EditedCategoryForm() {
   const [categoryData, setCategoryData] = useState([]);
@@ -124,7 +120,7 @@ function EditedCategoryForm() {
               <p className="pb-[40px] pt-[20px] ">
                 <span className="text-grey700">ชื่อหมวดหมู่</span>
                 <input
-                  className="rounded-lg border ml-16 px-4 h-11 w-4/6 border-grey300 focus:border-blue600 focus:outline-none"
+                  className="rounded-lg bg-white text-black border ml-16 px-4 h-11 w-4/6 border-grey300 focus:border-blue600 focus:outline-none"
                   type="text"
                   name="edited_category"
                   value={editedCategoryName}
