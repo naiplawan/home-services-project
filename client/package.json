@@ -14,7 +14,7 @@
     "@clerk/clerk-react": "^4.24.0",
     "@stripe/react-stripe-js": "^2.3.0",
     "@stripe/stripe-js": "^2.1.6",
-    "antd": "^5.8.6",
+    "antd": "^5.9.4",
     "axios": "^1.5.0",
     "dayjs": "^1.11.10",
     "jwt-decode": "^3.1.2",

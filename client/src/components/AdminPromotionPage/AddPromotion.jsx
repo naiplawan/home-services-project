@@ -70,6 +70,20 @@ function AddPromotionForm() {
       // const formattedExpiryDate = moment(selectedDate).format("YYYY-MM-DD");
       // const formattedExpiryTime = moment(selectedTime).format("HH:mm");
 
+      if (selectedDate) {
+        formData.append(
+          "promotion_expiry_date",
+          selectedDate.format("YYYY-MM-DD")
+        );
+      }
+
+      if (selectedTime) {
+        formData.append(
+          "promotion_expiry_time",
+          selectedTime.format("HH:mm")
+        );
+      }
+
       formData.append("promotion_expiry_date", selectedDate);
       formData.append("promotion_expiry_time", selectedTime);
       formData.append("promotion_discount", promotionDiscount);
@@ -294,35 +308,6 @@ function AddPromotionForm() {
                       required: true,
                       message: "กรุณาระบุวัน",
                     },
-                    // {
-                    //   validator: (_, value) => {
-                    //     const selectedDateTime = moment(value)
-                    //       .hour(moment(selectedTime).hour())
-                    //       .minute(moment(selectedTime).minute());
-
-                    //     const now = moment();
-                    //     if (selectedDateTime.isBefore(now)) {
-                    //       return Promise.reject(
-                    //         "Expiry date and time must be in the future"
-                    //       );
-                    //     }
-
-                    //     return Promise.resolve();
-                    //   },
-                    // },
-                    // {
-                    //   validator: (_, value) => {
-                    //     const selectedDate = moment(value);
-                    //     const now = moment().startOf("day");
-                    //     if (selectedDate.isBefore(now)) {
-                    //       return Promise.reject(
-                    //         "Expiry date must be in the future"
-                    //       );
-                    //     }
-
-                    //     return Promise.resolve();
-                    //   },
-                    // },
                   ]}
                   noStyle
                 >

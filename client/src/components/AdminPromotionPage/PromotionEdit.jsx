@@ -27,15 +27,22 @@ function PromotionEdit() {
   const [promotionDetail, setPromotionDetail] = useState(""); //ใช้กับ header
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+
+
   const [newFormData, setFormData] = useState({
     promotion_code: "",
     promotion_types: "",
     promotion_discount: "",
-    promotion_expiry_date: "",
+
+
     promotion_quota: "",
-    promotion_expiry_time: "",
-    promotion_created_date_time: "",
-    promotion_edited_date_time: "",
+
+    promotion_expiry_date: null,
+    promotion_expiry_time: null,
+
+   
   });
 
   const navigate = useNavigate();
@@ -68,9 +75,21 @@ function PromotionEdit() {
           promotion_code: result.data.data[0].promotion_code,
           promotion_types: result.data.data[0].promotion_types,
           promotion_discount: result.data.data[0].promotion_discount,
-          promotion_expiry_date: result.data.data[0].promotion_expiry_date,
           promotion_quota: result.data.data[0].promotion_quota,
-          promotion_expiry_time: result.data.data[0].promotion_expiry_time,
+          promotion_expiry_date: moment(
+            result.data.data[0].promotion_expiry_date
+          ),
+          promotion_expiry_time: moment(
+            result.data.data[0].promotion_expiry_time,
+            "HH:mm"
+          ),
+          promotion_expiry_date: moment(
+            result.data.data[0].promotion_expiry_date
+          ),
+          promotion_expiry_time: moment(
+            result.data.data[0].promotion_expiry_time,
+            "HH:mm"
+          ),
           promotion_created_date_time:
             result.data.data[0].promotion_created_date_time,
           promotion_edited_date_time:
@@ -104,6 +123,20 @@ function PromotionEdit() {
     setDeleteConfirmation(false);
   };
 
+  const handleDateChange = (date) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      promotion_expiry_date: date,
+    }));
+  };
+
+  const handleTimeChange = (time) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      promotion_expiry_time: time,
+    }));
+  };
+
   const handleSubmitEdit = async () => {
     try {
       console.log("formData", newFormData);
@@ -113,15 +146,24 @@ function PromotionEdit() {
       formData.append("promotion_code", newFormData.promotion_code);
       formData.append("promotion_types", newFormData.promotion_types);
       formData.append("promotion_discount", newFormData.promotion_discount);
-      formData.append(
-        "romotion_expiry_date",
-        newFormData.promotion_expiry_date
-      );
-      formData.append(
-        "promotion_expiry_time",
-        newFormData.promotion_expiry_time
-      );
+
+
       formData.append("promotion_quota", newFormData.promotion_quota);
+
+      if (newFormData.promotion_expiry_date) {
+        formData.append(
+          "promotion_expiry_date",
+          newFormData.promotion_expiry_date.format("YYYY-MM-DD")
+        );
+      }
+
+      if (newFormData.promotion_expiry_time) {
+        formData.append(
+          "promotion_expiry_time",
+          newFormData.promotion_expiry_time.format("HH:mm")
+        );
+      }
+
 
       const response = await axios.put(
         `http://localhost:4000/promotion/${params.promotionId}`,
@@ -161,7 +203,10 @@ function PromotionEdit() {
         wrapperCol={{ span: 24 }}
         layout="horizontal"
         name="promotion_form"
-        // initialValues={formData}
+        initialValues={{
+          promotion_expiry_date: newFormData.promotion_expiry_date,    
+          promotion_expiry_time: newFormData.promotion_expiry_time 
+        }}
         onFinish={handleSubmitEdit}
         requiredMark={false}
       >
@@ -391,35 +436,47 @@ function PromotionEdit() {
             >
               <Row gutter={1}>
                 <Col span={8}>
-                  <Form.Item noStyle>
+                  <Form.Item
+                    // name="promotion_expiry_date"
+                    rules={[
+                      {
+                        required: true,
+                        message: "กรุณาระบุวัน",
+                      },
+                    ]}
+                    noStyle
+                  >
                     <DatePicker
-                      name="promotion_expiry_date"
-                      value={moment(newFormData.promotion_expiry_date)} // Assuming you're using Moment.js for dates
-                      onChange={(e) =>
-                        setFormData({
-                          ...newFormData,
-                          promotion_expiry_date: e.target.value,
-                        })
-                      }
-                      style={{ width: "50%" }}
+                      value={newFormData.promotion_expiry_date}
+                      onChange={handleDateChange}
+                      // onChange={(e) => 
+                      //   setFormData({
+                      //   ...newFormData,
+                      //   promotion_expiry_date: e.target.value
+                      // })}
                       format="YYYY-MM-DD"
                       disabledDate={(current) =>
                         current && current < moment().startOf("day")
                       }
+                      style={{ width: "50%" }}
+                 
                     />
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item noStyle>
+                  <Form.Item
+                    // name="promotion_expiry_time"
+                    rules={[
+                      {
+                        required: true,
+                        message: "กรุณาระบุเวลา",
+                      },
+                    ]}
+                    noStyle
+                  >
                     <TimePicker
-                      // name="promotion_expiry_time"
-                      value={moment(newFormData.promotion_expiry_time, "HH:mm")}
-                      onChange={(e) =>
-                        setFormData({
-                          ...newFormData,
-                          promotion_expiry_time: e.target.value,
-                        })
-                      }
+                      value={newFormData.promotion_expiry_time}
+                      onChange={handleTimeChange}                   
                       format="HH:mm"
                       style={{ width: "50%" }}
                     />
