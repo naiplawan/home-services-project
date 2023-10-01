@@ -204,7 +204,7 @@ function AdminCategory() {
                                       </div>
                                       {category.category_id !==
                                         deleteCategory && (
-                                        <div className="pr-[5%] flex ">
+                                        <div className="pr-[5%] pt-[10px] flex ">
                                           <img
                                             className="cursor-pointer w-[25px] h-[25px] mr-[50%] "
                                             src={trashIcon}

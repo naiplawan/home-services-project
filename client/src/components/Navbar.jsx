@@ -18,6 +18,7 @@ function Navbar () {
 
   const userId = localStorage.getItem("user_id");
 
+
   return (
     <div className="flex justify-between p-5 shadow-[2px_2px_24px_rgba(23,51,106,0.12)] sticky top-0 z-[100] bg-white">
       <div className="flex lg:ml-40 items-center">
@@ -26,7 +27,9 @@ function Navbar () {
           HomeServices
         </button>
         <div className="items-center text-base font-bold prompt lg:ml-10 px-3 pt-1.5">
-          <button className="cursor-pointer">บริการของเรา</button>
+          <button className="cursor-pointer"
+            onClick={() => navigate("/services-list")}
+            >บริการของเรา</button>
         </div>
       </div>
 

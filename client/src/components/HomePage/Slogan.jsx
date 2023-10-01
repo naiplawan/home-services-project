@@ -1,8 +1,11 @@
 import BlueMan from "../../assets/homepagePhoto/BlueMan.png";
 import '../../styles/App.css'
+import { useNavigate } from "react-router-dom";
 
 
 function Slogan () {
+
+  const navigate = useNavigate();
 
   return (
     <div className="flex justify-between bg-[#E7EEFF] relative">
@@ -18,7 +21,8 @@ function Slogan () {
           ซ่อมเครื่องใช้ไฟฟ้า ซ่อมแอร์ ทำความสะอาดบ้าน<br />โดยพนักงานแม่บ้าน และช่างมืออาชีพ
         </div>
         <div className="xl:ml-40 xl:mt-12 lg:mt-20 "> 
-          <button className="btn-primary">
+          <button className="btn-primary"
+          onClick={() => navigate("/services-list")}>
             เช็คราคาบริการ
           </button>
         </div>
