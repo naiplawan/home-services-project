@@ -10,8 +10,9 @@ import credit from "../assets/CustomerPhoto/icons/credit.svg";
 import qr from "../assets/CustomerPhoto/icons/qr.svg";
 import greyarrow from "../assets/CustomerPhoto/icons/BackGrey.svg";
 import { message, Steps, Form, Input, DatePicker, TimePicker } from "antd";
-import { Elements } from "@stripe/react-stripe-js"; // npm install --save @stripe/react-stripe-js @stripe/stripe-js
-import { loadStripe } from "@stripe/stripe-js";
+import moment from "moment";
+// import { Elements } from "@stripe/react-stripe-js"; // npm install --save @stripe/react-stripe-js @stripe/stripe-js
+// import { loadStripe } from "@stripe/stripe-js";
 import { usePromotion } from "../hooks/promotion";
 
 function AllStepCheckOutForm() {
@@ -22,17 +23,29 @@ function AllStepCheckOutForm() {
   const [current, setCurrent] = useState(0);
   const [selectedSubService, setSelectedSubService] = useState([]);
   const { TextArea } = Input;
-  const [formData, setFormData] = useState({});
+
+  const [totalPrice, setTotalPrice] = useState(0);
+
   const navigate = useNavigate();
   const monthFormat = "MM/YY";
   const [promotionCode, setPromotionCode] = useState("");
   const { promotion, getPromotion, checkPromotionExpiry, decreaseQuota } =
     usePromotion();
 
-  const [success, setSuccess] = useState(false);
-  const stripePromise = loadStripe(
-    "pk_test_51Nu6oIL0v3CrBX83LGIIF7Jg1hTUm7LqnHABeSt8Yz0VTyDHTL4ecgodTtLsbhksXbJbd1t4GO7V10nmhM6QbSlh00vyRy9Gv5"
-  );
+  // const [success, setSuccess] = useState(false);
+  // const stripePromise = loadStripe(
+  //   "pk_test_51Nu6oIL0v3CrBX83LGIIF7Jg1hTUm7LqnHABeSt8Yz0VTyDHTL4ecgodTtLsbhksXbJbd1t4GO7V10nmhM6QbSlh00vyRy9Gv5"
+  // );
+  const [formData, setFormData] = useState({
+    date: dayjs(), // set default value to current date
+    time: moment().startOf("hour").add(1, "hour"), // set default value to next hour
+    service_date_time: "", // initialize empty string for combined date and time value
+    address: "",
+    sub_district: "",
+    district: "",
+    province: "",
+    note: "",
+  });
 
   console.log("params.serviceId:", params.serviceId);
   console.log("Service Data:", service);
@@ -96,6 +109,8 @@ function AllStepCheckOutForm() {
     } else {
       const updatedSubService = [...selectedSubService];
       updatedSubService[index].count += 1;
+      updatedSubService[index].sub_service_quantity =
+        updatedSubService[index].count;
       setSelectedSubService(updatedSubService);
     }
   };
@@ -110,7 +125,7 @@ function AllStepCheckOutForm() {
       await checkPromotionExpiry(promotion.promotion_expiry);
       await decreaseQuota(promotion.promotion_code);
       message.success("Promotion applied successfully.");
-      console.log("Promotion",promotion.promotion_code)
+      console.log("Promotion", promotion.promotion_code);
     } catch (error) {
       message.error(error.message);
     }
@@ -147,16 +162,85 @@ function AllStepCheckOutForm() {
     return selectedSubService;
   };
 
+  useEffect(() => {
+    // ฟังก์ชันสำหรับคำนวณราคาและอัปเดต state
+    const calculateTotalPrice = () => {
+      // คำนวณราคาใหม่จากรายการและอัปเดต state
+      const newTotalPrice = selectedSubService.reduce(
+        (total, item) => total + item.price_per_unit * item.count,
+        0
+      );
+      setTotalPrice(newTotalPrice);
+    };
+
+    // เรียกใช้ฟังก์ชันคำนวณราคาเมื่อรายการเปลี่ยนแปลง
+    calculateTotalPrice();
+  }, [selectedSubService]); // เป็นตัวแปรที่เมื่อมีการเปลี่ยนแปลงจะเรียกใช้ useEffect
+
   const handleFormChange = (changedValues) => {
-    setFormData({ ...formData, ...changedValues });
+    const quantity = selectedSubService[0].count;
+    console.log("quanity", quantity);
+
+    // const newTotalPrice = calculateTotalPrice().reduce(
+    //   (total, item) => total + item.price_per_unit * item.count,
+    //   0
+    // );
+    // setTotalPrice(newTotalPrice);
+
+    if (changedValues.date) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        date: changedValues.date,
+        service_date_time: `${changedValues.date.format(
+          "YYYY-MM-DD"
+        )} ${prevFormData.time.format("HH:mm:ss")}`,
+      }));
+    } else if (changedValues.time) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        time: changedValues.time,
+        service_date_time: `${prevFormData.date.format(
+          "YYYY-MM-DD"
+        )} ${changedValues.time.format("HH:mm")}`,
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        ...changedValues,
+      }));
+    }
   };
 
-  const handleFormSubmit = (formValues) => {
+  const handleFormSubmit = async () => {
     // Handle form submission logic here
-    console.log("Form values:", formValues);
+    try {
+      
+      const user_id = localStorage.getItem("user_id");
 
-    // Assuming you want to move to the next step after form submission
-    next();
+      const formDataItem = {
+        formData: formData,
+        subService: selectedSubService,
+        totalPrice: totalPrice,
+        user_id: user_id,
+      };
+
+      console.log("formDataItem", formDataItem);
+
+      const response = await axios.post(
+        "http://localhost:4000/checkout",
+        formDataItem
+        // {
+        //   headers: { "Content-Type": "multipart/form-data" },
+        // }
+      );
+
+      if (response.status === 200) {
+        message.success("ซื้อบริการสำเร็จ");
+      }
+      next();
+    } catch (error) {
+      console.error("Error creating promotion:", error);
+    }
   };
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
@@ -165,46 +249,46 @@ function AllStepCheckOutForm() {
     setSelectedPaymentMethod(method);
   };
 
-  const handleSubmitStripe = async (e) => {
-    e.preventDefault();
-    if (!stripe || !elements) {
-      console.error("Stripe.js has not loaded yet.");
-      return;
-    }
+  // const handleSubmitStripe = async (e) => {
+  //   e.preventDefault();
+  //   if (!stripe || !elements) {
+  //     console.error("Stripe.js has not loaded yet.");
+  //     return;
+  //   }
 
-    const cardElement = elements.getElement(CardElement);
+  //   const cardElement = elements.getElement(CardElement);
 
-    if (!cardElement) {
-      console.error("CardElement is missing.");
-      return;
-    }
+  //   if (!cardElement) {
+  //     console.error("CardElement is missing.");
+  //     return;
+  //   }
 
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-    });
+  //   const { error, paymentMethod } = await stripe.createPaymentMethod({
+  //     type: "card",
+  //     card: cardElement,
+  //   });
 
-    if (!error) {
-      try {
-        const { id } = paymentMethod;
-        const response = await axios.post("http://localhost:4000/payment", {
-          amount: calculateTotalPrice(), // Pass the total amount here
-          id,
-        });
+  //   if (!error) {
+  //     try {
+  //       const { id } = paymentMethod;
+  //       const response = await axios.post("http://localhost:4000/payment", {
+  //         amount: calculateTotalPrice(), // Pass the total amount here
+  //         id,
+  //       });
 
-        if (response.data.success) {
-          console.log("Successful payment");
-          setSuccess(true);
-        }
-      } catch (error) {
-        console.log("Error", error);
-        message.error("Payment failed. Please try again.");
-      }
-    } else {
-      console.log(error.message);
-      message.error("Payment failed. Please check your card details.");
-    }
-  };
+  //       if (response.data.success) {
+  //         console.log("Successful payment");
+  //         setSuccess(true);
+  //       }
+  //     } catch (error) {
+  //       console.log("Error", error);
+  //       message.error("Payment failed. Please try again.");
+  //     }
+  //   } else {
+  //     console.log(error.message);
+  //     message.error("Payment failed. Please check your card details.");
+  //   }
+  // };
 
   console.log("current is:", current);
   console.log("Form:", formData);
@@ -340,7 +424,9 @@ function AllStepCheckOutForm() {
                       placeholder="กรุณาเลือกวันที่"
                       className="w-[22.5vw] h-[44px] px-4 py-2.5"
                       value={formData.date}
-                      onChange={(date) => handleFormChange({ date })}
+                      onChange={(date) =>
+                        handleFormChange({ date: dayjs(date) })
+                      }
                     />
                   </Form.Item>
 
@@ -354,7 +440,9 @@ function AllStepCheckOutForm() {
                       placeholder="กรุณาเลือกเวลา"
                       className="w-[22.5vw] h-[44px] px-4 py-2.5"
                       value={formData.time}
-                      onChange={(time) => handleFormChange({ time })}
+                      onChange={(time) =>
+                        handleFormChange({ time: dayjs(time) })
+                      }
                     />
                   </Form.Item>
 
@@ -384,9 +472,9 @@ function AllStepCheckOutForm() {
                         placeholder="กรุณากรอกแขวง / ตำบล"
                         allowClear
                         style={{ height: "44px" }}
-                        value={formData.subdistrict}
+                        value={formData.sub_district}
                         onChange={(e) =>
-                          handleFormChange({ subdistrict: e.target.value })
+                          handleFormChange({ sub_district: e.target.value })
                         }
                       />
                     </Form.Item>
@@ -423,7 +511,7 @@ function AllStepCheckOutForm() {
                         }
                       />
                     </Form.Item>
-                    <div className="mr-[120px] ">
+                    {/* <div className="mr-[120px] ">
                       <Form.Item
                         label="รหัสไปรษณีย์ :"
                         className="font-medium  text-grey900"
@@ -439,7 +527,7 @@ function AllStepCheckOutForm() {
                           }
                         />
                       </Form.Item>
-                    </div>
+                    </div> */}
                   </div>
 
                   <Form.Item
@@ -450,9 +538,9 @@ function AllStepCheckOutForm() {
                     <TextArea
                       placeholder="กรุณาระบุข้อมูลเพิ่มเติม"
                       autoSize={{ minRows: 3 }}
-                      value={formData.additionalInfo}
+                      value={formData.note}
                       onChange={(e) =>
-                        handleFormChange({ additionalInfo: e.target.value })
+                        handleFormChange({ note: e.target.value })
                       }
                     />
                   </Form.Item>
@@ -472,95 +560,98 @@ function AllStepCheckOutForm() {
                 items={items}
               />
             </div>
-            <Elements stripe={stripePromise}>
-              <div>ชำระเงิน</div>
-              <div className="flex justify-evenly mt-4">
-                <button
-                  className={`w-full border border-[#CCD0D7] rounded-lg p-1 flex flex-col justify-center items-center focus:outline-none focus:ring focus:ring-[#336DF2] ${
-                    selectedPaymentMethod === "qr"
-                      ? "bg-[#E7EEFF] focus:ring focus:ring-[#336DF2]"
-                      : ""
-                  }`}
-                  onClick={() => handlePaymentMethodClick("qr")}
-                >
-                  <img src={qr} />
-                  <p>พร้อมเพย์</p>
-                </button>
-                <button
-                  className={`w-full border border-[#CCD0D7] rounded-lg p-1 ml-4 flex flex-col justify-center items-center focus:outline-none focus:ring focus:ring-[#336DF2] ${
-                    selectedPaymentMethod === "credit"
-                      ? "bg-[#E7EEFF] focus:ring focus:ring-[#336DF2]"
-                      : ""
-                  }`}
-                  onClick={() => handlePaymentMethodClick("credit")}
-                >
-                  <img src={credit} />
-                  <p>บัตรเครดิต</p>
-                </button>
-              </div>
-              <div className="mt-5">
-                <p>
-                  หมายเลขบัตรเครดิต<span className="text-[#C82438]">*</span>
-                </p>
-                <input
-                  placeholder="กรุณากรอกหมายเลขบัตรเครดิต"
-                  className="w-full border border-[#CCD0D7] bg-white rounded-lg p-2"
-                  required
-                />
-              </div>
-              <div className="mt-5">
-                <p>
-                  ชื่อบนบัตร<span className="text-[#C82438]">*</span>
-                </p>
-                <input
-                  placeholder="กรุณากรอกชื่อบนบัตร"
-                  className="w-full border bg-white border-[#CCD0D7] rounded-lg p-2"
-                  required
-                />
-              </div>
-              <div className="flex mt-5">
-                <div>
-                  <p>
-                    วันหมดอายุ<span className="text-[#C82438]">*</span>
-                  </p>
-                  <DatePicker
-                    defaultValue={dayjs("2015/01", monthFormat)}
-                    format={monthFormat}
-                    picker="month"
-                    placeholder="MM/YY"
-                    required
-                  />
-                </div>
-                <div className="ml-4">
-                  <p>
-                    รหัส CVC / CVV
-                    <span className="text-[#C82438] bg-white">*</span>
-                  </p>
-                  <input
-                    type="tel"
-                    placeholder="xxx"
-                    className="w-full border bg-white border-[#CCD0D7] rounded-lg p-0.5"
-                    maxLength="3"
-                    pattern="([0-9]{3})"
-                    required
-                  />
-                </div>
-              </div>
-              <div className="my-8 w-full h-[1px] border border-[#CCD0D7]"></div>
+            {/* <Elements stripe={stripePromise}> */}
+            <div>ชำระเงิน</div>
+            <div className="flex justify-evenly mt-4">
+              <button
+                className={`w-full border border-[#CCD0D7] rounded-lg p-1 flex flex-col justify-center items-center focus:outline-none focus:ring focus:ring-[#336DF2] ${
+                  selectedPaymentMethod === "qr"
+                    ? "bg-[#E7EEFF] focus:ring focus:ring-[#336DF2]"
+                    : ""
+                }`}
+                onClick={() => handlePaymentMethodClick("qr")}
+              >
+                <img src={qr} />
+                <p>พร้อมเพย์</p>
+              </button>
+              <button
+                className={`w-full border border-[#CCD0D7] rounded-lg p-1 ml-4 flex flex-col justify-center items-center focus:outline-none focus:ring focus:ring-[#336DF2] ${
+                  selectedPaymentMethod === "credit"
+                    ? "bg-[#E7EEFF] focus:ring focus:ring-[#336DF2]"
+                    : ""
+                }`}
+                onClick={() => handlePaymentMethodClick("credit")}
+              >
+                <img src={credit} />
+                <p>บัตรเครดิต</p>
+              </button>
+            </div>
+            <div className="mt-5">
+              <p>
+                หมายเลขบัตรเครดิต<span className="text-[#C82438]">*</span>
+              </p>
+              <input
+                placeholder="กรุณากรอกหมายเลขบัตรเครดิต"
+                className="w-full border border-[#CCD0D7] bg-white rounded-lg p-2"
+                required
+              />
+            </div>
+            <div className="mt-5">
+              <p>
+                ชื่อบนบัตร<span className="text-[#C82438]">*</span>
+              </p>
+              <input
+                placeholder="กรุณากรอกชื่อบนบัตร"
+                className="w-full border bg-white border-[#CCD0D7] rounded-lg p-2"
+                required
+              />
+            </div>
+            <div className="flex mt-5">
               <div>
-                <p>Promotion Code</p>
-                <input
-                  placeholder="กรุณากรอกโค้ดส่วนลด (ถ้ามี)"
-                  className="w-full border bg-white border-[#CCD0D7] rounded-lg p-1"
-                  onChange={handlePromotionInputChange} 
+                <p>
+                  วันหมดอายุ<span className="text-[#C82438]">*</span>
+                </p>
+                <DatePicker
+                  defaultValue={dayjs("2015/01", monthFormat)}
+                  format={monthFormat}
+                  picker="month"
+                  placeholder="MM/YY"
+                  required
                 />
               </div>
-              <div className="pt-6 ml-5">
-                <button className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-20 p-1 px-1 bg-[#336DF2] rounded-lg" onClick={handleApplyPromotion}>
-                  ใช้โค้ด
-                </button>
+              <div className="ml-4">
+                <p>
+                  รหัส CVC / CVV
+                  <span className="text-[#C82438] bg-white">*</span>
+                </p>
+                <input
+                  type="tel"
+                  placeholder="xxx"
+                  className="w-full border bg-white border-[#CCD0D7] rounded-lg p-0.5"
+                  maxLength="3"
+                  pattern="([0-9]{3})"
+                  required
+                />
               </div>
-            </Elements>
+            </div>
+            <div className="my-8 w-full h-[1px] border border-[#CCD0D7]"></div>
+            <div>
+              <p>Promotion Code</p>
+              <input
+                placeholder="กรุณากรอกโค้ดส่วนลด (ถ้ามี)"
+                className="w-full border bg-white border-[#CCD0D7] rounded-lg p-1"
+                onChange={handlePromotionInputChange}
+              />
+            </div>
+            <div className="pt-6 ml-5">
+              <button
+                className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-20 p-1 px-1 bg-[#336DF2] rounded-lg"
+                onClick={handleApplyPromotion}
+              >
+                ใช้โค้ด
+              </button>
+            </div>
+            {/* </Elements> */}
           </div>
         ) : null}
         {/* summary-box */}
@@ -618,11 +709,7 @@ function AllStepCheckOutForm() {
           <div className="flex justify-between pt-5 mb-2">
             <div className="text-[16px] text-[#646C80]">รวม</div>
             <div className="text-black font-bold">
-              {calculateTotalPrice().reduce(
-                (total, item) => total + item.price_per_unit * item.count,
-                0
-              )}
-              .00฿
+              {totalPrice.toFixed(2)} ฿
             </div>
           </div>
           {current === 3 && (
@@ -672,7 +759,7 @@ function AllStepCheckOutForm() {
             {current < steps.length - 1 && (
               <button
                 className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-40 p-2 px-6 bg-[#336DF2] rounded-lg"
-                onClick={current === 2 ? () => next(onFinish()) : () => next()}
+                onClick={current === 2 ? () => next() : () => next()}
               >
                 ดำเนินการต่อ
                 <img src={arrowWhite} alt="goarrow" />
@@ -682,9 +769,10 @@ function AllStepCheckOutForm() {
               <button
                 type="primary"
                 onClick={(e) => {
-                  e.preventDefault(); // Prevent the default form submission
+                  e.preventDefault();
+                  handleFormSubmit(); // Prevent the default form submission
                   message.success("Processing complete!");
-                  handleSubmitStripe(e); // Pass the event object
+                  // handleSubmitStripe(e); // Pass the event object
                   next();
                 }}
                 className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-45 p-2 px-6 bg-[#336DF2] rounded-lg"
