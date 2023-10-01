@@ -18,6 +18,8 @@ import axios from "axios";
 import arrow from "../../assets/AdminPhoto/arrow.png";
 import trash from "../../assets/homepagePhoto/trash.svg";
 import AlertBoxDelete from "../AlertBox.jsx";
+import dayjs from 'dayjs';
+
 
 function PromotionEdit() {
   // const [promotion, setPromotion] = useState({});
@@ -35,24 +37,21 @@ function PromotionEdit() {
     promotion_code: "",
     promotion_types: "",
     promotion_discount: "",
-
-
     promotion_quota: "",
-
     promotion_expiry_date: null,
-    promotion_expiry_time: null,
-
-   
+    promotion_expiry_time: null,  
   });
 
   const navigate = useNavigate();
 
+  const now = dayjs();
+
   const params = useParams();
 
   const isFutureTime = (current) => {
-    const now = moment().startOf("day");
-    const currentTime = moment();
-    const selectedTime = moment(current);
+    const now = dayjs().startOf("day");
+    const currentTime = dayjs();
+    const selectedTime = dayjs(current);
     return (
       selectedTime.isAfter(now) ||
       (selectedTime.isSame(now, "day") && selectedTime.isAfter(currentTime))
@@ -60,7 +59,7 @@ function PromotionEdit() {
   };
 
   const isFutureDate = (current) => {
-    const now = moment().startOf("day");
+    const now = dayjs().startOf("day");
     return current && current.isAfter(now);
   };
 
@@ -76,20 +75,13 @@ function PromotionEdit() {
           promotion_types: result.data.data[0].promotion_types,
           promotion_discount: result.data.data[0].promotion_discount,
           promotion_quota: result.data.data[0].promotion_quota,
-          promotion_expiry_date: moment(
+          promotion_expiry_date: dayjs(
             result.data.data[0].promotion_expiry_date
           ),
           promotion_expiry_time: moment(
             result.data.data[0].promotion_expiry_time,
             "HH:mm"
-          ),
-          promotion_expiry_date: moment(
-            result.data.data[0].promotion_expiry_date
-          ),
-          promotion_expiry_time: moment(
-            result.data.data[0].promotion_expiry_time,
-            "HH:mm"
-          ),
+          ),       
           promotion_created_date_time:
             result.data.data[0].promotion_created_date_time,
           promotion_edited_date_time:
