@@ -26,10 +26,41 @@ function AllStepCheckOutForm() {
 
   const [totalPrice, setTotalPrice] = useState(0);
 
+  const [expirationDate, setExpirationDate] = useState(null); // State for expiration date
+  
+  const [isApplied, setIsApplied] = useState(false);
+
+  const [promotionQuota, setPromotionQuota] = useState(null);
+
+  const {
+    promotion_types,
+    promotion_discount,
+    promotion_expiry_date,
+    promotion_quota,
+    promotion_code,
+  } = promotion;
+
+  const calculateDiscountedPrice = () => {
+    if (!promotion_types) {
+      return totalPrice;
+    }
+
+    if (promotion_types === "fixed") {
+      return totalPrice - promotion_discount;
+    }
+
+    if (promotion_types === "percent") {
+      const discountAmount = (promotion_discount / 100) * totalPrice;
+      return totalPrice - discountAmount;
+    }
+
+    return totalPrice;
+  };
+
   const navigate = useNavigate();
   const monthFormat = "MM/YY";
   const [promotionCode, setPromotionCode] = useState("");
-  const { promotion, getPromotion, checkPromotionExpiry, decreaseQuota } =
+  const { promotion, getPromotion, decreaseQuota } =
     usePromotion();
 
   // const [success, setSuccess] = useState(false);
@@ -116,16 +147,55 @@ function AllStepCheckOutForm() {
   };
 
   const handleApplyPromotion = async () => {
-    console.log(
-      "handleApplyPromotion called with promotionCode:",
-      promotionCode
-    );
+    if (!promotionCode) {
+      message.error("กรุณากรอก promotion code ก่อน");
+      return;
+    }
+
     try {
       await getPromotion(promotionCode);
-      await checkPromotionExpiry(promotion.promotion_expiry);
-      await decreaseQuota(promotion.promotion_code);
-      message.success("Promotion applied successfully.");
-      console.log("Promotion", promotion.promotion_code);
+
+      if (promotionCode !== promotion_code) {
+        message.error("โปรโมชันโค้ดไม่ถูกต้อง");
+        return;
+      }
+
+      // Check if the promotion has already been applied
+      if (isApplied) {
+        message.warning("ท่านใช้ส่วนลดไปแล้ว");
+        return;
+      }
+
+      // Check expiration date
+      const currentDate = new Date();
+      const expirationDateObject = new Date(promotion_expiry_date);
+
+      if (currentDate > expirationDateObject) {
+          message.error("โค้ดหมดอายุแล้ว");
+          return;
+      }
+
+      // Check code usage quota
+      if (0 < promotion_quota) {
+        // Increment the code usage count
+        setExpirationDate(promotion_expiry_date); // Update expiration date
+        setPromotionQuota(promotion_quota);
+        setIsApplied(true); 
+        message.success("โค้ดถูกใช้งานแล้ว");
+
+        decreaseQuota(promotion);
+
+        // Calculate discounted price here
+        const discountedPrice = calculateDiscountedPrice();
+
+        // Update the UI with the discounted price
+        setTotalPrice(discountedPrice);
+
+      } else {
+          message.error("โค้ดหมดแล้ว");
+      }
+
+      
     } catch (error) {
       message.error(error.message);
     }
