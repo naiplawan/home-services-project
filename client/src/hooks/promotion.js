@@ -45,11 +45,11 @@ export const usePromotion = () => {
     axios.put(`http://localhost:4000/promotion/${promotion.promotion_id}`, updatedPromotionItem)
       .then((response) => {
         console.log("Decreased promotion quota:", response.data);
-        message.success("Promotion applied successfully.");
+        message.success("ใช้โค้ดส่วนลดสำเร็จ");
       })
       .catch((error) => {
         console.error("Failed to decrease promotion quota:", error);
-        message.error("Failed to Send Data to Server");
+        message.error("ส่งข้อมูลไปเซิฟเวอร์ล้มเหลว");
       });
   };
 

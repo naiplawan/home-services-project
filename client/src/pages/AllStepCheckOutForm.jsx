@@ -24,8 +24,13 @@ function AllStepCheckOutForm() {
   const [selectedSubService, setSelectedSubService] = useState([]);
   const { TextArea } = Input;
 
-  const [totalPrice, setTotalPrice] = useState(0);
+  const navigate = useNavigate();
+  const monthFormat = "MM/YY";
+  const [promotionCode, setPromotionCode] = useState("");
+  const { promotion, getPromotion, decreaseQuota } =
+    usePromotion();
 
+  const [totalPrice, setTotalPrice] = useState(0);
   const [expirationDate, setExpirationDate] = useState(null); // State for expiration date
   
   const [isApplied, setIsApplied] = useState(false);
@@ -56,12 +61,6 @@ function AllStepCheckOutForm() {
 
     return totalPrice;
   };
-
-  const navigate = useNavigate();
-  const monthFormat = "MM/YY";
-  const [promotionCode, setPromotionCode] = useState("");
-  const { promotion, getPromotion, decreaseQuota } =
-    usePromotion();
 
   // const [success, setSuccess] = useState(false);
   // const stripePromise = loadStripe(
@@ -156,7 +155,7 @@ function AllStepCheckOutForm() {
       await getPromotion(promotionCode);
 
       if (promotionCode !== promotion_code) {
-        message.error("โปรโมชันโค้ดไม่ถูกต้อง");
+        // message.error("โปรโมชันโค้ดไม่ถูกต้อง");
         return;
       }
 
@@ -231,6 +230,21 @@ function AllStepCheckOutForm() {
   const calculateTotalPrice = () => {
     return selectedSubService;
   };
+
+  useEffect(() => {
+    console.log("promotion:", promotion);
+    if (isApplied) {
+      setExpirationDate(promotion_expiry_date);
+      setPromotionQuota(promotion_quota);
+    }
+  }, [promotion, isApplied]);
+
+  useEffect(() => {
+    if (promotionCode === promotion_code) {
+      // If the entered code matches the promotion code, apply it automatically
+      handleApplyPromotion();
+    }
+  }, [promotionCode, promotion_code])
 
   useEffect(() => {
     // ฟังก์ชันสำหรับคำนวณราคาและอัปเดต state
