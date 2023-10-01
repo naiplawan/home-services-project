@@ -154,7 +154,8 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
     const service_id = latestService[0].service_id;
 
     for (const subServiceItem of subServiceItems) {
-      subServiceItem.service_id = service_id; // Add service_id to each subServiceItem
+      subServiceItem.service_id = service_id,
+      subServiceItem.sub_service_quantity = 1 ; // Add service_id to each subServiceItem
     }
 
     if (!service_id) {
@@ -166,7 +167,9 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
 
     // Insert sub-services
     const { data: insertedSubserviceData, error: subServiceError } =
-      await supabase.from("sub_service").insert(subServiceItems);
+      await supabase
+      .from("sub_service")
+      .insert(subServiceItems);
 
     if (subServiceError) {
       console.error(
