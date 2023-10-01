@@ -30,12 +30,19 @@ function PromotionEdit() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
 
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+
   const [newFormData, setFormData] = useState({
     promotion_code: "",
     promotion_types: "",
     promotion_discount: "",
 
+
     promotion_quota: "",
+
+    promotion_expiry_date: null,
+    promotion_expiry_time: null,
 
     promotion_expiry_date: null,
     promotion_expiry_time: null,
@@ -72,6 +79,13 @@ function PromotionEdit() {
           promotion_types: result.data.data[0].promotion_types,
           promotion_discount: result.data.data[0].promotion_discount,
           promotion_quota: result.data.data[0].promotion_quota,
+          promotion_expiry_date: moment(
+            result.data.data[0].promotion_expiry_date
+          ),
+          promotion_expiry_time: moment(
+            result.data.data[0].promotion_expiry_time,
+            "HH:mm"
+          ),
           promotion_expiry_date: moment(
             result.data.data[0].promotion_expiry_date
           ),
@@ -126,6 +140,20 @@ function PromotionEdit() {
     }));
   };
 
+  const handleDateChange = (date) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      promotion_expiry_date: date,
+    }));
+  };
+
+  const handleTimeChange = (time) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      promotion_expiry_time: time,
+    }));
+  };
+
   const handleSubmitEdit = async () => {
     try {
       console.log("formData", newFormData);
@@ -136,7 +164,22 @@ function PromotionEdit() {
       formData.append("promotion_types", newFormData.promotion_types);
       formData.append("promotion_discount", newFormData.promotion_discount);
 
+
       formData.append("promotion_quota", newFormData.promotion_quota);
+
+      if (newFormData.promotion_expiry_date) {
+        formData.append(
+          "promotion_expiry_date",
+          newFormData.promotion_expiry_date.format("YYYY-MM-DD")
+        );
+      }
+
+      if (newFormData.promotion_expiry_time) {
+        formData.append(
+          "promotion_expiry_time",
+          newFormData.promotion_expiry_time.format("HH:mm")
+        );
+      }
 
       if (newFormData.promotion_expiry_date) {
         formData.append(
@@ -446,6 +489,7 @@ function PromotionEdit() {
                         current && current < moment().startOf("day")
                       }
                       style={{ width: "50%" }}
+                      style={{ width: "50%" }}
                     />
                   </Form.Item>
                 </Col>
@@ -461,6 +505,8 @@ function PromotionEdit() {
                     noStyle
                   >
                     <TimePicker
+                      value={newFormData.promotion_expiry_time}
+                      onChange={handleTimeChange}
                       value={newFormData.promotion_expiry_time}
                       onChange={handleTimeChange}
                       format="HH:mm"
