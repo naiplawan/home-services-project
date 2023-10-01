@@ -783,7 +783,7 @@ function AllStepCheckOutForm() {
                   </div>
                   <div className="flex justify-between">
                     <div className="text-[#646C80]">ข้อมูลเพิ่มเติม:</div>
-                    <div className="text-black">{formData.additionalInfo}</div>
+                    <div className="text-black">{formData.note}</div>
                   </div>
                 </div>
               ) : null}
