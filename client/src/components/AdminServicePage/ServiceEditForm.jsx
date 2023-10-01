@@ -24,16 +24,57 @@ import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
 import image from "../../assets/AdminPhoto/imageIndex.js";
 import { names } from "@ctrl/tinycolor";
-import trash from "../../assets/homepagePhoto/trash.svg";
-
+import drag from "../../assets/AdminPhoto/drag.svg";
+import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 
 function ServiceEditForm() {
   //render component and package area
+  const [form] = Form.useForm();
   const navigate = useNavigate();
   const params = useParams();
   const { Dragger } = Upload;
   
-  const { serviceId } = useParams();
+
+
+  const handleDragEnd = (result) => {
+    if (!result.destination || result.destination.index === result.source.index) {
+      return;
+    }
+  
+    const updatedSubServices = [...currentSubService];
+    const [reorderedItem] = updatedSubServices.splice(result.source.index, 1);
+    updatedSubServices.splice(result.destination.index, 0, reorderedItem);
+  
+    setSubServices(updatedSubServices); // อัพเดต subServices ใหม่
+  
+    updateSubServiceOrder(updatedSubServices);
+  };
+  
+  
+  const updateSubServiceOrder = async (updatedSubServices) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:4000/service/${params.serviceId}/update-sub-service-order`,
+        {
+          sub_services: updatedSubServices,
+        }
+      );
+  
+      if (response.status === 200) {
+        message.success("Successfully updated sub_service order");
+      } else {
+        console.error("Failed to update sub_service order:", response.data);
+        message.error("Failed to update sub_service order");
+      }
+    } catch (error) {
+      console.error("Error updating sub_service order:", error);
+      message.error("Error updating sub_service order");
+    }
+  };
+  
+  
+  
+  
 
   //state for category
   const [category, setCategory] = useState([]); //use to map data on category
@@ -47,13 +88,17 @@ function ServiceEditForm() {
 
   //state
   const [service, setService] = useState([]);
-
+  const [subServices, setSubServices] = useState([]);
   //state for name
   const [editableServiceName, setEditableServiceName] = useState(
     service.service_name
   );
 
-  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+  //state for sub_service
+
+  // const [newSubService, setNewSubService] = useState([]);
+
+  // console.log("newSubService", newSubService);
 
   const currentSubService = service.sub_service; // subservice เดิม
 
@@ -88,85 +133,68 @@ function ServiceEditForm() {
 
   console.log(category.data); // array of object
 
+  const [subService, setSubService] = useState([]);
+
+
   const getService = async (serviceId) => {
     try {
-      const response = await axios.get(
-        `http://localhost:4000/service/${serviceId}`
-      );
-      setService(response.data.data);
-      setEditableServiceName(response.data.data.service_name);
-      setCurrentImage(response.data.data.service_photo);
-      setCurrentCategory(response.data.data.category);
-      console.log("all data", response.data.data);
+      const response = await axios.get(`http://localhost:4000/service/${serviceId}`);
+      if (response.data.data) { // ตรวจสอบว่า response.data.data ไม่เป็น undefined
+        setService(response.data.data);
+        setEditableServiceName(response.data.data.service_name);
+        setCurrentImage(response.data.data.service_photo);
+        setCurrentCategory(response.data.data.category);
+        if (response.data.data.service && response.data.data.service.sub_service) {
+          setSubService(response.data.data.service.sub_service);
+        } else {
+          setSubService([]); // หาก sub_service ไม่ถูกกำหนดให้ตั้งค่าเป็นรายการว่าง
+        }
+        console.log("all data", response.data.data);
+      } else {
+        console.error("Data is undefined:", response.data);
+      }
     } catch (error) {
       console.error("Error fetching service data:", error);
     }
   };
+  
 
  
 console.log('service before updating', service)
-
-const handleDelete = async () => {
-  try {
-    await axios.delete(`http://localhost:4000/service/${serviceId}`);
-    message.success("ลบserviceสำเร็จ");
-    navigate("/admin-service");
-  } catch (error) {
-    console.error("เกิดข้อผิดพลาดในการลบโปรโมชั่น:", error);
-  }
-};
-
-const showDeleteConfirmation = () => {
-  setDeleteConfirmation(true);
-};
-
-const hideDeleteConfirmation = () => {
-  setDeleteConfirmation(false);
-};
 
   // put data API area
   const handleSubmitEdit = async (values) => {
     try {
       console.log("Form values:", values);
-
+  
       const subServiceData = values["service.sub_service"];
-
+  
       const user_id = localStorage.getItem("user_id");
       const selectedCategoryId = category.data.find(
         (category) => category.category_name === selectedCategory
       )?.category_id;
-
+  
       const formData = new FormData();
       formData.append("user_id", user_id);
-
-      // Check if service_name has changed
+  
       if (editableServiceName !== service.service_name) {
         formData.append("service_name", editableServiceName);
-      } else {
-        formData.append("service_name", service.service_name); // Use the fetched value
       }
-
-      // Check if category_id has changed
+  
       if (selectedCategoryId !== currentCategory.category_id) {
         formData.append("category_id", selectedCategoryId);
-      } else {
-        formData.append("category_id", currentCategory.category_id); // Use the fetched value
       }
-
-      // Check if file has changed
+  
       if (fileList[0] && fileList[0] !== currentImage) {
         formData.append("file", fileList[0]);
-      } else {
-        formData.append("file", currentImage); // Use the fetched value
       }
-
-      // Check if sub_service has changed
-
-      formData.append("items", JSON.stringify(subServiceData));
-
-      // Add the unchanged fields
+  
+      if (subServiceData) {
+        formData.append("items", JSON.stringify(subServiceData));
+      }
+  
       formData.append("service_created_date", service.service_created_date);
-
+  
       const response = await axios.put(
         `http://localhost:4000/service/${params.serviceId}`,
         formData,
@@ -174,7 +202,7 @@ const hideDeleteConfirmation = () => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
+  
       if (response.status === 200) {
         message.success("Successfully update service");
       } else {
@@ -186,6 +214,8 @@ const hideDeleteConfirmation = () => {
       message.error("Error updating service");
     }
   };
+  
+  
 
   // use effect
   // get category to map
@@ -204,6 +234,13 @@ const hideDeleteConfirmation = () => {
     getService(params.serviceId);
   }, [params.serviceId]);
 
+  useEffect(() => {
+    // ในที่นี้คุณสามารถดึงข้อมูล sub-service จากเซิร์ฟเวอร์หรือฐานข้อมูลอื่น ๆ ให้ตรงกับตำแหน่งใหม่
+    // และอัพเดตค่า subServices ด้วยข้อมูลใหม่ที่ได้มา
+    console.log(subServices);
+  }, [subServices]);
+
+
   const labelStyle = {
     marginTop: "10px",
     color: "var(--gray-900, #323640)",
@@ -216,9 +253,7 @@ const hideDeleteConfirmation = () => {
 
   return (
     <>
-    <div>
-
-   
+    <DragDropContext onDragEnd={handleDragEnd}>
       <Form
         labelCol={{ span: 100 }}
         wrapperCol={{ span: 24 }}
@@ -382,141 +417,135 @@ const hideDeleteConfirmation = () => {
               <hr className="mt-10 mb-10 text-grey300" />
 
               {/* {service.sub_service.length > 0 && ( */}
-              <div className="mb-10 text-grey700 text-base font-medium ">
-                รายการบริการย่อย
-              </div>
-              <Form.List
-                name="service.sub_service"
-                initialValue={service.sub_service}
+              <div className="mb-10 text-grey700 text-base font-medium">
+  รายการบริการย่อย
+</div>
+<Form.List name="service.sub_service" initialValue={service.sub_service}>
+  {(subServices, { add, remove }) => (
+    <>
+      <Droppable droppableId="subServices">
+        {(provided) => (
+          <div {...provided.droppableProps} ref={provided.innerRef}>
+            {subServices.map(({ key, name, ...restField }, index) => (
+              <Draggable
+                key={index.toString()}
+                draggableId={key.toString()}
+                index={index}
               >
-                {(subServices, { add, remove }) => (
-                  <>
-                    {service.sub_service &&
-                      subServices.map(({ key, name, ...restField }) => (
-                        <Space
-                          key={key}
-                          style={{ display: "flex", marginBottom: 8 }}
-                          align="baseline"
-                        >
-                          <Form.Item
-                            {...restField}
-                            name={[name, "sub_service_name"]}
-                            label="ชื่อรายการ"
-                            rules={[
-                              {
-                                required: true,
-                                message: "กรุณากรอกชื่อรายการ",
-                              },
-                            ]}
-                            // initialValue={
-                            //   currentSubService[key]?.sub_service_name
-                            // }
-                          >
-                            <Input
-                              className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
-                              placeholder="ชื่อรายการ"
-                              // value={currentSubService.sub_service_name}
-                              // onChange={(e) => {
-                              //   setNewSubService({
-                              //     sub_service_: e.target.value,
-                              //   });
-                              // }}
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "price_per_unit"]}
-                            label="ค่าบริการ / 1 หน่วย"
-                            // rules={[
-                            //   {
-                             
-                            //     message: "กรุณากรอกค่าบริการ / 1 หน่วย",
-                            //   },
-                            //   {
-                            //     message: "กรุณากรอกตัวเลข",
-                            //   },
-                            // ]}
-                            // initialValue={
-                            //   currentSubService[key]?.price_per_unit
-                            // }
-                          >
-                            <Input
-                              type="number"
-                              min="0"
-                              max="20000"
-                              step="any"
-                              className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
-                              placeholder="ค่าบริการ / 1 หน่วย"
-                              // value={currentSubService.price_per_unit}
-                              // onChange={(e) => {
-                              //   setNewSubService({
-                              //     price_per_unit: e.target.value,
-                              //   });
-                              // }}                    
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            {...restField}
-                            name={[name, "unit"]}
-                            label="หน่วยการบริการ"
-                            rules={[
-                              {
-                                required: true,
-                                message: "กรุณากรอกหน่วยการบริการ",
-                              },
-                            ]}
-                            // initialValue={currentSubService[key]?.unit}
-                          >
-                            <Input
-                              className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
-                              placeholder="หน่วยการบริการ"
-                              name="unit"
-                              // value={currentSubService.unit}
-                              
-                            />
-                          </Form.Item>
-                          <div
-                            style={{
-                              flex: "1",
-                              display: "flex",
-                              alignItems: "flex-end",
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    <Space
+                      key={index.toString()} // เปลี่ยน key เป็น index.toString()
+                      style={{ display: "flex", marginBottom: 8 }}
+                      align="baseline"
+                    >
+                      <div className="w-20 relative">
+                        <img
+                          src={drag}
+                          className="w-15 absolute bottom-[-35px]"
+                          alt="Drag"
+                        />
+                      </div>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "sub_service_name"]}
+                        label="ชื่อรายการ"
+                        rules={[
+                          {
+                            required: true,
+                            message: "กรุณากรอกชื่อรายการ",
+                          },
+                        ]}
+                      >
+                        <Input
+                          className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                          placeholder="ชื่อรายการ"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "price_per_unit"]}
+                        label="ค่าบริการ / 1 หน่วย"
+                      >
+                        <Input
+                          type="number"
+                          min="0"
+                          max="20000"
+                          step="any"
+                          className="rounded-lg h-11 border border-grey300 mr-4 py-2.5 px-4 focus:border-blue600 focus:outline-none"
+                          placeholder="ค่าบริการ / 1 หน่วย"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "unit"]}
+                        label="หน่วยการบริการ"
+                        rules={[
+                          {
+                            required: true,
+                            message: "กรุณากรอกหน่วยการบริการ",
+                          },
+                        ]}
+                      >
+                        <Input
+                          className="rounded-lg h-11 border border-grey300 py-2.5 px-4 focus:border-blue600 focus:outline-none mr-4"
+                          placeholder="หน่วยการบริการ"
+                          name="unit"
+                        />
+                      </Form.Item>
+                      <div
+                        style={{
+                          flex: "1",
+                          display: "flex",
+                          alignItems: "flex-end",
+                        }}
+                      >
+                        <Form.Item colon={false} label="">
+                          <a
+                            className=" text-blue600 text-base not-italic font-semibold underline"
+                            onClick={() => {
+                              if (subServices.length > 1) {
+                                remove(name);
+                              } else {
+                                notification.error({
+                                  message: "Error",
+                                  description:
+                                    "ต้องมีรายการย่อยอย่างน้อย  1 รายการ",
+                                  duration: 5,
+                                });
+                              }
                             }}
                           >
-                            <Form.Item colon={false} label="">
-                              <a
-                                className=" text-blue600 text-base not-italic font-semibold underline"
-                                onClick={() => {
-                                  if (subServices.length > 1) {
-                                    remove(name);
-                                  } else {
-                                    notification.error({
-                                      message: "Error",
-                                      description:
-                                        "ต้องมีรายการย่อยอย่างน้อย  1 รายการ",
-                                      duration: 5, // Set duration (in seconds)
-                                    });
-                                  }
-                                }}
-                              >
-                                ลบรายการ
-                              </a>
-                            </Form.Item>
-                          </div>
-                        </Space>
-                      ))}
-                    <button
-                      className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
-                      type="button"
-                      onClick={() => {
-                        add();
-                        // Add a new empty object to newSubService
-                      }}
-                    >
-                      + เพิ่มรายการ
-                    </button>
-                  </>
+                            ลบรายการ
+                          </a>
+                        </Form.Item>
+                      </div>
+                    </Space>
+                  </div>
                 )}
-              </Form.List>
+              </Draggable>
+            ))}
+          </div>
+        )}
+      </Droppable>
+      <button
+        className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
+        type="button"
+        onClick={() => {
+          add();
+        }}
+      >
+        + เพิ่มรายการ
+      </button>
+    </>
+  )}
+</Form.List>
+
+
 
               <hr className="mt-10 mb-10 text-grey300 "></hr>
               <p className="pb-[25px] ">
@@ -533,30 +562,17 @@ const hideDeleteConfirmation = () => {
               </p>
             </div>
           </div>
+          <div className="ml-0">
+            <img
+              className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
+              alt="Delete"
+              src={image.trashIcon}
+            />
+            ลบบริการ
+          </div>
         </div>
       </Form>
-      <div
-        className="flex justify-end mr-12 mt-5 text-[#80899C] underline cursor-pointer"
-        onClick={showDeleteConfirmation}
-      >
-        <img
-          className="cursor-pointer w-[25px] h-[25px]  "
-          src={trash}
-          alt="Delete"
-        />{" "}
-        ลบ Promotion Code
-      </div>
-      {deleteConfirmation && (
-        <AlertBoxDelete
-          deleteFunction={handleDelete}
-          hideFunction={hideDeleteConfirmation}
-          textAlert="ยืนยันการลบรายการ"
-          alertQuestion={`คุณต้องการลบรายการ ${service.service_name} ใช่หรือไม่ ?`}
-          primary="ลบรายการ"
-          secondary="ยกเลิก"
-        />
-      )}
-      </div>
+      </DragDropContext>
     </>
   );
 }

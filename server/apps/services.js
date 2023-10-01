@@ -422,4 +422,27 @@ serviceRouter.delete("/:id", async (req, res) => {
   }
 });
 
+serviceRouter.put("/:id/update-sub-service-order", async (req, res) => {
+  try {
+    const serviceId = req.params.id;
+    const updatedSubServices = req.body; // รับข้อมูลจากคำขอ PUT
+
+    // อัปเดต _id ของรายการตามตำแหน่งใหม่ที่ได้รับ
+    for (let i = 0; i < updatedSubServices.length; i++) {
+      const subService = updatedSubServices[i];
+      const subServiceId = subService.sub_service_id;
+      const newPosition = i; // ตำแหน่งใหม่ของรายการ
+      
+      // ดำเนินการอัปเดต _id ของรายการในฐานข้อมูลตามตำแหน่งใหม่
+      // ตรวจสอบดูว่าวิธีการอัปเดตข้อมูลในฐานข้อมูลของคุณคืออย่างไร
+    }
+
+    // เมื่ออัปเดตเสร็จสิ้น ส่งการตอบกลับให้ผู้ใช้ว่าอัปเดตสำเร็จ
+    return res.status(200).json({ success: true, message: "Successfully updated sub-service order" });
+  } catch (error) {
+    console.error("Error updating sub-service order", error);
+    res.status(500).json({ success: false, message: "Error updating sub-service order" });
+  }
+});
+
 export default serviceRouter;
