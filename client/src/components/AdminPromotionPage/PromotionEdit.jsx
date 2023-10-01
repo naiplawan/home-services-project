@@ -30,8 +30,6 @@ function PromotionEdit() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
 
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
 
   const [newFormData, setFormData] = useState({
     promotion_code: "",
@@ -44,8 +42,7 @@ function PromotionEdit() {
     promotion_expiry_date: null,
     promotion_expiry_time: null,
 
-    promotion_expiry_date: null,
-    promotion_expiry_time: null,
+   
   });
 
   const navigate = useNavigate();
@@ -140,20 +137,6 @@ function PromotionEdit() {
     }));
   };
 
-  const handleDateChange = (date) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      promotion_expiry_date: date,
-    }));
-  };
-
-  const handleTimeChange = (time) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      promotion_expiry_time: time,
-    }));
-  };
-
   const handleSubmitEdit = async () => {
     try {
       console.log("formData", newFormData);
@@ -181,19 +164,6 @@ function PromotionEdit() {
         );
       }
 
-      if (newFormData.promotion_expiry_date) {
-        formData.append(
-          "promotion_expiry_date",
-          newFormData.promotion_expiry_date.format("YYYY-MM-DD")
-        );
-      }
-
-      if (newFormData.promotion_expiry_time) {
-        formData.append(
-          "promotion_expiry_time",
-          newFormData.promotion_expiry_time.format("HH:mm")
-        );
-      }
 
       const response = await axios.put(
         `http://localhost:4000/promotion/${params.promotionId}`,
@@ -489,7 +459,7 @@ function PromotionEdit() {
                         current && current < moment().startOf("day")
                       }
                       style={{ width: "50%" }}
-                      style={{ width: "50%" }}
+                 
                     />
                   </Form.Item>
                 </Col>
@@ -506,9 +476,7 @@ function PromotionEdit() {
                   >
                     <TimePicker
                       value={newFormData.promotion_expiry_time}
-                      onChange={handleTimeChange}
-                      value={newFormData.promotion_expiry_time}
-                      onChange={handleTimeChange}
+                      onChange={handleTimeChange}                   
                       format="HH:mm"
                       style={{ width: "50%" }}
                     />
