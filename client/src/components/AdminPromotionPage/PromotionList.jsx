@@ -109,14 +109,14 @@ function PromotionList() {
               <ul>
                 <li className="flex text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300">
                   <span className="text-grey700 mx-[1%]">Promotion Code</span>
-                  <span className="text-grey700 mx-[5%]">ประเภท</span>
-                  <span className="text-grey700 mx-[%] ">
+                  <span className="text-grey700 mx-[6%]">ประเภท</span>
+                  <span className="text-grey700 ml-[%] ">
                     โควต้าเหลือ(ครั้ง)
                   </span>
                   <span className="text-grey700 mx-[5%]">ราคาที่ลด</span>
-                  <span className="text-grey700 mx-[3%]">สร้างเมื่อ</span>
-                  <span className="text-grey700 mx-[13%]">วันหมดอายุ</span>
-                  <span className="text-grey700 mx-[6%] mr-[2%]">Action</span>
+                  <span className="text-grey700 mx-[4%]">สร้างเมื่อ</span>
+                  <span className="text-grey700 mx-[12%]">วันหมดอายุ</span>
+                  <span className="text-grey700 mx-[9%] mr-[2%]">Action</span>
                 </li>
                 <ul>
                   {data &&

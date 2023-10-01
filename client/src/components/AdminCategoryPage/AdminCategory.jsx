@@ -139,9 +139,15 @@ function AdminCategory() {
                       {" "}
                       ชื่อหมวดหมู่{" "}
                     </span>
-                    <span className=" text-grey700 mx-[16%]"> สร้างเมื่อ</span>
-                    <span className=" text-grey700 mx-[]"> แก้ไขล่าสุด</span>
-                    <span className=" text-grey700 mx-[29%] mr-[2%]">
+                    <span className=" text-grey700 mx-[16.4%]">
+                      {" "}
+                      สร้างเมื่อ
+                    </span>
+                    <span className=" text-grey700 mx-[-0.5%]">
+                      {" "}
+                      แก้ไขล่าสุด
+                    </span>
+                    <span className=" text-grey700 mx-[30%] mr-[1%]">
                       {" "}
                       Action
                     </span>

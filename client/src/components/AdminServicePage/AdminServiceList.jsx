@@ -167,9 +167,9 @@ function AdminServiceList() {
                 <span className="text-grey700 pl-[7%]">ลำดับ</span>
                 <span className="text-grey700 pl-[4%]">ชื่อหมวดบริการ</span>
                 <span className="text-grey700 pl-[11%]">หมวดหมู่</span>
-                <span className="text-grey700 pl-[10%]">สร้างเมื่อ</span>
+                <span className="text-grey700 pl-[12%]">สร้างเมื่อ</span>
                 <span className="text-grey700 pl-[17%]">แก้ไขล่าสุด</span>
-                <span className="text-grey700 pl-[15%]">Action</span>
+                <span className="text-grey700 pl-[16%]">Action</span>
               </li>
 
               <Droppable droppableId="service-list">
