@@ -45,7 +45,7 @@ function Navbar () {
                 <button className="flex p-2 hover:bg-[#EFEFF2] hover:text-[#232630]" onClick={()=> navigate("/profile")}><span><img src={person} className="mr-3 "/></span>ข้อมูลผู้ใช้งาน</button>
                 <button className="flex p-1 hover:bg-[#EFEFF2] hover:text-[#232630]" onClick={() => navigate(`/customer-ordered-list/${userId}`)}><span><img src={form} className="mr-3"/></span>รายการคำสั่งซ่อม</button>
                 <button className="flex pt-2 p-1 hover:bg-[#EFEFF2] hover:text-[#232630]" onClick={() => navigate(`/customer-ordered-history/${userId}`)}><span><img src={watch} className="mr-3"/></span>ประวัติการซ่อม</button>
-                <button className="flex pt-2 p-1 hover:bg-[#EFEFF2] hover:text-[#232630]" onClick={()=> navigate("/admin")}><span ><img src={watch} className="mr-3" /></span >Admin Dashboard</button>
+                <button className="flex pt-2 p-1 hover:bg-[#EFEFF2] hover:text-[#232630]" onClick={()=> navigate("/admin-category")}><span ><img src={watch} className="mr-3" /></span >Admin Dashboard</button>
                 <button className="flex pt-2 p-2 border-t border-grey300 hover:bg-[#EFEFF2] hover:text-[#232630]" onClick={logout}><span><img src={exit} className="mr-3"/></span>ออกจากระบบ</button>
               </ul>
               </div>

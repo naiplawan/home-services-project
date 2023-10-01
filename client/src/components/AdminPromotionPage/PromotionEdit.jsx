@@ -191,13 +191,8 @@ function PromotionEdit() {
         layout="horizontal"
         name="promotion_form"
         initialValues={{
-          promotion_expiry_date: newFormData.promotion_expiry_date
-            ? moment(newFormData.promotion_expiry_date)
-            : null,
-          promotion_expiry_time: newFormData.promotion_expiry_time
-            ? moment(newFormData.promotion_expiry_time, "HH:mm")
-            : null,
-          // ... (other initial values)
+          promotion_expiry_date: newFormData.promotion_expiry_date,    
+          promotion_expiry_time: newFormData.promotion_expiry_time 
         }}
         onFinish={handleSubmitEdit}
         requiredMark={false}
@@ -429,7 +424,7 @@ function PromotionEdit() {
               <Row gutter={1}>
                 <Col span={8}>
                   <Form.Item
-                    name="promotion_expiry_date"
+                    // name="promotion_expiry_date"
                     rules={[
                       {
                         required: true,
@@ -441,6 +436,11 @@ function PromotionEdit() {
                     <DatePicker
                       value={newFormData.promotion_expiry_date}
                       onChange={handleDateChange}
+                      // onChange={(e) => 
+                      //   setFormData({
+                      //   ...newFormData,
+                      //   promotion_expiry_date: e.target.value
+                      // })}
                       format="YYYY-MM-DD"
                       disabledDate={(current) =>
                         current && current < moment().startOf("day")
@@ -451,7 +451,7 @@ function PromotionEdit() {
                 </Col>
                 <Col span={8}>
                   <Form.Item
-                    name="promotion_expiry_time"
+                    // name="promotion_expiry_time"
                     rules={[
                       {
                         required: true,
