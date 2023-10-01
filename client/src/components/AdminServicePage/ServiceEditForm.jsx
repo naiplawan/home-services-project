@@ -38,7 +38,6 @@ function ServiceEditForm() {
   const [category, setCategory] = useState([]); //use to map data on category
   const [selectedCategory, setSelectedCategory] = useState(""); //this state store the select category
   const [currentCategory, setCurrentCategory] = useState([]); // the category from serviceID(the data before editng)
-  const [selectedCategoryID, setSelectedCategoryID] = useState(""); // fetch categoryId > category_name to display dropdown list
   console.log("เปลี่ยนแคท", currentCategory, typeof currentCategory);
   console.log(selectedCategory);
 
@@ -93,14 +92,11 @@ function ServiceEditForm() {
       const response = await axios.get(
         `http://localhost:4000/service/${serviceId}`
       );
-      const serviceData = response.data.data; // object of service data
       setService(response.data.data);
       setEditableServiceName(response.data.data.service_name);
       setCurrentImage(response.data.data.service_photo);
       setCurrentCategory(response.data.data.category);
       console.log("all data", response.data.data);
-      // Set the selectedCategoryID to the category ID from the database
-      setSelectedCategoryID(serviceData.category_id); 
     } catch (error) {
       console.error("Error fetching service data:", error);
     }
@@ -292,16 +288,16 @@ function ServiceEditForm() {
                   required
                 >
                   <Select
-                    value={selectedCategoryID} // change setSelectedCategory > selectedCategoryID
+                    value={selectedCategory}
                     style={{ width: "50%" }}
                     name="category_id"
-                    onChange={(value) => setSelectedCategoryID(value)} // change setSelectedCategory > selectedCategoryID
+                    onChange={(value) => setSelectedCategory(value)} 
                   >
                     {category.data &&
                       category.data.map((categoryItem) => (
                         <Select.Option
                           key={categoryItem.category_id}
-                          value={categoryItem.category_id} // change category.name > category.id
+                          value={categoryItem.category_name}
                         >
                           {categoryItem.category_name}
                         </Select.Option>
@@ -393,7 +389,6 @@ function ServiceEditForm() {
                   initialValue={service.sub_service}
                 >
                   {(subServices, { add, remove }) => (
-                    
                     <>
                       {service.sub_service &&
                         subServices.map(({ key, name, ...restField }) => (
@@ -403,8 +398,8 @@ function ServiceEditForm() {
                               display: "flex",
                               alignItems: "center",
                               gap: "16px",
-                              width: "100%"
-                            }}                                                 
+                              width: "100%",
+                            }}
                           >
                             <div style={{ width: "50%" }}>
                               <Form.Item
@@ -434,7 +429,6 @@ function ServiceEditForm() {
                                 labelAlign="top"
                                 labelCol={{ span: 24 }}
                                 rules={[
-                                  
                                   {
                                     validator(_, value) {
                                       if (value <= 20000) {
@@ -466,7 +460,6 @@ function ServiceEditForm() {
                                 labelCol={{ span: 24 }}
                                 rules={[
                                   {
-                                  
                                     message: "กรุณากรอกหน่วยการบริการ",
                                   },
                                 ]}
@@ -480,7 +473,7 @@ function ServiceEditForm() {
                             </div>
                             <div
                               style={{
-                               width: "10%",
+                                width: "10%",
                                 display: "flex",
                                 alignItems: "flex-end",
                               }}
@@ -547,7 +540,7 @@ function ServiceEditForm() {
             src={trash}
             alt="Delete"
           />{" "}
-          ลบ Promotion Code
+          ลบบริการ
         </div>
         {deleteConfirmation && (
           <AlertBoxDelete

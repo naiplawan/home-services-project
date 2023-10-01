@@ -101,7 +101,7 @@ checkoutRouter.post("/", async (req, res) => {
       .insert([
         {
           order_number,
-          status: "กำลังดำเนินการ",
+          status: "รอดำเนินการ",
           checkout_id,
           user_id,
         },
