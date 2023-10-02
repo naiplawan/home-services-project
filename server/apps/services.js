@@ -1,13 +1,13 @@
 import { Router } from "express";
 import supabase from "../utils/supabase.js";
 import multer from "multer";
-import { protect } from "../middlewares/protects.js";
+// import { protect } from "../middlewares/protects.js";
 
 const serviceRouter = Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-serviceRouter.use(protect);
+// serviceRouter.use(protect);
 // API route to service listing page
 serviceRouter.get("/", async (req, res) => {
   const keywords = req.query.keywords || "";
