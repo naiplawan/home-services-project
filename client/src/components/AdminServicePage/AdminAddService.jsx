@@ -7,6 +7,8 @@ import {
   InputNumber,
   Image,
   Button,
+  Row,
+  Col,
 } from "antd";
 import {
   LoadingOutlined,
@@ -17,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 // import  {useUtils}  from "../../hooks/utils";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
+import Frame from "../../assets/AdminPhoto/Frame.svg";
 
 function AddService() {
   const { Dragger } = Upload;
@@ -33,8 +35,7 @@ function AddService() {
   const [fileList, setFileList] = useState([]);
 
   const handleFileChange = (file) => {
-
-    console.log('file', file)
+    console.log("file", file);
     const reader = new FileReader();
 
     reader.onload = (e) => {
@@ -42,6 +43,7 @@ function AddService() {
     };
 
     reader.readAsDataURL(file);
+    setFileList([file]);
     return false;
   };
 
@@ -49,11 +51,13 @@ function AddService() {
     setSelectedImage(null);
   };
 
-  console.log('ฟายลิส', fileList)
+  console.log("ฟายลิส", fileList);
 
   const handleSubmitService = async (values) => {
     try {
       console.log("values", values);
+      const user_id = localStorage.getItem("user_id");
+
       console.log("selectedCategory", selectedCategory);
       console.log("fileList:", fileList);
 
@@ -61,7 +65,11 @@ function AddService() {
         (category) => category.category_name === selectedCategory
       )?.category_id;
 
+      console.log("ก่อนส่ง", user_id);
+
       const formData = new FormData();
+      formData.append("user_id", user_id);
+
       formData.append("service_name", values.service_name);
 
       formData.append("category_id", selectedCategoryId);
@@ -70,7 +78,7 @@ function AddService() {
 
       formData.append("file", fileList[0]);
 
-      values.items.forEach((item, index) => {
+      values.items.forEach((item) => {
         formData.append(
           "items",
           JSON.stringify({
@@ -94,15 +102,14 @@ function AddService() {
       );
 
       if (response.status === 200) {
-        message.success("Successfully create service");
+        message.success("สร้างบริการใหม่สำเร็จ");
       } else {
         message.error("Cannot create service");
       }
-      navigate("/admin-service")
-
+      navigate("/admin-service");
     } catch (error) {
       console.error(error);
-      message.error("Error creating service");
+      message.error("กรุณากรอกบริการให้ครบถ้วน");
     }
   };
 
@@ -137,7 +144,9 @@ function AddService() {
     fontSize: "16px",
     fontStyle: "normal",
     fontWeight: 500,
-    lineHeight: "150%", // 24px
+    lineHeight: "150%", 
+    width: "12.8125rem",
+    textAlign: "left", // 24px
   };
 
   return (
@@ -166,7 +175,7 @@ function AddService() {
               </button>
             </div>
           </div>
-          <div className="bg-white m-10 rounded p-4 w-full max-w-[1120px] mx-auto">
+          <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
             {/* flex flex-col items-start  */}
 
             <Form.Item
@@ -180,17 +189,30 @@ function AddService() {
               ]}
               name="service_name"
             >
-              <Input style={{ width: "50%" }} required />
+              <Input style={{ width: "50%" }} />
             </Form.Item>
 
             <Form.Item
               label={<span style={labelStyle}>หมวดหมู่</span>}
               colon={false}
+              rules={[
+                {
+                  required: true,
+                  message: "โปรดเลือกหมวดหมู่",
+                },
+              ]}
+              required
             >
               <Select
                 value={selectedCategory}
                 style={{ width: "50%" }}
                 onChange={(value) => setSelectedCategory(value)}
+                rules={[
+                  {
+                    required: true,
+                    message: "โปรดเลือกหมวดหมู่",
+                  },
+                ]}
               >
                 {data &&
                   data.data &&
@@ -204,158 +226,237 @@ function AddService() {
                   ))}
               </Select>
             </Form.Item>
-            <div className="h-40 w-8/12 pr-16 mb-10 flex justify-between ">
-              <div className="text-grey700 w-52 text-base font-medium ">
-                รูปภาพ
-              </div>
 
-              <div className="w-3/4 h-40 relative">
-                <Upload.Dragger
-                  name="file"
-                  accept=".png,.jpg,.jpeg"
-                  beforeUpload={(file) => {
-                    setFileList([file]);
+            {/* <div className="h-40 w-8/12 pr-16 mb-10 flex justify-between "> */}
+            <Form.Item
+              label={<span style={labelStyle}>รูปภาพ</span>}
+              colon={false}
+              rules={[
+                {
+                  required: true,
+                  message: "โปรดเลือกรูปภาพ",
+                },
+              ]}
+              required
+            >
+              <Upload.Dragger
+                style={{ width: "50%" }}
+                name="file"
+                accept=".png,.jpg,.jpeg"
+                beforeUpload={(file) => {
+                  const isImage = file.type.startsWith("image/");
+                  const isLt5M = file.size / 1024 / 1024 < 5;
+              
+                  if (!isImage) {
+                    message.error("โปรดอัพโหลดไฟล์รูปภาพเท่านั้น");
+                  }
+              
+                  if (!isLt5M) {
+                    message.error("ขนาดไฟล์รูปภาพต้องไม่เกิน 5MB");
+                  }
+              
+                  if (isImage && isLt5M) {
                     handleFileChange(file);
-                    return false;
-                  }}
-                  maxFileSize={5000}
-                  showUploadList={false}
-                  className="relative"
-                >
-                  {selectedImage && (
-                    <div>
-                      <Image src={selectedImage} alt="uploaded" width={144} />
-                      <Button onClick={handleDeleteImage}>Delete</Button>
-                    </div>
-                  )}
+                  }
+              
+                  return false; // Prevent default upload behavior
+                }}
+                maxFileSize={5 * 1024 * 1024}
+                showUploadList={false}
+                className="relative"
+                rules={[
+                  {
+                    required: true,
+                    message: "เลือกรูปภาพ",
+                  },
+                ]}
+              >
+                {selectedImage && (
                   <div>
-                    {!selectedImage && (
-                      <>
-                        <InboxOutlined style={{ fontSize: "36px" }} />
-                        <p className="ant-upload-text">อัพโหลดรูปภาพ</p>
-                        <p className="ant-upload-hint">
-                          PNG, JPG ขนาดไม่เกิน 5MB
-                        </p>
-                      </>
-                    )}
+                    <Image src={selectedImage} alt="uploaded" width={144} />
                   </div>
-                </Upload.Dragger>
+                )}
+                <div>
+                  {!selectedImage && (
+                    <>
+                      <InboxOutlined style={{ fontSize: "36px" }} />
+                      <p className="ant-upload-text">
+                        <span className="text-blue600 text-base not-italic font-semibold underline">
+                          อัพโหลดรูปภาพ
+                        </span>{" "}
+                        หรือ ลากและวางที่นี่
+                      </p>
+                      <p className="ant-upload-hint">
+                        PNG, JPG ขนาดไม่เกิน 5MB
+                      </p>
+                    </>
+                  )}
+                </div>
+              </Upload.Dragger>
+              <div className="flex justify-between" style={{ width: "50%" }}>
                 <div className="text-grey700 text-xs z-0 mt-1">
                   ขนาดภาพที่แนะนำ: 1440 x 225 PX
                 </div>
+                <div className=" text-blue500 text-base not-italic font-semibold underline">
+                  {" "}
+                  <a onClick={handleDeleteImage}>ลบรูปภาพ</a>
+                </div>
               </div>
-            </div>
+            </Form.Item>
+            {/* </div> */}
 
             <hr className="mb-10 text-grey300 "></hr>
 
             <div className="mb-10 text-grey700 text-base font-medium ">
               รายการบริการย่อย
             </div>
-            <DragDropContext>
-              <Form.List name="items">
-                {(fields, { add, remove }) => (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "16px",
-                    }}
-                  >
-                    {fields.map((field) => (
-                      <div
-                        key={field.key}
-                        style={{ display: "flex", gap: "16px" }}
-                      >
-                        <div style={{ flex: "1" }}>
-                          <Form.Item
-                            colon={false}
-                            label="ชื่อรายการ"
-                            name={[field.name, "name"]}
-                            labelAlign="top"
-                            labelCol={{ span: 24 }}
-                          >
-                            <Input
-                              name="sub_service_name"
-                              // value={formData.sub_service_name}
-                              // onChange={handleChange}
-                            />
-                          </Form.Item>
-                        </div>
-                        <div style={{ flex: "1" }}>
-                          <Form.Item
-                            colon={false}
-                            label="ค่าบริการ / 1 หน่วย"
-                            name={[field.name, "cost"]}
-                            labelAlign="top"
-                            labelCol={{ span: 24 }}
-                          >
-                            <InputNumber
-                              formatter={(value) =>
-                                `฿ ${value}`.replace(
-                                  /\B(?=(\d{3})+(?!\d))/g,
-                                  ","
-                                )
-                              }
-                              parser={(value) =>
-                                value.replace(/฿\s?|(,*)/g, "")
-                              }
-                              name="price_per_unit"
-                              // value={formData.price_per_unit}
-                              // onChange={(value) =>
-                              //   setFormData({
-                              //     ...formData,
-                              //     price_per_unit: value,
-                              //   })
-                              // }
-                            />
-                          </Form.Item>
-                        </div>
-                        <div style={{ flex: "1" }}>
-                          <Form.Item
-                            colon={false}
-                            label="หน่วยการบริการ"
-                            name={[field.name, "unit"]}
-                            labelAlign="top"
-                            labelCol={{ span: 24 }}
-                          >
-                            <Input
-                              name="unit"
-                              // value={formData.unit}
-                              // onChange={handleChange}
-                            />
-                          </Form.Item>
-                        </div>
+            {/* <Row gutter={12}>
+              <Col span={24}> */}
+                <Form.List
+                  name="items"
+                  initialValue={[{ name: "", cost: "", unit: "" }]}            
+                >
+                  {(fields, { add, remove }) => (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "16px",
+                      }}
+                    >
+                      {fields.map((field, index) => (
                         <div
+                          key={field.key}
                           style={{
-                            flex: "1",
                             display: "flex",
-                            alignItems: "flex-end",
+                            alignItems: "center",
+                            gap: "16px",
+                            width: "100%"
                           }}
                         >
-                          <Form.Item colon={false} label="">
-                            <a
-                              onClick={() => {
-                                remove(field.name);
-                              }}
-                            >
-                              ลบรายการ
-                            </a>
-                          </Form.Item>
-                        </div>
-                      </div>
-                    ))}
+                          <span>
+                            {" "}
+                            <img src={Frame} />
+                          </span>
 
-                    <button
-                      className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
-                      type="button"
-                      onClick={() => add()}
-                    >
-                      + เพิ่มรายการ
-                    </button>
-                  </div>
-                )}
-              </Form.List>
-            </DragDropContext>
+                          <div style={{ width: "50%",}}
+                          >
+                            <Form.Item
+                              colon={false}
+                              label="ชื่อรายการ" 
+                              name={[field.name, "name"]}
+                              labelAlign="top"
+                              labelCol={{ span: 24 }}
+                              rules={[
+                                {
+                                  required: true, // Only the first one is required
+                                  message: "โปรดกรอกชื่อรายการ",
+                                },
+                              ]}    
+                                            
+                            >
+                              <Input name="sub_service_name" />
+                            </Form.Item>
+                          </div>
+
+                          <div   style={{ width: "25%", }}>
+                            <Form.Item
+                              colon={false}
+                              label="ค่าบริการ / 1 หน่วย"
+                              name={[field.name, "cost"]}
+                              labelAlign="top"
+                              labelCol={{ span: 24 }}
+                              rules={[
+                                {
+                                  message: "โปรดกรอกค่าบริการ",
+                                },
+                                {
+                                  validator(_, value) {
+                                    if (value <= 20000) {
+                                      return Promise.resolve();
+                                    }
+                                    return Promise.reject(
+                                      "ค่าบริการต้องไม่เกิน 20000"
+                                    );
+                                  },
+                                },
+                              ]}
+                            >
+                              <Input
+                                type="number"
+                                min={0}
+                                name="price_per_unit"
+                                suffix="฿"
+                              />
+                            </Form.Item>
+                          </div>
+                          <div 
+                          style={{ width: "25%", }}
+                          >
+                            <Form.Item
+                              colon={false}
+                              label="หน่วยการบริการ"
+                              name={[field.name, "unit"]}
+                              labelAlign="top"
+                              labelCol={{ span: 24 }}
+                              rules={[
+                                {
+                                  message: "โปรดกรอกหน่วยการบริการ",
+                                },
+                              ]}
+                            >
+                              <Input name="unit" />
+                            </Form.Item>
+                          </div>
+                          <div
+                            style={{
+                              width: "10%",
+                              display: "flex",
+                              alignItems: "flex-end",
+                            }}
+                          >
+                            {fields.length > 1 && (
+                              <Form.Item
+                                colon={false}
+                                label=""
+                                style={{ marginBottom: 0,}}
+                              >
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <a
+                                    onClick={() => {
+                                      remove(field.name);
+                                    }}
+                                    style={{
+                                      textDecoration: "underline",
+                                      marginRight: "8px",
+                                    }}
+                                  >
+                                    ลบรายการ
+                                  </a>
+                                </div>
+                              </Form.Item>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+
+                      <button
+                        className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
+                        type="button"
+                        onClick={() => add()}
+                      >
+                        + เพิ่มรายการ
+                      </button>
+                    </div>
+                  )}
+                </Form.List>
+              {/* </Col>
+            </Row> */}
           </div>
         </div>
       </Form>

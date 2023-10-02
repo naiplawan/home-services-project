@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Form, Input, Checkbox, message } from "antd";
-import Navbar from "../components/NavBar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -9,10 +9,10 @@ function RegisterPage() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const inputStyle = "border rounded-lg border-grey300 w-[440px] h-11 px-4 py-2.5" ;
+  const inputStyle = "border rounded-lg border-grey300 w-[100%] h-12 px-4 py-2" ;
 
   const formStyle =
-    "bg-white border border-grey300 rounded-lg h-full mt-[3.25rem] mb-[5.4375rem] px-[5.4375rem] pt-[2rem] pb-[3.3125rem] flex flex-col w-[45%] items-center gap-4";
+    "bg-white border border-grey300 rounded-lg h-full mt-[3.25rem] mb-[5.4375rem] px-[5.4375rem] pt-[2rem] pb-[3.3125rem] flex flex-col w-[840px] items-center gap-4";
 
   const labelStyle = {
     marginTop: "10px",
@@ -89,7 +89,7 @@ function RegisterPage() {
           </h1>
 
           <Form.Item
-            className="h-[72px]"
+            className="w-[80%] h-[72px]"
             name="fullName"
             label={<span style={labelStyle}>ชื่อ - นามสกุล</span>}
             labelAlign="top"
@@ -117,7 +117,7 @@ function RegisterPage() {
 
           {/* Phone Number */}
           <Form.Item
-            className="h-[72px]"
+            className="w-[80%] h-[72px]"
             name="phoneNumber"
             label={<span style={labelStyle}>เบอร์โทรศัพท์</span>}
             labelAlign="top"
@@ -145,7 +145,7 @@ function RegisterPage() {
 
           {/* Email */}
           <Form.Item
-            className="h-[72px]"
+            className="w-[80%] h-[72px]"
             name="email"
             label={<span style={labelStyle}>อีเมล </span>}
             labelAlign="top"
@@ -179,6 +179,7 @@ function RegisterPage() {
 
           {/* Password */}
           <Form.Item
+            className="w-[80%]"
             name="password"
             label={<span style={labelStyle}>รหัสผ่าน</span>}
             labelAlign="top"

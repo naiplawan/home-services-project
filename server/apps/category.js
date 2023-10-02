@@ -1,8 +1,9 @@
 import { Router } from "express";
 import supabase from "../utils/supabase.js";
+// import { protect } from "../middlewares/protects.js";
 
 const categoryRouter = Router();
-
+// categoryRouter.use(protect);
 // ดู categories ทั้งหมด
 categoryRouter.get("/", async (req, res) => {
   try {
