@@ -1,7 +1,7 @@
-
-import { Button, Form, Input, message } from "antd";
+import { Form, Input, message } from "antd";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/NavBar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import { useAuth } from "../contexts/authentication";
 import "../styles/App.css";
 
@@ -9,13 +9,22 @@ function LoginForm() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  
+
   const onFinish = async (values) => {
     try {
+     
       console.log(values);
-      await login(values);
+      const response = await login(values);
+      console.log("Response:", response)
+  
+      if (response.success) {
+        navigate("/");
+      } else {
+        message.error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+      }
     } catch (error) {
       console.error("Login failed:", error);
-      message.error("เข้าสู่ระบบล้มเหลว");
     }
   };
 
@@ -23,16 +32,10 @@ function LoginForm() {
     navigate("/register");
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-
-
-
   const inputStyle = "border rounded-lg border-grey300 w-[100%] h-11 px-4 py-2.5";
 
   const formStyle =
-    "bg-white border border-grey300 rounded-lg h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px] w-[45%] items-center gap-4";
+    "bg-white border border-grey300 rounded-lg h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px] w-[740px] items-center gap-4";
 
   const labelStyle = {
     marginTop: "10px",
@@ -57,7 +60,6 @@ function LoginForm() {
               remember: true,
             }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
             autoComplete="off"
             className={formStyle}
           >
@@ -68,24 +70,12 @@ function LoginForm() {
               className="w-440px h-72px"
               label={<span style={labelStyle}>อีเมล</span>}
               name="email"
-              labelAlign="top" // Use labelAlign to position the label on top
-              labelCol={{ span: 24 }} // Set the label column to take up the full width
+              labelAlign="top"
+              labelCol={{ span: 24 }}
               rules={[
                 {
                   required: true,
                   message: "กรุณากรอกอีเมล",
-                },
-                {
-                  validator: (rule, value) => {
-                    if (
-                      !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i.test(
-                        value
-                      )
-                    ) {
-                      return Promise.reject("กรุณากรอกอีเมลให้ถูกต้อง");
-                    }
-                    return Promise.resolve();
-                  },
                 },
               ]}
             >
@@ -103,35 +93,6 @@ function LoginForm() {
                   required: true,
                   message: "กรุณากรอกรหัสผ่าน",
                 },
-                {
-                  validator: (rule, value) => {
-                    if (
-                      !/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])/.test(
-                        value
-                      )
-                    ) {
-                      return Promise.reject("กรุณากรอกรหัสผ่านให้ถูกต้อง");
-                    }
-                    if (!/[A-Z]/.test(value)) {
-                      return Promise.reject("ต้องมี Uppercase อย่างน้อย 1 ตัว");
-                    }
-                    if (!/[a-z]/.test(value)) {
-                      return Promise.reject("ต้องมี Lowercase อย่างน้อย 1 ตัว");
-                    }
-                    if (!/[0-9]/.test(value)) {
-                      return Promise.reject("ต้องมีตัวเลขอย่างน้อย 1 ตัว");
-                    }
-                    if (!/[!@#$%^&*]/.test(value)) {
-                      return Promise.reject("ต้องมีอักขระพิเศษอย่างน้อย 1 ตัว");
-                    }
-                    if (value.length < 8) {
-                      return Promise.reject(
-                        "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร"
-                      );
-                    }
-                    return Promise.resolve();
-                  },
-                },
               ]}
             >
               <Input.Password
@@ -141,7 +102,9 @@ function LoginForm() {
             </Form.Item>
 
             <Form.Item style={{textAlign: 'center'}}>
-              <button  className="btn-primary w-[100%] mt-5 mb-5">
+              <button  
+              className="btn-primary w-[100%] mt-5 mb-5"
+              type="submit">
                 เข้าสู่ระบบ
               </button>
             </Form.Item>

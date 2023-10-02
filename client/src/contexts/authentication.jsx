@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios"; //npm install axios
 import { useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode"; //package npm install jwt-decode //npm install jsonwebtoken
+import { message } from "antd";
 
 const AuthContext = React.createContext();
 //Comment Code//
@@ -40,16 +41,24 @@ function AuthProvider(props) {
       navigate("/");
       // ใส่ condition login ตรวจสอบ role
       if (userDataFromToken.role === "admin") {
-        navigate("/admin");
+        navigate("/admin-category");
+        message.success("เข้าสู่ระบบสำเร็จ");
       } else if (userDataFromToken.role === "customer") {
         navigate("/");
-      }
+        message.success("เข้าสู่ระบบสำเร็จ");
+      } else {
+        message.error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+      }  
     } catch (e) {
+      console.error("Login failed:", e);
       if (e.response && e.response.data) {
         setErrorLogin("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
       }
+      // Return a response object indicating failure
+      return { success: false, error: e.response ? e.response.data : e.message };
     }
   };
+  
 
   //ใส่ removeItem ตอน logout
   const logout = () => {

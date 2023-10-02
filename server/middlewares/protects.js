@@ -11,13 +11,17 @@ export const protect = async (req, res, next) => {
 
   const tokenWithoutBearer = token.split(" ")[1];
 
-  jwt.verify(tokenWithoutBearer, process.env.SECRET_KEY, (err, payload) => {
-    if (err) {
-      return res.status(401).json({
-        message: "Token is invalid",
-      });
+  jwt.verify(
+    tokenWithoutBearer,
+    process.env.REACT_APP_JWT_KEY,
+    (err, payload) => {
+      if (err) {
+        return res.status(401).json({
+          message: "Token is invalid",
+        });
+      }
+      req.user = payload;
+      next();
     }
-    req.user = payload;
-    next();
-  });
+  );
 };
