@@ -1,13 +1,14 @@
 import { Router } from "express";
 import stripe from "stripe";
 import dotenv from "dotenv";
+import { protect } from "../middlewares/protects.js";
 
 dotenv.config();
 
 const paymentRouter = Router();
 const stripeSecretKey = process.env.STRIPE_TEST_KEY;
 const stripeInstance = new stripe(stripeSecretKey);
-
+paymentRouter.use(protect);
 
 paymentRouter.get("/", (req, res) => {
   res.send("Welcome to Payment router");

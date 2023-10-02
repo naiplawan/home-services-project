@@ -1,12 +1,13 @@
 import { Router } from "express";
 import supabase from "../utils/supabase.js";
 import multer from "multer";
+import { protect } from "../middlewares/protects.js";
 
 const serviceRouter = Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
+serviceRouter.use(protect);
 // API route to service listing page
 serviceRouter.get("/", async (req, res) => {
   const keywords = req.query.keywords || "";
@@ -154,8 +155,8 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
     const service_id = latestService[0].service_id;
 
     for (const subServiceItem of subServiceItems) {
-      subServiceItem.service_id = service_id,
-      subServiceItem.sub_service_quantity = 1 ; // Add service_id to each subServiceItem
+      (subServiceItem.service_id = service_id),
+        (subServiceItem.sub_service_quantity = 1); // Add service_id to each subServiceItem
     }
 
     if (!service_id) {
@@ -167,9 +168,7 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
 
     // Insert sub-services
     const { data: insertedSubserviceData, error: subServiceError } =
-      await supabase
-      .from("sub_service")
-      .insert(subServiceItems);
+      await supabase.from("sub_service").insert(subServiceItems);
 
     if (subServiceError) {
       console.error(
@@ -194,7 +193,7 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
     const user_id = req.body.user_id;
     const file = req.file;
 
-    console.log(req.file)
+    console.log(req.file);
 
     const updatedServiceItem = {
       user_id: user_id,
@@ -209,7 +208,7 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
       "service_name",
       "category_id",
       "service_created_date",
-      "service_photo"
+      "service_photo",
     ];
 
     optionalFields.forEach((field) => {
@@ -250,11 +249,15 @@ serviceRouter.put("/:id", upload.single("file"), async (req, res) => {
       // Upload file to Supabase storage
       const uploadResult = await supabase.storage
         .from("home_service")
-        .upload(`service_photo/${Date.now()}${file.originalname}`, file.buffer, {
-          cacheControl: "3600",
-          upsert: false,
-          contentType: file.mimetype,
-        });
+        .upload(
+          `service_photo/${Date.now()}${file.originalname}`,
+          file.buffer,
+          {
+            cacheControl: "3600",
+            upsert: false,
+            contentType: file.mimetype,
+          }
+        );
       console.log("uploadresult", uploadResult);
 
       if (!uploadResult.error) {

@@ -1,10 +1,10 @@
 //api ฝั่ง customer
 import { Router } from "express";
 import supabase from "../utils/supabase.js";
-// import { protect } from "../middlewares/protects.js";
+import { protect } from "../middlewares/protects.js";
 
 const checkoutRouter = Router();
-// checkoutRouter.use(protect);
+checkoutRouter.use(protect);
 
 function generateOrderNumber() {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -54,16 +54,32 @@ checkoutRouter.post("/", async (req, res) => {
   //req.body ที่ได้มา ใช้ insert 3 table
   try {
     console.log(req.body);
-   
-    const { formData, subService, totalPrice, user_id, promotion_id } = req.body;
 
-    const { service_date_time, address, sub_district, district, province, note } =
-      formData;
+    const { formData, subService, totalPrice, user_id, promotion_id } =
+      req.body;
+
+    const {
+      service_date_time,
+      address,
+      sub_district,
+      district,
+      province,
+      note,
+    } = formData;
 
     // Insert into checkout
     const { data: checkoutData, error: checkoutError } = await supabase
       .from("checkout")
-      .insert({ service_date_time, address, sub_district, district, province, note, total_price: totalPrice, promotion_id});
+      .insert({
+        service_date_time,
+        address,
+        sub_district,
+        district,
+        province,
+        note,
+        total_price: totalPrice,
+        promotion_id,
+      });
 
     console.log("checkout data", checkoutData);
 

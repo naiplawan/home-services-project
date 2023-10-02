@@ -103,7 +103,7 @@ authRouter.post("/login", async (req, res) => {
         role: user[0].role,
       },
       process.env.REACT_APP_JWT_KEY,
-      { expiresIn: "900000" }
+      { expiresIn: "3600000" }
     );
     return res.json({
       message: "login successfully",
