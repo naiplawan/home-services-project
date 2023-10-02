@@ -43,6 +43,7 @@ function AllStepCheckOutForm() {
     promotion_expiry_date,
     promotion_quota,
     promotion_code,
+    promotion_id,
   } = promotion;
 
   const calculateDiscountedPrice = () => {
@@ -206,6 +207,7 @@ function AllStepCheckOutForm() {
       e.target.value
     );
     setPromotionCode(e.target.value);
+    console.log(promotionCode);
   };
 
   console.log("promotion:", promotion);
@@ -306,6 +308,8 @@ function AllStepCheckOutForm() {
         subService: selectedSubService,
         totalPrice: totalPrice,
         user_id: user_id,
+        promotion_id: promotion_id,
+        service_id: params.serviceId,
       };
 
       console.log("formDataItem", formDataItem);

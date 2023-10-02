@@ -55,7 +55,7 @@ checkoutRouter.post("/", async (req, res) => {
   try {
     console.log(req.body);
    
-    const { formData, subService, totalPrice, user_id } = req.body;
+    const { formData, subService, totalPrice, user_id, promotion_id } = req.body;
 
     const { service_date_time, address, sub_district, district, province, note } =
       formData;
@@ -63,14 +63,14 @@ checkoutRouter.post("/", async (req, res) => {
     // Insert into checkout
     const { data: checkoutData, error: checkoutError } = await supabase
       .from("checkout")
-      .insert({ service_date_time, address, sub_district, district, province, note, total_price: totalPrice, });
+      .insert({ service_date_time, address, sub_district, district, province, note, total_price: totalPrice, promotion_id});
 
     console.log("checkout data", checkoutData);
 
     const { data: lastestCheckout } = await supabase
       .from("checkout")
       .select("checkout_id")
-      .order("checkout_id")
+      .order("checkout_id", { ascending: false })
       .limit(1);
 
     console.log("lastest checkout", lastestCheckout);
@@ -101,9 +101,11 @@ checkoutRouter.post("/", async (req, res) => {
       .insert([
         {
           order_number,
+          serviceman_detail_id: 1,
           status: "รอดำเนินการ",
           checkout_id,
           user_id,
+          service_id: req.body.service_id,
         },
       ]);
 
