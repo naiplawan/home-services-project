@@ -1,17 +1,16 @@
 import { Router } from "express";
 import supabase from "../utils/supabase.js";
 import multer from "multer";
+import moment from "moment";
 
 const promotionRouter = Router();
 
 // const multer = require("multer");
-const upload = multer()
+const upload = multer();
 
 promotionRouter.get("/", async (req, res) => {
   try {
-    let data = await supabase
-      .from("promotion")
-      .select("*")
+    let data = await supabase.from("promotion").select("*");
 
     return res.json({
       data,
@@ -44,7 +43,7 @@ promotionRouter.get("/:id", async (req, res) => {
   }
 });
 
-promotionRouter.put("/:id",upload.none(),async (req, res) => {
+promotionRouter.put("/:id", upload.none(), async (req, res) => {
   try {
     const promotionId = req.params.id;
 
@@ -55,6 +54,7 @@ promotionRouter.put("/:id",upload.none(),async (req, res) => {
       promotion_discount: req.body.promotion_discount,
       promotion_expiry_date: req.body.promotion_expiry_date,
       promotion_expiry_time: req.body.promotion_expiry_time,
+      promotion_edited_date_time: new Date(),
     };
 
     const { data: updatedPromotionData, error: updatedPromotionError } =
@@ -79,7 +79,7 @@ promotionRouter.put("/:id",upload.none(),async (req, res) => {
   }
 });
 
-promotionRouter.post("/",upload.none(), async (req, res) => {
+promotionRouter.post("/", upload.none(), async (req, res) => {
   try {
     const {
       promotion_code,
@@ -92,11 +92,12 @@ promotionRouter.post("/",upload.none(), async (req, res) => {
 
     console.log(req.body);
 
-    const formattedExpiryDate = new Date(req.body.promotion_expiry_date[1]);
-    const formattedExpiryDateAsString = formattedExpiryDate
-      .toISOString()
-      .split("T")[0];
-    const formattedExpiryTime = req.body.promotion_expiry_time[1];
+    const formattedExpiryDate = moment(req.body.promotion_expiry_date[1]);
+    const formattedExpiryDateAsString =
+      formattedExpiryDate.format("YYYY-MM-DD");
+    const formattedExpiryTime = moment(req.body.promotion_expiry_time[1]);
+    const formattedExpiryTimeAsString =
+      formattedExpiryTime.format("HH:MM");
 
     //item
 
@@ -126,7 +127,7 @@ promotionRouter.post("/",upload.none(), async (req, res) => {
         promotion_quota,
         promotion_discount,
         promotion_expiry_date: formattedExpiryDateAsString,
-        promotion_expiry_time: formattedExpiryTime,
+        promotion_expiry_time:  formattedExpiryTimeAsString,
         promotion_created_date_time: currentDateTime,
         promotion_edited_date_time: currentDateTime,
       },
