@@ -3,7 +3,7 @@ import image from "../../assets/CustomerPhoto/imageIndex.js";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-// import Moment from "react-moment";
+import dateFormat from "../../utils/dateFormat.js";
 
 function OrderHistory () {
     const params = useParams();
@@ -63,10 +63,8 @@ function OrderHistory () {
                                                     alt="Calendar Icon" 
                                                 />
                                                 <div>
-                                                  วันเวลาดำเนินการ: 21/09/2023 12:00 น.
-                                                  {/* <Moment format="DD/MM/YYYY HH:mm">
-                                                    {data.users.service.sub_service.checkout_quantity.checkout.service_date_time}
-                                                  </Moment>{" "} */}
+                                                  วันเวลาดำเนินการ:{" "}
+                                                        {dateFormat(data.checkout.service_date_time)}
                                                 </div>
                                             </div>
                                             <div className="flex gap-x-[15px]">
@@ -81,14 +79,14 @@ function OrderHistory () {
                                         <div className="text-base font-normal leading-normal text-grey700">
                                             รายการ: {data.service.service_name}
                                             <ul className="flex flex-col list-disc ml-3">
-                                                {data.service.sub_service.map((subService, index) => {
+                                                {data.checkout.checkout_quantity.map((subService, index) => {
                                                     return (
                                                         <li
                                                             key={index}
                                                             className="ml-2 my-1 font-normal text-sm text-black"
                                                         >
-                                                            {subService.sub_service_name}, {" "}
-                                                            {subService.sub_service_quantity} {subService.unit}
+                                                            {subService.sub_service.sub_service_name}, {" "}
+                                                            {subService.sub_service_quantity} {subService.sub_service.unit}
                                                         </li>
                                                     )
                                                 })}
