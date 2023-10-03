@@ -781,7 +781,7 @@ function AllStepCheckOutForm() {
                   <div className="flex justify-between">
                     <div className="text-[#646C80]">สถานที่:</div>
                     <div className="text-black">
-                      {formData.address} {formData.subdistrict}{" "}
+                      {formData.address} {formData.sub_district}{" "}
                       {formData.district} {formData.province} {formData.zipcode}
                     </div>
                   </div>
