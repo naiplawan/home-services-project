@@ -10,13 +10,9 @@ Drag and Drop
 
 **Authors**
 🛠️ https://github.com/naiplawan
-
 🛠️ https://github.com/Pittyyyy
-
 🛠️ https://github.com/PinocchioBT
-
 🛠️ https://github.com/MYNTCODE
-
 🛠️ https://github.com/JaqJaqq
 
 **Tech Stack**
