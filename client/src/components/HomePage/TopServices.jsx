@@ -4,6 +4,7 @@ import AlertBoxDelete from "../AlertBox.jsx";
 import SellBlack from "../../assets/homepagePhoto/SellBlack.jsx";
 import { useNavigate } from "@/routing/navigation.jsx";
 import { useState, useEffect } from "react";
+import LoadingState from "@/components/ui/loading-state.jsx";
 import { useAuth } from "../../contexts/authentication";
 import {
   getCategoryColor,
@@ -14,15 +15,18 @@ import {
 function TopServices() {
   const navigate = useNavigate();
 
-  const [services, setServices] = useState({ data: [] });
+  const [services, setServices] = useState({ data: null });
+  const [error, setError] = useState(null);
 
   const getCategory = async () => {
     try {
+      setError(null);
       const response = await axios("/api/service");
       const serviceList = response.data?.data;
       setServices({ data: Array.isArray(serviceList) ? serviceList : [] });
-    } catch (error) {
-      console.error("Error fetching services:", error);
+    } catch {
+      setServices({ data: null });
+      setError("เกิดข้อผิดพลาดในการเรียกข้อมูลบริการ");
     }
   };
 
@@ -56,6 +60,20 @@ function TopServices() {
       </div>
 
       <section>
+        {services.data === null ? (
+          error ? (
+            <div className="flex flex-col items-center gap-4 bg-[#f0f0f0] px-4 py-8 text-center">
+              <p className="text-red-600">{error}</p>
+              <button className={buttonStyles.primary} onClick={getCategory}>
+                ลองอีกครั้ง
+              </button>
+            </div>
+          ) : (
+            <div className="bg-[#f0f0f0] px-4 py-8">
+              <LoadingState label="กำลังโหลดบริการยอดฮิต" />
+            </div>
+          )
+        ) : (
         <div className="grid h-full w-full grid-cols-1 items-stretch justify-items-center gap-5 bg-[#f0f0f0] px-4 pb-12 pt-8 sm:grid-cols-2 sm:px-8 sm:pb-20 lg:grid-cols-3 xl:px-[159px]">
           {services &&
             services.data &&
@@ -139,6 +157,7 @@ function TopServices() {
                 </div>
               ))}
         </div>
+        )}
 
         {alertRole && (
           <AlertBoxDelete

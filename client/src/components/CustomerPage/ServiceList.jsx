@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "@/routing/navigation.jsx";
 import axios from "axios";
 import image from "../../assets/CustomerPhoto/imageIndex.js";
@@ -6,6 +6,7 @@ import { buttonStyles } from "@/lib/ui-classes.js";
 import SellBlack from "../../assets/homepagePhoto/SellBlack.jsx";
 import InputPriceRange from "./InputPriceRange";
 import AlertBoxDelete from "../AlertBox.jsx";
+import LoadingState from "@/components/ui/loading-state.jsx";
 import { useAuth } from "../../contexts/authentication";
 import {
   getMaxPrice,
@@ -72,6 +73,7 @@ function ServiceList() {
   // state ส่วนนี้เกี่ยวกับปุ่ม"ค้นหา"  เงื่อนไขคือผลลัพธ์ของ filter จะเกิดขึ้นเมื่อกดปุ่มค้นหาเท่านั้น
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   const [filteredServices, setFilteredServices] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleSearchClick = () => {
     // ทำการกรองข้อมูลและตั้งค่า filteredServices ใหม่ตามเงื่อนไข
@@ -113,6 +115,7 @@ function ServiceList() {
   const [services, setServices] = useState({ data: [] });
   const [categories, setCategories] = useState({ data: [] });
   const [error, setError] = useState(null);
+  const serviceRequestId = useRef(0);
 
   // API for rendering category <select>/<option>
   const getCategory = useCallback(async () => {
@@ -134,6 +137,8 @@ function ServiceList() {
 
   // API for rendering services
   const handleSearch = useCallback(async () => {
+    const requestId = ++serviceRequestId.current;
+    setIsLoading(true);
     try {
       setError(null);
       // await getCategory();
@@ -142,22 +147,34 @@ function ServiceList() {
       );
 
       if (response.data.error) {
-        setError("เกิดข้อผิดพลาดในการค้นหา");
+        if (requestId === serviceRequestId.current) {
+          setError("เกิดข้อผิดพลาดในการค้นหา");
+        }
       } else {
         const serviceResult = response.data?.data;
         const serviceList = Array.isArray(serviceResult)
           ? serviceResult
           : serviceResult?.data;
         if (!Array.isArray(serviceList)) {
-          setServices({ data: [] });
-          setError("เกิดข้อผิดพลาดในการค้นหา");
+          if (requestId === serviceRequestId.current) {
+            setServices({ data: [] });
+            setError("เกิดข้อผิดพลาดในการค้นหา");
+          }
           return;
         }
-        setServices({ data: serviceList });
+        if (requestId === serviceRequestId.current) {
+          setServices({ data: serviceList });
+        }
         console.log("ผลลัพธ์การค้นหา", serviceList);
       }
     } catch (error) {
-      setError("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์", error.message);
+      if (requestId === serviceRequestId.current) {
+        setError("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
+      }
+    } finally {
+      if (requestId === serviceRequestId.current) {
+        setIsLoading(false);
+      }
     }
   }, [keywords, selectedCategory, maxPriceFilter, minPriceFilter, orderFilter]);
 
@@ -174,7 +191,6 @@ function ServiceList() {
 
   return (
     <>
-      {error && <p className="text-red-600 text-center">{error}</p>}
       <div>
         <header>
           <div className="Header relative">
@@ -276,6 +292,18 @@ function ServiceList() {
         </div>
 
         <section>
+          {isLoading ? (
+            <div className="bg-[#f0f0f0] px-4 py-8 sm:px-8 xl:px-[159px]">
+              <LoadingState label="กำลังโหลดบริการ" />
+            </div>
+          ) : error ? (
+            <div className="flex min-h-48 flex-col items-center justify-center gap-4 bg-[#f0f0f0] px-4 py-8 text-center">
+              <p className="text-red-600">{error}</p>
+              <button className={buttonStyles.primary} onClick={handleSearch}>
+                ลองอีกครั้ง
+              </button>
+            </div>
+          ) : (
           <div className="grid h-full grid-cols-1 items-stretch justify-items-center gap-5 bg-[#f0f0f0] px-4 pb-16 pt-8 sm:grid-cols-2 sm:px-8 xl:grid-cols-3 xl:px-[159px]">
             {services &&
               services.data &&
@@ -437,6 +465,7 @@ function ServiceList() {
                 ))
               ))}
           </div>
+          )}
           {alertRole && (
             <AlertBoxDelete
               deleteFunction={handleLogout}

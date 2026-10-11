@@ -19,10 +19,12 @@ function AdminServiceList() {
 
   const getServices = async () => {
     try {
+      setError(null);
       const response = await axios.get("/api/service");
       const serviceList = response.data?.data;
       setServices({ data: Array.isArray(serviceList) ? serviceList : [] });
     } catch (error) {
+      setServices({ data: null });
       setError("เกิดข้อผิดพลาดในการเรียกข้อมูลบริการ");
     }
   };
@@ -159,9 +161,18 @@ function AdminServiceList() {
           </div>
         </div>
       </header>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && Array.isArray(services.data) && (
+        <p className="text-red-500 mb-4">{error}</p>
+      )}
       <div className="categories-data min-h-screen min-w-0 bg-bg p-4 sm:p-6 lg:ml-60 lg:p-[41px] ml-14">
-        {!Array.isArray(services.data) ? (
+        {error && !Array.isArray(services.data) ? (
+          <div className="flex min-h-48 flex-col items-center justify-center gap-4 text-center">
+            <p className="text-red-600">{error}</p>
+            <button className={buttonStyles.primary} onClick={getServices}>
+              ลองอีกครั้ง
+            </button>
+          </div>
+        ) : !Array.isArray(services.data) ? (
           <LoadingState label="กำลังโหลดบริการ" />
         ) : (
           <div className="category-list w-full overflow-x-auto">

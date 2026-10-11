@@ -16,6 +16,7 @@
 
 ### Fixed
 
+- Show animated loading states while homepage, customer, and admin service lists fetch results, with retry actions when requests fail.
 - Show only the first validation error for each registration field so required and format messages do not appear together.
 - Return service and category query results as arrays in the API response and report Supabase query errors; update homepage and admin consumers to render the normalized payload.
 - Keep the service listing page rendered when an API response has no service data, instead of throwing a client-side exception.
