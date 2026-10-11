@@ -14,6 +14,7 @@
 
 ### Fixed
 
+- Return service and category query results as arrays in the API response and report Supabase query errors, so homepage service cards can render.
 - Keep the service listing page rendered when an API response has no service data, instead of throwing a client-side exception.
 
 - Correct case-sensitive imports for homepage components and assets so the Vite production build resolves them on Linux.

@@ -18,9 +18,13 @@ serviceRouter.get("/", async (req, res) => {
   const orderFilter = req.query.orderFilter || "";
 
   try {
-    const data = await supabase
+    const { data, error } = await supabase
       .from("service")
       .select("*, sub_service(*), category(*)");
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
 
     //note: ถ้าใส่ function filter อาจจะทำให้หน้าอื่นที่ใช้ API ตัวนี้เกิดปัญหาได้ ต้องเช็คหน้าอื่นที่ใช้ API ตัวเดียวกันระหว่างเทส
 

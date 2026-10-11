@@ -7,7 +7,12 @@ const categoryRouter = Router();
 // ดู categories ทั้งหมด
 categoryRouter.get("/", async (req, res) => {
   try {
-    const data = await supabase.from("category").select("*");
+    const { data, error } = await supabase.from("category").select("*");
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
     return res.json({
       data,
     });
