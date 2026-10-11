@@ -11,11 +11,11 @@
 
 @font-face {
   font-family: prompt;
-  src: url(../public/Prompt\ Regular.ttf);
+  src: url("/Prompt Regular.ttf");
 }
 @font-face {
   font-family: prompt-Bold;
-  src: url(../public/Prompt-Bold.ttf);
+  src: url("/Prompt-Bold.ttf");
 }
 
 .prompt {

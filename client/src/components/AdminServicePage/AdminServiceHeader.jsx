@@ -1,24 +1,17 @@
 import "../../styles/App.css";
-import {useEffect} from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useUtils } from "../../hooks/utils.js";
 import image from "../../assets/AdminPhoto/imageIndex";
 
 const AdminServiceHeader = () => {
     const navigate = useNavigate();
-    const { searchService, setSearchService, setService } = useUtils;
+    const [searchService, setSearchService] = useState("");
 
-    const searchServiceData = async () => {
-      const results = await axios.get(
-        `http://localhost:4000/service?keywords=${searchService}`
-      );
-      setService(results.data.data);
-    };
-  
     useEffect(() => {
-      let timerId;
-      timerId = setTimeout(searchServiceData, 1000);
+      const timerId = setTimeout(() => {
+        axios.get(`/api/service?keywords=${searchService}`);
+      }, 1000);
       return () => {
         clearTimeout(timerId);
       };

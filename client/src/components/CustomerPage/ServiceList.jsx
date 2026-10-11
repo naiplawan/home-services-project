@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import image from "../../assets/CustomerPhoto/imageIndex.js";
-import SellBlack from "../../assets/homepagePhoto/sellBlack.jsx";
+import SellBlack from "../../assets/homepagePhoto/SellBlack.jsx";
 import InputPriceRange from "./InputPriceRange";
 import AlertBoxDelete from "../AlertBox.jsx";
 import { useAuth } from "../../contexts/authentication";
@@ -114,23 +114,23 @@ function ServiceList() {
   const [error, setError] = useState(null);
 
   // API for rendering category <select>/<option>
-  const getCategory = async () => {
+  const getCategory = useCallback(async () => {
     try {
-      const result = await axios("http://localhost:4000/category");
+      const result = await axios("/api/category");
       setCategories(result.data.data);
       console.log("getCategory มีอะไร ", result.data.data);
-    } catch (error) {
+    } catch {
       setError("เกิดข้อผิดพลาดในการเรียกข้อมูลหมวดหมู่");
     }
-  };
+  }, []);
 
   // API for rendering services
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     try {
       setError(null);
       // await getCategory();
       const response = await axios.get(
-        `http://localhost:4000/service?keywords=${keywords}&categoryFilter=${selectedCategory}&maxPriceFilter=${maxPriceFilter}&minPriceFilter=${minPriceFilter}&orderFilter=${orderFilter}`
+        `/api/service?keywords=${keywords}&categoryFilter=${selectedCategory}&maxPriceFilter=${maxPriceFilter}&minPriceFilter=${minPriceFilter}&orderFilter=${orderFilter}`
       );
 
       if (response.data.error) {
@@ -142,7 +142,7 @@ function ServiceList() {
     } catch (error) {
       setError("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์", error.message);
     }
-  };
+  }, [keywords, selectedCategory, maxPriceFilter, minPriceFilter, orderFilter]);
 
   console.log("อันนี้คือคำค้นหา", keywords);
   console.log("อันนี้คือหมวดหมู่", selectedCategory);
@@ -153,10 +153,11 @@ function ServiceList() {
   useEffect(() => {
     handleSearch();
     getCategory();
-  }, []);
+  }, [handleSearch, getCategory]);
 
   return (
     <>
+      {error && <p className="text-red-600 text-center">{error}</p>}
       <div>
         <header>
           <div className="Header relative">

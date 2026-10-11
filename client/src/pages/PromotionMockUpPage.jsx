@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Input, Button, message } from "antd";
 import { usePromotion } from "../hooks/promotion";
 
@@ -9,7 +9,6 @@ const PromotionMockUpPage = () => {
   const [codeUsage, setCodeUsage] = useState(0); // State for code usage count, initialized to 0
   const [expirationDate, setExpirationDate] = useState(null); // State for expiration date
   const [expirationTime, setExpirationTime] = useState(null); // State for expiration date
-  const [promotionQuota, setPromotionQuota] = useState(null);
   const [isApplied, setIsApplied] = useState(false);
 
   const {
@@ -21,7 +20,7 @@ const PromotionMockUpPage = () => {
     promotion_code,
   } = promotion;
 
-  const calculateDiscountedPrice = () => {
+  const calculateDiscountedPrice = useCallback(() => {
     if (!promotion_types) {
       return totalPrice;
     }
@@ -36,9 +35,9 @@ const PromotionMockUpPage = () => {
     }
 
     return totalPrice;
-  };
+  }, [totalPrice, promotion_types, promotion_discount]);
 
-  const handleApplyPromotion = async () => {
+  const handleApplyPromotion = useCallback(async () => {
     if (!promotionCode) {
         message.error("กรุณากรอก promotion code ก่อน");
         return;
@@ -62,7 +61,6 @@ const PromotionMockUpPage = () => {
 
         // Check expiration date
         const currentDate = new Date();
-        const currentTime = currentDate.getTime();
         const expirationDateObject = new Date(promotion_expiry_date);
 
         if (currentDate > expirationDateObject) {
@@ -76,7 +74,6 @@ const PromotionMockUpPage = () => {
           setCodeUsage((prevCodeUsage) => prevCodeUsage + 1);
           setExpirationDate(promotion_expiry_date); // Update expiration date
           setExpirationTime(promotion_expiry_time); // Update expiration date
-          setPromotionQuota(promotion_quota);
           setIsApplied(true); 
           message.success("โค้ดถูกใช้งานแล้ว");
 
@@ -95,7 +92,7 @@ const PromotionMockUpPage = () => {
     } catch (error) {
         message.error(error.message);
     }
-  };
+  }, [promotionCode, getPromotion, promotion_code, promotion_expiry_date, promotion_expiry_time, codeUsage, promotion_quota, setCodeUsage, setExpirationDate, setExpirationTime, setIsApplied, decreaseQuota, promotion, calculateDiscountedPrice]);
 
   const handleInputChange = (e) => {
     console.log("handleInputChange called with value:", e.target.value);
@@ -104,7 +101,6 @@ const PromotionMockUpPage = () => {
     // Reset the promotion data when the input changes
     setExpirationDate(null);
     setExpirationTime(null);
-    setPromotionQuota(null);
     setTotalPrice(1000)
     setCodeUsage(0)
     setIsApplied(false);
@@ -115,16 +111,15 @@ const PromotionMockUpPage = () => {
     if (isApplied) {
       setExpirationDate(promotion_expiry_date);
       setExpirationTime(promotion_expiry_time);
-      setPromotionQuota(promotion_quota);
     }
-  }, [promotion, isApplied]);
+  }, [promotion, isApplied, promotion_expiry_date, promotion_expiry_time]);
 
   useEffect(() => {
-    if (promotionCode === promotion_code) {
+    if (promotionCode === promotion_code && !isApplied) {
       // If the entered code matches the promotion code, apply it automatically
       handleApplyPromotion();
     }
-  }, [promotionCode, promotion_code])
+  }, [promotionCode, promotion_code, isApplied, handleApplyPromotion])
 
   console.log("ราคาหลังลดไป:", totalPrice)
 

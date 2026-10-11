@@ -1,5 +1,6 @@
 import "../styles/App.css";
 import image from "../assets/AdminPhoto/imageIndex";
+import PropTypes from "prop-types";
 
 function AlertBoxDelete(props) {
   return (
@@ -43,5 +44,14 @@ function AlertBoxDelete(props) {
     </div>
   );
 }
+
+AlertBoxDelete.propTypes = {
+  textAlert: PropTypes.string,
+  alertQuestion: PropTypes.string,
+  deleteFunction: PropTypes.func,
+  primary: PropTypes.string,
+  hideFunction: PropTypes.func,
+  secondary: PropTypes.string,
+};
 
 export default AlertBoxDelete;

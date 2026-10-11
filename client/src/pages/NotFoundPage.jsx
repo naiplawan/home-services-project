@@ -13,7 +13,7 @@ function NotFoundPage() {
       </h1>
       <h2
         className="text-center font-bold text-8xl text-white pt-5 tracking-widest"
-        css={css`
+        style={css`
           -webkit-text-stroke-width: 3px;
           -webkit-text-stroke-color: #001c59;
           text-shadow: 3px 3px #001c59;
@@ -24,7 +24,7 @@ function NotFoundPage() {
       </h2>
       <p className="text-center text-blue950 pt-5 pb-7">
         {" "}
-        We can't find the page you are looking for.
+        We can&apos;t find the page you are looking for.
       </p>
       <button
         className="border hover:opacity-70 border-blue950 px-5 py-2 rounded-lg text-blue950"

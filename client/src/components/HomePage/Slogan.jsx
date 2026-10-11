@@ -1,4 +1,4 @@
-import BlueMan from "../../assets/homepagePhoto/BlueMan.png";
+import BlueMan from "../../assets/homepagePhoto/blueMan.png";
 import '../../styles/App.css'
 import { useNavigate } from "react-router-dom";
 

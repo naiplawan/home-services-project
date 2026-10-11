@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode"; //package npm install jwt-decode //npm install jsonwebtoken
 import { message } from "antd";
 
+/* eslint-disable react-refresh/only-export-components */
+import PropTypes from "prop-types";
+
 const AuthContext = React.createContext();
 //Comment Code//
 
@@ -17,14 +20,14 @@ function AuthProvider(props) {
   const navigate = useNavigate();
 
   const register = async (values) => {
-    await axios.post("http://localhost:4000/auth/register", values);
+    await axios.post("/api/auth/register", values);
     navigate("/login");
   };
 
   //ใส่ logic login
   const login = async (data) => {
     try {
-      const result = await axios.post("http://localhost:4000/auth/login", data);
+      const result = await axios.post("/api/auth/login", data);
       console.log(result);
       const token = result.data.token;
       const fullName = result.data.data.token;
@@ -88,6 +91,8 @@ function AuthProvider(props) {
     </AuthContext.Provider>
   );
 }
+
+AuthProvider.propTypes = { children: PropTypes.node.isRequired };
 
 const useAuth = () => React.useContext(AuthContext);
 

@@ -4,11 +4,9 @@ import {
   Radio,
   DatePicker,
   TimePicker,
-  Button,
   Col,
   Row,
   message,
-  InputNumber,
 } from "antd";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +17,7 @@ function AddPromotionForm() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const [inputDisable, setInputDisable] = useState("");
+  const [, setInputDisable] = useState("");
   const [promotionType, setPromotionType] = useState("");
 
   const [selectedDate, setSelectedDate] = useState(null);
@@ -31,21 +29,6 @@ function AddPromotionForm() {
 
   const handleTimeChange = (time) => {
     setSelectedTime(time);
-  };
-
-  const isFutureTime = (current) => {
-    const now = moment().startOf("day");
-    const currentTime = moment();
-    const selectedTime = moment(current);
-    return (
-      selectedTime.isAfter(now) ||
-      (selectedTime.isSame(now, "day") && selectedTime.isAfter(currentTime))
-    );
-  };
-
-  const isFutureDate = (current) => {
-    const now = moment().startOf("day");
-    return current && current.isAfter(now);
   };
 
   const onFinish = async (values) => {
@@ -89,7 +72,7 @@ function AddPromotionForm() {
       formData.append("promotion_discount", promotionDiscount);
 
       const response = await axios.post(
-        "http://localhost:4000/promotion",
+        "/api/promotion",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

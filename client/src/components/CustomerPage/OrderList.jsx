@@ -6,19 +6,19 @@ import dateFormat from "../../utils/dateFormat.js";
 // import Moment from "react-moment";
 
 function OrderList () {
-    const params = useParams();
+    const { userId } = useParams();
     const [order, setOrder] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        getOrderHistoryById(params.userId);
-    }, [])
+        getOrderHistoryById(userId);
+    }, [userId])
 
     const getOrderHistoryById = async (userId) => {
         try {
             setLoading(true);
             const result = await axios.get(
-                `http://localhost:4000/orderHistory/${userId}`
+                `/api/orderHistory/${userId}`
             );
             setOrder(result.data.result);
             setLoading(false);

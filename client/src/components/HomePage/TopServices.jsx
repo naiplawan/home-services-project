@@ -1,7 +1,7 @@
 import "../../styles/App.css";
 import axios from "axios";
 import AlertBoxDelete from "../AlertBox.jsx";
-import SellBlack from "../../assets/homepagePhoto/sellBlack.jsx";
+import SellBlack from "../../assets/homepagePhoto/SellBlack.jsx";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/authentication";
@@ -15,15 +15,14 @@ function TopServices() {
   const navigate = useNavigate();
 
   const [services, setServices] = useState([]);
-  const [error, setError] = useState(null);
 
   const getCategory = async () => {
     try {
-      const response = await axios("http://localhost:4000/service");
+      const response = await axios("/api/service");
       setServices(response.data.data);
       console.log("ผลลัพธ์การค้นหา", response.data.data);
     } catch (error) {
-      setError("เกิดข้อผิดพลาดในการเรียกข้อมูลหมวดหมู่");
+      console.error("Error fetching services:", error);
     }
   };
 

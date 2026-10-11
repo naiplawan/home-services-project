@@ -45,7 +45,7 @@ function RegisterPage() {
 
         // Make API request
         const response = await axios.post(
-          "http://localhost:4000/auth/register",
+          "/api/auth/register",
           data
         );
 

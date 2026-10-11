@@ -119,11 +119,12 @@ serviceRouter.post("/", upload.single("file"), async (req, res) => {
 
     if (!uploadResult.error) {
       // Get public URL for the uploaded file
-      const servicePhotourl = `https://tqjclbmprqjrgdrvylqd.supabase.co/storage/v1/object/public/home_service/${uploadResult.data.path}`;
-      console.log(uploadResult.data.path);
+      const { data: publicUrlData } = supabase.storage
+        .from("home_service")
+        .getPublicUrl(uploadResult.data.path);
 
       // Assign the URL directly to service_photo
-      newServiceItem["service_photo"] = servicePhotourl;
+      newServiceItem["service_photo"] = publicUrlData.publicUrl;
     } else {
       console.error(
         "Error uploading file to Supabase storage",

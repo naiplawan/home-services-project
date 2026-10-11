@@ -3,19 +3,13 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import dateFormat from "../../utils/dateFormat.js";
 import arrow from "../../assets/AdminPhoto/arrow.png";
-import { Table } from "antd";
 
 function AdminDetailService() {
   const [service, setService] = useState({});
   const navigate = useNavigate();
   const params = useParams();
 
-  const [category, setCategory] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
   const [currentCategory, setCurrentCategory] = useState([]);
-
-  //state for sub_service
-  const [subService, setSubService] = useState([]);
 
   const categoryName = currentCategory.category_name;
 
@@ -38,7 +32,6 @@ function AdminDetailService() {
 
   // console.log(subServicesInfo);
 
-  const subServiceArray = service.sub_service;
   // for (let i = 0; i < subServiceArray.length; i++) {
   //     const subService = subServiceArray[i];
   //     const pricePerUnit = subService.price_per_unit;
@@ -63,27 +56,16 @@ function AdminDetailService() {
   const getService = async (serviceId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/service/${serviceId}`
+        `/api/service/${serviceId}`
       );
       setService(response.data.data);
       console.log(response.data.data);
       setCurrentCategory(response.data.data.category);
-      setSubService(response.data.data.sub_service);
       console.log("data by id", response.data.data);
     } catch (error) {
       console.error("Error fetching service data:", error);
     }
   };
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:4000/category")
-      .then((response) => {
-        setCategory(response.data.data);
-        console.log(response.data.data);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
 
   useEffect(() => {
     getService(params.serviceId);

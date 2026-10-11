@@ -19,7 +19,7 @@ function AdminCategory() {
 
   const getCategory = async () => {
     try {
-      const result = await axios("http://localhost:4000/category");
+      const result = await axios("/api/category");
       setData(result.data.data);
     } catch (error) {
       setError("เกิดข้อผิดพลาดในการเรียกข้อมูลหมวดหมู่");
@@ -27,7 +27,7 @@ function AdminCategory() {
   };
   // const getCategory = async () => {
   //   try {
-  //     const result = await axios("http://localhost:4000/category");
+  //     const result = await axios("/api/category");
   //     const sortedData = result.data.data.sort((a, b) => {
   //       const dateA = new Date(a.category_edited_date);
   //       const dateB = new Date(b.category_edited_date);
@@ -54,7 +54,7 @@ function AdminCategory() {
 
   const deleteCategoryById = async (categoryId) => {
     try {
-      await axios.delete(`http://localhost:4000/category/${categoryId}`);
+      await axios.delete(`/api/category/${categoryId}`);
       getCategory();
       hide();
     } catch (error) {
@@ -81,7 +81,7 @@ function AdminCategory() {
       try {
         setError(null);
         const response = await axios.get(
-          `http://localhost:4000/category?keyword=${keyword}`
+          `/api/category?keyword=${keyword}`
         );
 
         if (response.data.error) {

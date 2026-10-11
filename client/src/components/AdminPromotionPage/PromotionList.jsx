@@ -17,7 +17,7 @@ function PromotionList() {
 
   const getPromotion = async () => {
     try {
-      const result = await axios("http://localhost:4000/promotion");
+      const result = await axios("/api/promotion");
       setData(result.data.data);
     } catch (error) {
       setError("เกิดข้อผิดพลาดในการเรียกข้อมูลโปรโมชั่น");
@@ -27,7 +27,7 @@ function PromotionList() {
   // deletePromotion
   const deletePromotionById = async (promotionId) => {
     try {
-      await axios.delete(`http://localhost:4000/promotion/${promotionId}`);
+      await axios.delete(`/api/promotion/${promotionId}`);
       getPromotion();
       hide();
     } catch (error) {
@@ -54,7 +54,7 @@ function PromotionList() {
       try {
         setError(null);
         const response = await axios.get(
-          `http://localhost:4000/promotion?keyword=${keyword}`
+          `/api/promotion?keyword=${keyword}`
         );
 
         if (response.data.error) {
@@ -69,7 +69,6 @@ function PromotionList() {
     };
 
     fetchData();
-    console.log("แสดงผลข้อมูลของ useEffect", data);
   }, [keyword]);
 
   console.log(data);

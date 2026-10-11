@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
@@ -17,7 +17,7 @@ function AdminServiceList() {
 
   const getServices = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/service");
+      const response = await axios.get("/api/service");
       setServices(response.data.data);
     } catch (error) {
       setError("เกิดข้อผิดพลาดในการเรียกข้อมูลบริการ");
@@ -51,7 +51,7 @@ function AdminServiceList() {
 
   // const deleteServiceById = async (serviceId) => {
   //   try {
-  //     await axios.delete(http://localhost:4000/service/${serviceId});
+  //     await axios.delete(/api/service/${serviceId});
   //     getServices();
   //     hideDeleteServiceAlert();
   //   } catch (error) {
@@ -71,7 +71,7 @@ function AdminServiceList() {
 
   const deleteCategoryById = async (serviceId) => {
     try {
-      await axios.delete(`http://localhost:4000/service/${serviceId}`);
+      await axios.delete(`/api/service/${serviceId}`);
       getServices();
       hide();
     } catch (error) {

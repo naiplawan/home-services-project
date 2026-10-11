@@ -3,12 +3,9 @@ import { Card, Space } from "antd";
 import Navbar from "../components/Navbar";
 
 const ProfilePage = () => {
-  const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user_data"));
-    setUser(userData);
     setLoading(false);
   }, []);
 

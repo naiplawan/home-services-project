@@ -1,5 +1,4 @@
 import express from "express";
-import bodyParser from "body-parser";
 import cors from "cors";
 import authRouter from "./apps/auth.js";
 import categoryRouter from "./apps/category.js";
@@ -8,42 +7,32 @@ import checkoutRouter from "./apps/checkout.js";
 import orderHistoryRouter from "./apps/orderHistory.js";
 import paymentRouter from "./apps/payment.js";
 import promotionRouter from "./apps/promotion.js";
-import dotenv from "dotenv";
+const app = express();
 
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-async function init() {
-  dotenv.config();
+app.use("/api/auth", authRouter);
+app.use("/api/category", categoryRouter);
+app.use("/api/service", serviceRouter);
+app.use("/api/checkout", checkoutRouter);
+app.use("/api/orderHistory", orderHistoryRouter);
+app.use("/api/promotion", promotionRouter);
+app.use("/api/payment", paymentRouter);
 
-  const app = express();
-  const port = 4000;
-  
- 
+app.get("/api", (req, res) => {
+  res.send("Welcome to Home Service!");
+});
 
-  app.use(cors());
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
-  
+app.get("*", (req, res) => {
+  res.status(404).send("Page Not Found");
+});
 
+export default app;
 
-  app.use("/auth", authRouter);
-  app.use("/category", categoryRouter);
-  app.use("/service", serviceRouter);
-  app.use("/checkout", checkoutRouter);
-  app.use("/orderHistory", orderHistoryRouter);
-  app.use("/promotion",promotionRouter)
-  app.use("/payment", paymentRouter)
-
-  app.get("/", (req, res) => {
-    res.send("Welcome to Home Service!");
-  });
-
-  app.get("*", (req, res) => {
-    res.status(404).send("Page Not Found");
-  });
-
-  app.listen(port, () => {
-    console.log(`Server is listening on port ${port}`);
+if (process.env.VERCEL !== "1") {
+  app.listen(process.env.PORT || 4000, () => {
+    console.log(`Server is listening on port ${process.env.PORT || 4000}`);
   });
 }
-
-init();

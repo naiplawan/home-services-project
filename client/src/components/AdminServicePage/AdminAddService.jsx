@@ -4,17 +4,9 @@ import {
   Upload,
   Select,
   message,
-  InputNumber,
   Image,
-  Button,
-  Row,
-  Col,
 } from "antd";
-import {
-  LoadingOutlined,
-  PlusOutlined,
-  InboxOutlined,
-} from "@ant-design/icons";
+import { InboxOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 // import  {useUtils}  from "../../hooks/utils";
 import { useState, useEffect } from "react";
@@ -22,10 +14,8 @@ import axios from "axios";
 import Frame from "../../assets/AdminPhoto/Frame.svg";
 
 function AddService() {
-  const { Dragger } = Upload;
   const navigate = useNavigate();
 
-  const [data, setData] = useState([]);
   const [category, setCategory] = useState([]);
 
   const [selectedImage, setSelectedImage] = useState(null); //manage the selected image
@@ -94,7 +84,7 @@ function AddService() {
       }
 
       const response = await axios.post(
-        "http://localhost:4000/service",
+        "/api/service",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -117,17 +107,14 @@ function AddService() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/category")
+      .get("/api/category")
       .then((response) => {
-        setData(response.data.data); // Store data in state
         setCategory(response.data.data);
         console.log(response.data);
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  console.log(data.data);
-  console.log(category);
 
   // const isImage = (file) => {
   //   const acceptedImageTypes = ['image/jpeg', 'image/png'];
@@ -214,9 +201,7 @@ function AddService() {
                   },
                 ]}
               >
-                {data &&
-                  data.data &&
-                  data.data.map((categoryItem) => (
+                {category.map((categoryItem) => (
                     <Select.Option
                       key={categoryItem.category_id}
                       value={categoryItem.category_name}
@@ -324,7 +309,7 @@ function AddService() {
                         gap: "16px",
                       }}
                     >
-                      {fields.map((field, index) => (
+                      {fields.map((field) => (
                         <div
                           key={field.key}
                           style={{

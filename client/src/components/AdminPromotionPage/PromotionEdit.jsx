@@ -4,11 +4,9 @@ import {
   Radio,
   DatePicker,
   TimePicker,
-  Button,
   Col,
   Row,
   message,
-  InputNumber,
 } from "antd";
 import moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
@@ -29,9 +27,6 @@ function PromotionEdit() {
   const [promotionDetail, setPromotionDetail] = useState(""); //ใช้กับ header
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
-
 
   const [newFormData, setFormData] = useState({
     promotion_code: "",
@@ -44,30 +39,11 @@ function PromotionEdit() {
 
   const navigate = useNavigate();
 
-  const now = dayjs();
-
-  const params = useParams();
-
-  const isFutureTime = (current) => {
-    const now = dayjs().startOf("day");
-    const currentTime = dayjs();
-    const selectedTime = dayjs(current);
-    return (
-      selectedTime.isAfter(now) ||
-      (selectedTime.isSame(now, "day") && selectedTime.isAfter(currentTime))
-    );
-  };
-
-  const isFutureDate = (current) => {
-    const now = dayjs().startOf("day");
-    return current && current.isAfter(now);
-  };
-
   useEffect(() => {
     const getPromotionDetail = async (promotionId) => {
       try {
         const result = await axios.get(
-          `http://localhost:4000/promotion/${promotionId}`
+          `/api/promotion/${promotionId}`
         );
         setPromotionDetail(result.data.data[0].promotion_code);
         setFormData({
@@ -99,7 +75,7 @@ function PromotionEdit() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:4000/promotion/${promotionId}`);
+      await axios.delete(`/api/promotion/${promotionId}`);
       message.success("ลบโปรโมชั่นสำเร็จ");
       navigate("/admin-promotion");
     } catch (error) {
@@ -158,7 +134,7 @@ function PromotionEdit() {
 
 
       const response = await axios.put(
-        `http://localhost:4000/promotion/${params.promotionId}`,
+        `/api/promotion/${promotionId}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

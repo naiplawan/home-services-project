@@ -22,7 +22,7 @@ function EditedCategoryForm() {
   const getCategory = async (categoryId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/category/${categoryId}`
+        `/api/category/${categoryId}`
       );
       setCategoryData(response.data.data);
       setEditedCategoryName(response.data.data[0].category_name);
@@ -35,7 +35,7 @@ function EditedCategoryForm() {
     event.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:4000/category/${categoryId}`,
+        `/api/category/${categoryId}`,
         {
           category_name: editedCategoryName,
           category_edited_date: new Date(),
@@ -52,7 +52,7 @@ function EditedCategoryForm() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:4000/category/${categoryId}`);
+      await axios.delete(`/api/category/${categoryId}`);
       message.success("ลบหมวดหมู่สำเร็จ");
       navigate("/admin-category");
     } catch (error) {

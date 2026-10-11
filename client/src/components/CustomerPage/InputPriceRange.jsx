@@ -108,6 +108,14 @@ InputPriceRange.propTypes = {
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
+  setMinFilter: PropTypes.func.isRequired,
+  setMaxFilter: PropTypes.func.isRequired,
+};
+
+InputPriceRange.propTypes = {
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default InputPriceRange;

@@ -4,33 +4,22 @@ import {
   Upload,
   Select,
   message,
-  InputNumber,
   Image,
-  Button,
-  Modal,
-  Space,
   notification,
 } from "antd";
-import {
-  LoadingOutlined,
-  PlusOutlined,
-  InboxOutlined,
-} from "@ant-design/icons";
+import { InboxOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import arrow from "../../assets/AdminPhoto/arrow.png";
 import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
-import image from "../../assets/AdminPhoto/imageIndex.js";
-import { names } from "@ctrl/tinycolor";
 import trash from "../../assets/homepagePhoto/trash.svg";
 
 function ServiceEditForm() {
   //render component and package area
   const navigate = useNavigate();
   const params = useParams();
-  const { Dragger } = Upload;
 
   const { serviceId } = useParams();
 
@@ -42,7 +31,6 @@ function ServiceEditForm() {
   console.log(selectedCategory);
 
   //state for category to map
-  const [data, setData] = useState([]); //use to map category
 
   //state
   const [service, setService] = useState([]);
@@ -54,7 +42,6 @@ function ServiceEditForm() {
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
-  const currentSubService = service.sub_service; // subservice เดิม
 
   //state for image
   const [selectedImage, setSelectedImage] = useState(null); //โชว์รูปภาพที่เลือก
@@ -90,7 +77,7 @@ function ServiceEditForm() {
   const getService = async (serviceId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/service/${serviceId}`
+        `/api/service/${serviceId}`
       );
       setService(response.data.data);
       setEditableServiceName(response.data.data.service_name);
@@ -106,7 +93,7 @@ function ServiceEditForm() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:4000/service/${serviceId}`);
+      await axios.delete(`/api/service/${serviceId}`);
       message.success("ลบserviceสำเร็จ");
       navigate("/admin-service");
     } catch (error) {
@@ -130,7 +117,7 @@ function ServiceEditForm() {
       const subServiceData = values["service.sub_service"];
 
       const user_id = localStorage.getItem("user_id");
-      const selectedCategoryId = category.data.find(
+      const selectedCategoryId = category.find(
         (category) => category.category_name === selectedCategory
       )?.category_id;
 
@@ -166,7 +153,7 @@ function ServiceEditForm() {
       formData.append("service_created_date", service.service_created_date);
 
       const response = await axios.put(
-        `http://localhost:4000/service/${params.serviceId}`,
+        `/api/service/${params.serviceId}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -189,7 +176,7 @@ function ServiceEditForm() {
   // get category to map
   useEffect(() => {
     axios
-      .get("http://localhost:4000/category")
+      .get("/api/category")
       .then((response) => {
         // Store data in state
         setCategory(response.data.data);
@@ -293,8 +280,7 @@ function ServiceEditForm() {
                     name="category_id"
                     onChange={(value) => setSelectedCategory(value)} 
                   >
-                    {category.data &&
-                      category.data.map((categoryItem) => (
+                    {category.map((categoryItem) => (
                         <Select.Option
                           key={categoryItem.category_id}
                           value={categoryItem.category_name}

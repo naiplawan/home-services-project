@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import arrowBlue from "../assets/CustomerPhoto/icons/arrow-blue.svg";
@@ -31,11 +31,9 @@ function AllStepCheckOutForm() {
     usePromotion();
 
   const [totalPrice, setTotalPrice] = useState(0);
-  const [expirationDate, setExpirationDate] = useState(null); // State for expiration date
   
   const [isApplied, setIsApplied] = useState(false);
 
-  const [promotionQuota, setPromotionQuota] = useState(null);
 
   const {
     promotion_types,
@@ -46,7 +44,7 @@ function AllStepCheckOutForm() {
     promotion_id,
   } = promotion;
 
-  const calculateDiscountedPrice = () => {
+  const calculateDiscountedPrice = useCallback(() => {
     if (!promotion_types) {
       return totalPrice;
     }
@@ -61,7 +59,7 @@ function AllStepCheckOutForm() {
     }
 
     return totalPrice;
-  };
+  }, [totalPrice, promotion_types, promotion_discount]);
 
   // const [success, setSuccess] = useState(false);
   // const stripePromise = loadStripe(
@@ -109,7 +107,7 @@ function AllStepCheckOutForm() {
   const getService = async (serviceId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/service/${serviceId}`
+        `/api/service/${serviceId}`
       );
       const serviceData = response.data.data;
 
@@ -146,7 +144,7 @@ function AllStepCheckOutForm() {
     }
   };
 
-  const handleApplyPromotion = async () => {
+  const handleApplyPromotion = useCallback(async () => {
     if (!promotionCode) {
       message.error("กรุณากรอก promotion code ก่อน");
       return;
@@ -178,8 +176,6 @@ function AllStepCheckOutForm() {
       // Check code usage quota
       if (0 < promotion_quota) {
         // Increment the code usage count
-        setExpirationDate(promotion_expiry_date); // Update expiration date
-        setPromotionQuota(promotion_quota);
         setIsApplied(true); 
         message.success("โค้ดถูกใช้งานแล้ว");
 
@@ -199,7 +195,7 @@ function AllStepCheckOutForm() {
     } catch (error) {
       message.error(error.message);
     }
-  };
+  }, [promotionCode, getPromotion, promotion_code, isApplied, promotion_expiry_date, promotion_quota, setIsApplied, decreaseQuota, promotion, calculateDiscountedPrice]);
 
   const handlePromotionInputChange = (e) => {
     console.log(
@@ -234,19 +230,11 @@ function AllStepCheckOutForm() {
   };
 
   useEffect(() => {
-    console.log("promotion:", promotion);
-    if (isApplied) {
-      setExpirationDate(promotion_expiry_date);
-      setPromotionQuota(promotion_quota);
-    }
-  }, [promotion, isApplied]);
-
-  useEffect(() => {
-    if (promotionCode === promotion_code) {
+    if (promotionCode === promotion_code && !isApplied) {
       // If the entered code matches the promotion code, apply it automatically
       handleApplyPromotion();
     }
-  }, [promotionCode, promotion_code])
+  }, [promotionCode, promotion_code, isApplied, handleApplyPromotion])
 
   useEffect(() => {
     // ฟังก์ชันสำหรับคำนวณราคาและอัปเดต state
@@ -315,7 +303,7 @@ function AllStepCheckOutForm() {
       console.log("formDataItem", formDataItem);
 
       const response = await axios.post(
-        "http://localhost:4000/checkout",
+        "/api/checkout",
         formDataItem
         // {
         //   headers: { "Content-Type": "multipart/form-data" },
@@ -359,7 +347,7 @@ function AllStepCheckOutForm() {
   //   if (!error) {
   //     try {
   //       const { id } = paymentMethod;
-  //       const response = await axios.post("http://localhost:4000/payment", {
+  //       const response = await axios.post("/api/payment", {
   //         amount: calculateTotalPrice(), // Pass the total amount here
   //         id,
   //       });

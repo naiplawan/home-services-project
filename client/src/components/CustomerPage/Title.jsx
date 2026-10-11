@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 function Title(props) {
     return (
         <div className="flex justify-center items-center p-6 bg-blue600">
@@ -5,4 +7,6 @@ function Title(props) {
         </div>
     );
 }
+
+Title.propTypes = { title: PropTypes.string.isRequired };
   export default Title;

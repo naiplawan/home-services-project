@@ -12,7 +12,7 @@ function PromotionDetail() {
   const params = useParams();
   const getPromotionDetail = async (promotionId) => {
     const result = await axios.get(
-      `http://localhost:4000/promotion/${promotionId}`
+      `/api/promotion/${promotionId}`
     );
     setPromotionById(result.data.data);
     setPromotionDetail(result.data.data[0].promotion_code);
@@ -22,7 +22,7 @@ function PromotionDetail() {
   useEffect(() => {
     getPromotionDetail(params.promotionId);
     console.log(params.promotionId);
-  }, []);
+  }, [params.promotionId]);
 
   return (
     <div className="bg-grey100 h-[100%] pb-[4%] pl-60 ">

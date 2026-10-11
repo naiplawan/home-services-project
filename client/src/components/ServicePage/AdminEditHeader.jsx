@@ -1,4 +1,5 @@
 import image from "../../assets/AdminPhoto/imageIndex";
+import PropTypes from "prop-types";
 
 function AdminEditedHeader(props) {
   return (
@@ -20,5 +21,12 @@ function AdminEditedHeader(props) {
     </header>
   );
 }
+
+AdminEditedHeader.propTypes = {
+  back: PropTypes.func.isRequired,
+  title: PropTypes.string,
+  name: PropTypes.string,
+  children: PropTypes.node,
+};
 
 export default AdminEditedHeader;

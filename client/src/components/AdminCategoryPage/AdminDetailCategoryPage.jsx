@@ -12,7 +12,7 @@ function AdminDetailCategoryPage() {
   const params = useParams();
   const getCategory = async (categoryId) => {
     const results = await axios.get(
-      `http://localhost:4000/category/${categoryId}`
+      `/api/category/${categoryId}`
     );
     setCategoryById(results.data.data);
     setCategoryDetail(results.data.data[0].category_name);
@@ -22,7 +22,7 @@ function AdminDetailCategoryPage() {
   useEffect(() => {
     getCategory(params.categoryId);
     console.log(params.categoryId);
-  }, []);
+  }, [params.categoryId]);
 
   return (
     <div className="bg-grey100 h-[100%] pb-[4%] pl-60 ">

@@ -8,7 +8,7 @@ export const usePromotion = () => {
 
   const getPromotion = async (promotionCode) => {
     try {
-      const response = await axios(`http://localhost:4000/checkout?keyword=${promotionCode}`);
+      const response = await axios(`/api/checkout?keyword=${promotionCode}`);
       setPromotion(response.data.data[0]);
     } catch (error) {
       console.error("Failed to get promotions:", error);
@@ -42,7 +42,7 @@ export const usePromotion = () => {
       promotion_expiry_time: promotion.promotion_expiry_time,
     };
     console.log("ที่จะส่งไปหลังบ้าน:", updatedPromotionItem);
-    axios.put(`http://localhost:4000/promotion/${promotion.promotion_id}`, updatedPromotionItem)
+    axios.put(`/api/promotion/${promotion.promotion_id}`, updatedPromotionItem)
       .then((response) => {
         console.log("Decreased promotion quota:", response.data);
         message.success("ใช้โค้ดส่วนลดสำเร็จ");

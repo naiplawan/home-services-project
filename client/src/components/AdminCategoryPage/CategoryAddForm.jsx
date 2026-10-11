@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 
 function CategoryAddForm() {
   const [categoryName, setCategoryName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
@@ -16,22 +14,17 @@ function CategoryAddForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      setIsError(false);
-      setIsLoading(true);
-
-      const response = await axios.post("http://localhost:4000/category", {
+      const response = await axios.post("/api/category", {
         category_name: categoryName,
       });
 
-      setIsLoading(false);
       if (response.status === 201) {
         setCategoryName("");
         message.success("สร้าง category สำเร็จ!");
         navigate("/admin-category");
       }
-    } catch (error) {
-      setIsError(true);
-      setIsLoading(false);
+    } catch {
+      message.error("สร้างหมวดหมู่ไม่สำเร็จ");
     }
   };
 
