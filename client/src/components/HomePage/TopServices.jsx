@@ -79,12 +79,7 @@ function TopServices() {
             services.data &&
             Array.isArray(services.data) &&
             services.data
-              .filter(
-                (service) =>
-                  service.service_name === "ทำความสะอาดทั่วไป" ||
-                  service.service_name === "ล้างแอร์" ||
-                  service.service_name === "ซ่อมเครื่องซักผ้า"
-              )
+              .slice(0, 3)
               .map((service) => (
                 <div
                   key={service.id}
