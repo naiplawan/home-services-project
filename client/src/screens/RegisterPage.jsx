@@ -92,6 +92,7 @@ function RegisterPage() {
           <Form.Item
             className="w-[80%] h-[72px]"
             name="fullName"
+            validateFirst
             label={<span style={labelStyle}>ชื่อ - นามสกุล</span>}
             labelAlign="top"
             labelCol={{ span: 24 }}
@@ -120,6 +121,7 @@ function RegisterPage() {
           <Form.Item
             className="w-[80%] h-[72px]"
             name="phoneNumber"
+            validateFirst
             label={<span style={labelStyle}>เบอร์โทรศัพท์</span>}
             labelAlign="top"
             labelCol={{ span: 24 }}
@@ -148,6 +150,7 @@ function RegisterPage() {
           <Form.Item
             className="w-[80%] h-[72px]"
             name="email"
+            validateFirst
             label={<span style={labelStyle}>อีเมล </span>}
             labelAlign="top"
             labelCol={{ span: 24 }}
@@ -182,6 +185,7 @@ function RegisterPage() {
           <Form.Item
             className="w-[80%]"
             name="password"
+            validateFirst
             label={<span style={labelStyle}>รหัสผ่าน</span>}
             labelAlign="top"
             labelCol={{ span: 24 }}
