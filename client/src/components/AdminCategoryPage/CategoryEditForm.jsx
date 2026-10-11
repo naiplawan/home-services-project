@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "@/routing/navigation.jsx";
 import dateFormat from "../../utils/dateFormat.js";
 import arrow from "../../assets/AdminPhoto/arrow.png";
+import assetUrl from "../../assets/assetUrl.js";
 import trash from "../../assets/homepagePhoto/trash.svg";
 import AlertBoxDelete from "../AlertBox.jsx";
-import { message } from "antd";
+import { notify } from "@/components/ui/notify.js";
 
 function EditedCategoryForm() {
   const [categoryData, setCategoryData] = useState([]);
@@ -42,7 +43,7 @@ function EditedCategoryForm() {
         }
       );
       if (response.status === 200) {
-        message.success("แก้ไขหมวดหมู่สำเร็จ");
+      notify.success("แก้ไขหมวดหมู่สำเร็จ");
         navigate("/admin-category");
       }
     } catch (error) {
@@ -53,7 +54,7 @@ function EditedCategoryForm() {
   const handleDelete = async () => {
     try {
       await axios.delete(`/api/category/${categoryId}`);
-      message.success("ลบหมวดหมู่สำเร็จ");
+      notify.success("ลบหมวดหมู่สำเร็จ");
       navigate("/admin-category");
     } catch (error) {
       console.error("เกิดข้อผิดพลาดในการลบหมวดหมู่:", error);
@@ -79,7 +80,7 @@ function EditedCategoryForm() {
           <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
             <div className="flex">
               <img
-                src={arrow}
+                src={assetUrl(arrow)}
                 className=" h-[40px] w-[40px] cursor-pointer hover:scale-110 transition"
                 onClick={() => navigate("/admin-category")}
               />

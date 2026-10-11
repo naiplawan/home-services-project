@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
 import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
+import LoadingState from "@/components/ui/loading-state.jsx";
 import image from "../../assets/AdminPhoto/imageIndex.js";
 import axios from "axios";
 import drag from "../../assets/AdminPhoto/drag.svg";
@@ -159,7 +160,7 @@ function AdminServiceList() {
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <div className="categories-data min-h-screen bg-bg p-[41px] ml-60">
         {services.length === 0 ? (
-          <p>Loading...</p>
+          <LoadingState label="กำลังโหลดบริการ" />
         ) : (
           <div className="category-list w-[100%]">
             <ul>

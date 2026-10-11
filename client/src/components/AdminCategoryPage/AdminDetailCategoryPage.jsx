@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "@/routing/navigation.jsx";
 import dateFormat from "../../utils/dateFormat.js";
 import arrow from "../../assets/AdminPhoto/arrow.png";
+import assetUrl from "../../assets/assetUrl.js";
 
 function AdminDetailCategoryPage() {
   const [categoryById, setCategoryById] = useState([]);
@@ -32,7 +33,7 @@ function AdminDetailCategoryPage() {
             <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
               <div className="flex">
                 <img
-                  src={arrow}
+                  src={assetUrl(arrow)}
                   className=" h-[40px] w-[40px] cursor-pointer hover:scale-110 transition"
                   onClick={() => navigate("/admin-category")}
                 />

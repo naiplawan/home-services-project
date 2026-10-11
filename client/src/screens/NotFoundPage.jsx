@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 // import "./App.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
 
 function NotFoundPage() {
   const navigate = useNavigate();

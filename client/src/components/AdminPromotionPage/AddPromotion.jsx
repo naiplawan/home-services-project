@@ -6,10 +6,10 @@ import {
   TimePicker,
   Col,
   Row,
-  message,
 } from "antd";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
+import { notify } from "@/components/ui/notify.js";
 import { useState } from "react";
 import axios from "axios";
 
@@ -80,7 +80,7 @@ function AddPromotionForm() {
       );
 
       if (response.status === 200) {
-        message.success("สร้างโปรโมชั่นโค้ดใหม่สำเร็จ");
+        notify.success("สร้างโปรโมชั่นโค้ดใหม่สำเร็จ");
       }
       navigate("/admin-promotion");
     } catch (error) {

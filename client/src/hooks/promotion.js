@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import moment from "moment";
-import { message } from "antd"; 
+import { notify } from "@/components/ui/notify.js";
 
 export const usePromotion = () => {
   const [promotion, setPromotion] = useState({});
@@ -45,11 +45,11 @@ export const usePromotion = () => {
     axios.put(`/api/promotion/${promotion.promotion_id}`, updatedPromotionItem)
       .then((response) => {
         console.log("Decreased promotion quota:", response.data);
-        message.success("ใช้โค้ดส่วนลดสำเร็จ");
+        notify.success("ใช้โค้ดส่วนลดสำเร็จ");
       })
       .catch((error) => {
         console.error("Failed to decrease promotion quota:", error);
-        message.error("ส่งข้อมูลไปเซิฟเวอร์ล้มเหลว");
+        notify.error("ส่งข้อมูลไปเซิฟเวอร์ล้มเหลว");
       });
   };
 

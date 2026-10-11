@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
 import axios from "axios";
 import image from "../../assets/CustomerPhoto/imageIndex.js";
 import SellBlack from "../../assets/homepagePhoto/SellBlack.jsx";
@@ -109,15 +109,22 @@ function ServiceList() {
   };
 
   // ***** About Data Fetching *****
-  const [services, setServices] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [services, setServices] = useState({ data: [] });
+  const [categories, setCategories] = useState({ data: [] });
   const [error, setError] = useState(null);
 
   // API for rendering category <select>/<option>
   const getCategory = useCallback(async () => {
     try {
       const result = await axios("/api/category");
-      setCategories(result.data.data);
+      const categoryResult = result.data?.data;
+      setCategories(
+        Array.isArray(categoryResult)
+          ? { data: categoryResult }
+          : categoryResult && Array.isArray(categoryResult.data)
+            ? categoryResult
+            : { data: [] },
+      );
       console.log("getCategory มีอะไร ", result.data.data);
     } catch {
       setError("เกิดข้อผิดพลาดในการเรียกข้อมูลหมวดหมู่");
@@ -136,8 +143,17 @@ function ServiceList() {
       if (response.data.error) {
         setError("เกิดข้อผิดพลาดในการค้นหา");
       } else {
-        setServices(response.data.data);
-        console.log("ผลลัพธ์การค้นหา", response.data.data);
+        const serviceResult = response.data?.data;
+        const serviceList = Array.isArray(serviceResult)
+          ? serviceResult
+          : serviceResult?.data;
+        if (!Array.isArray(serviceList)) {
+          setServices({ data: [] });
+          setError("เกิดข้อผิดพลาดในการค้นหา");
+          return;
+        }
+        setServices({ data: serviceList });
+        console.log("ผลลัพธ์การค้นหา", serviceList);
       }
     } catch (error) {
       setError("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์", error.message);

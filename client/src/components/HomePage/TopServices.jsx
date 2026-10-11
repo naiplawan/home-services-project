@@ -2,7 +2,7 @@ import "../../styles/App.css";
 import axios from "axios";
 import AlertBoxDelete from "../AlertBox.jsx";
 import SellBlack from "../../assets/homepagePhoto/SellBlack.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/authentication";
 import {
@@ -19,8 +19,8 @@ function TopServices() {
   const getCategory = async () => {
     try {
       const response = await axios("/api/service");
-      setServices(response.data.data);
-      console.log("ผลลัพธ์การค้นหา", response.data.data);
+      setServices(response.data?.data ?? []);
+      console.log("ผลลัพธ์การค้นหา", response.data?.data);
     } catch (error) {
       console.error("Error fetching services:", error);
     }

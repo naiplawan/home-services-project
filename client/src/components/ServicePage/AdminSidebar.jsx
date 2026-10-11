@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
 import { useAuth } from "../../contexts/authentication";
 import image from "../../assets/AdminPhoto/imageIndex";
 

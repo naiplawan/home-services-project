@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Button, Form, Input, Checkbox, message } from "antd";
+import { Button, Form, Input, Checkbox } from "antd";
 import Navbar from "../components/Navbar.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
 import axios from "axios";
+import { notify } from "@/components/ui/notify.js";
 
 function RegisterPage() {
   // Initialize form
@@ -51,15 +52,15 @@ function RegisterPage() {
 
         // Check API response
         if (response.status === 200) {
-          message.success("ลงทะเบียนสำเร็จ");
+          notify.success("ลงทะเบียนสำเร็จ");
           // Redirect to login page or another page on success
           navigate("/login");
         } else {
-          message.error("ลงทะเบียนล้มเหลว");
+          notify.error("ลงทะเบียนล้มเหลว");
         }
       } catch (error) {
         console.error(error);
-        message.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+        notify.error("กรุณากรอกข้อมูลให้ครบถ้วน");
       } finally {
         setIsSubmitting(false);
       }

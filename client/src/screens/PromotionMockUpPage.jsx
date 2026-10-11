@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { Input, Button, message } from "antd";
+import { Input, Button } from "antd";
 import { usePromotion } from "../hooks/promotion";
+import { notify } from "@/components/ui/notify.js";
 
 const PromotionMockUpPage = () => {
   const [promotionCode, setPromotionCode] = useState("");
@@ -39,7 +40,7 @@ const PromotionMockUpPage = () => {
 
   const handleApplyPromotion = useCallback(async () => {
     if (!promotionCode) {
-        message.error("กรุณากรอก promotion code ก่อน");
+          notify.error("กรุณากรอก promotion code ก่อน");
         return;
     }
 
@@ -48,7 +49,7 @@ const PromotionMockUpPage = () => {
         await getPromotion(promotionCode);
 
         if (promotionCode !== promotion_code) {
-          message.error("โปรโมชันโค้ดไม่ถูกต้อง");
+          notify.error("โปรโมชันโค้ดไม่ถูกต้อง");
           return;
         }
 
@@ -64,7 +65,7 @@ const PromotionMockUpPage = () => {
         const expirationDateObject = new Date(promotion_expiry_date);
 
         if (currentDate > expirationDateObject) {
-            message.error("โค้ดหมดอายุแล้ว");
+            notify.error("โค้ดหมดอายุแล้ว");
             return;
           }
 
@@ -75,7 +76,7 @@ const PromotionMockUpPage = () => {
           setExpirationDate(promotion_expiry_date); // Update expiration date
           setExpirationTime(promotion_expiry_time); // Update expiration date
           setIsApplied(true); 
-          message.success("โค้ดถูกใช้งานแล้ว");
+          notify.success("โค้ดถูกใช้งานแล้ว");
 
           decreaseQuota(promotion);
 
@@ -86,11 +87,11 @@ const PromotionMockUpPage = () => {
           setTotalPrice(discountedPrice);
 
         } else {
-            message.error("โค้ดหมดแล้ว");
+          notify.error("โค้ดหมดแล้ว");
         }
 
     } catch (error) {
-        message.error(error.message);
+        notify.error(error.message);
     }
   }, [promotionCode, getPromotion, promotion_code, promotion_expiry_date, promotion_expiry_time, codeUsage, promotion_quota, setCodeUsage, setExpirationDate, setExpirationTime, setIsApplied, decreaseQuota, promotion, calculateDiscountedPrice]);
 

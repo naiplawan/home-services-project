@@ -1,8 +1,11 @@
-# React + Vite
+# Home Services frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The customer and admin web app uses Next.js App Router, React 18, Tailwind CSS, shadcn/ui primitives, and Framer Motion. The Express API remains in `../server` and is served under `/api` in the Vercel deployment.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Install frontend dependencies with `npm install` in this directory.
+2. Start the API from `../server` on port `4000`.
+3. Run `npm run dev` here and open `http://localhost:3000`.
+
+`npm run build` creates the production build, `npm start` serves that build, and `npm run lint` runs ESLint.

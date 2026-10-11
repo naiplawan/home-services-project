@@ -1,6 +1,7 @@
-import { Form, Input, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Form, Input } from "antd";
+import { useNavigate } from "@/routing/navigation.jsx";
 import Navbar from "../components/Navbar.jsx";
+import { notify } from "@/components/ui/notify.js";
 import { useAuth } from "../contexts/authentication";
 import "../styles/App.css";
 
@@ -20,7 +21,7 @@ function LoginForm() {
       if (response.success) {
         navigate("/");
       } else {
-        message.error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+        notify.error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
       }
     } catch (error) {
       console.error("Login failed:", error);

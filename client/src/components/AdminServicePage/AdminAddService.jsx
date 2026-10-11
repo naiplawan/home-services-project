@@ -3,11 +3,11 @@ import {
   Input,
   Upload,
   Select,
-  message,
   Image,
 } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
+import { notify } from "@/components/ui/notify.js";
 // import  {useUtils}  from "../../hooks/utils";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -92,14 +92,14 @@ function AddService() {
       );
 
       if (response.status === 200) {
-        message.success("สร้างบริการใหม่สำเร็จ");
+        notify.success("สร้างบริการใหม่สำเร็จ");
       } else {
-        message.error("Cannot create service");
+        notify.error("Cannot create service");
       }
       navigate("/admin-service");
     } catch (error) {
       console.error(error);
-      message.error("กรุณากรอกบริการให้ครบถ้วน");
+      notify.error("กรุณากรอกบริการให้ครบถ้วน");
     }
   };
 
@@ -233,11 +233,11 @@ function AddService() {
                   const isLt5M = file.size / 1024 / 1024 < 5;
               
                   if (!isImage) {
-                    message.error("โปรดอัพโหลดไฟล์รูปภาพเท่านั้น");
+                    notify.error("โปรดอัพโหลดไฟล์รูปภาพเท่านั้น");
                   }
               
                   if (!isLt5M) {
-                    message.error("ขนาดไฟล์รูปภาพต้องไม่เกิน 5MB");
+                    notify.error("ขนาดไฟล์รูปภาพต้องไม่เกิน 5MB");
                   }
               
                   if (isImage && isLt5M) {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { message } from "antd";
+import { useNavigate } from "@/routing/navigation.jsx";
+import { notify } from "@/components/ui/notify.js";
 
 function CategoryAddForm() {
   const [categoryName, setCategoryName] = useState("");
@@ -20,11 +20,11 @@ function CategoryAddForm() {
 
       if (response.status === 201) {
         setCategoryName("");
-        message.success("สร้าง category สำเร็จ!");
+        notify.success("สร้าง category สำเร็จ!");
         navigate("/admin-category");
       }
     } catch {
-      message.error("สร้างหมวดหมู่ไม่สำเร็จ");
+      notify.error("สร้างหมวดหมู่ไม่สำเร็จ");
     }
   };
 

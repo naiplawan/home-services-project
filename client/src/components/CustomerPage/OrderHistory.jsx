@@ -2,8 +2,9 @@ import image from "../../assets/CustomerPhoto/imageIndex.js";
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams } from "@/routing/navigation.jsx";
 import dateFormat from "../../utils/dateFormat.js";
+import LoadingState from "@/components/ui/loading-state.jsx";
 
 function OrderHistory () {
     const { userId } = useParams();
@@ -29,7 +30,7 @@ function OrderHistory () {
     };
     
     if (loading) {
-        return (<div>Loading...</div>);
+        return <LoadingState label="กำลังโหลดประวัติคำสั่งซื้อ" />;
     }
     console.log(order)
    

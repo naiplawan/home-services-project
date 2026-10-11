@@ -3,7 +3,7 @@
   "services": {
     "client": {
       "root": "client",
-      "framework": "vite"
+      "framework": "nextjs"
     },
     "server": {
       "root": "server",

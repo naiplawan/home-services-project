@@ -1,5 +1,5 @@
 import HouseIcon from '../assets/HouseIcon.svg';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "@/routing/navigation.jsx";
 import { useAuth } from "../contexts/authentication";
 import person from '../assets/homepagePhoto/person.svg'
 import form from '../assets/homepagePhoto/form.svg'

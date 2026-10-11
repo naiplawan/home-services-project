@@ -1,4 +1,5 @@
 import Tools from '../../assets/homepagePhoto/tools.png';
+import assetUrl from "../../assets/assetUrl.js";
 import House from '../../assets/homepagePhoto/house.svg';
 
 function ForJob () {
@@ -6,7 +7,7 @@ function ForJob () {
   return (
     <div className="text-white relative">
       <div className="bg-[#336DF2] flex ">
-        <img src={Tools} alt="" className="hidden md:block"/>
+        <img src={assetUrl(Tools)} alt="" className="hidden md:block"/>
         <div className="bg-[#336DF2] flex flex-col p-5 lg:pt-10 lg:pl-40 justify-evenly">
       <div className="font-bold text-[40px]">
         มาร่วมเป็นพนักงานซ่อม

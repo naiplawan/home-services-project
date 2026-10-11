@@ -1,6 +1,6 @@
 import image from "../../assets/CustomerPhoto/imageIndex.js";
 import orderIcon from "../../assets/homepagePhoto/form.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
 
 function SideNavbar () {
     const userId = localStorage.getItem("user_id");

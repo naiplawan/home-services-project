@@ -6,14 +6,15 @@ import {
   TimePicker,
   Col,
   Row,
-  message,
 } from "antd";
 import moment from "moment";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "@/routing/navigation.jsx";
+import { notify } from "@/components/ui/notify.js";
 import dateFormat from "../../utils/dateFormat.js";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import arrow from "../../assets/AdminPhoto/arrow.png";
+import assetUrl from "../../assets/assetUrl.js";
 import trash from "../../assets/homepagePhoto/trash.svg";
 import AlertBoxDelete from "../AlertBox.jsx";
 import dayjs from 'dayjs';
@@ -76,7 +77,7 @@ function PromotionEdit() {
   const handleDelete = async () => {
     try {
       await axios.delete(`/api/promotion/${promotionId}`);
-      message.success("ลบโปรโมชั่นสำเร็จ");
+      notify.success("ลบโปรโมชั่นสำเร็จ");
       navigate("/admin-promotion");
     } catch (error) {
       console.error("เกิดข้อผิดพลาดในการลบโปรโมชั่น:", error);
@@ -142,7 +143,7 @@ function PromotionEdit() {
       );
 
       if (response.status === 200) {
-        message.success("แก้ไขโปรโมชั่นสำเร็จ");
+        notify.success("แก้ไขโปรโมชั่นสำเร็จ");
       }
       navigate("/admin-promotion");
     } catch (error) {
@@ -182,7 +183,7 @@ function PromotionEdit() {
           <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
             <div className="flex gap-[14px] h-12 w-fit">
               <img
-                src={arrow}
+                src={assetUrl(arrow)}
                 className=" h-[40px] w-[40px] cursor-pointer hover:scale-110 transition"
                 onClick={() => navigate("/admin-promotion")}
               />

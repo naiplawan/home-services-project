@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "@/routing/navigation.jsx";
 import Navbar from "../components/Navbar";
 import arrowBlue from "../assets/CustomerPhoto/icons/arrow-blue.svg";
 import arrowWhite from "../assets/CustomerPhoto/icons/arrow-white.svg";
@@ -9,8 +9,9 @@ import dayjs from "dayjs";
 import credit from "../assets/CustomerPhoto/icons/credit.svg";
 import qr from "../assets/CustomerPhoto/icons/qr.svg";
 import greyarrow from "../assets/CustomerPhoto/icons/BackGrey.svg";
-import { message, Steps, Form, Input, DatePicker, TimePicker } from "antd";
+import { Steps, Form, Input, DatePicker, TimePicker } from "antd";
 import moment from "moment";
+import { notify } from "@/components/ui/notify.js";
 // import { Elements } from "@stripe/react-stripe-js"; // npm install --save @stripe/react-stripe-js @stripe/stripe-js
 // import { loadStripe } from "@stripe/stripe-js";
 import { usePromotion } from "../hooks/promotion";
@@ -146,7 +147,7 @@ function AllStepCheckOutForm() {
 
   const handleApplyPromotion = useCallback(async () => {
     if (!promotionCode) {
-      message.error("กรุณากรอก promotion code ก่อน");
+      notify.error("กรุณากรอก promotion code ก่อน");
       return;
     }
 
@@ -160,7 +161,7 @@ function AllStepCheckOutForm() {
 
       // Check if the promotion has already been applied
       if (isApplied) {
-        message.warning("ท่านใช้ส่วนลดไปแล้ว");
+        notify.warning("ท่านใช้ส่วนลดไปแล้ว");
         return;
       }
 
@@ -169,7 +170,7 @@ function AllStepCheckOutForm() {
       const expirationDateObject = new Date(promotion_expiry_date);
 
       if (currentDate > expirationDateObject) {
-          message.error("โค้ดหมดอายุแล้ว");
+          notify.error("โค้ดหมดอายุแล้ว");
           return;
       }
 
@@ -177,7 +178,7 @@ function AllStepCheckOutForm() {
       if (0 < promotion_quota) {
         // Increment the code usage count
         setIsApplied(true); 
-        message.success("โค้ดถูกใช้งานแล้ว");
+        notify.success("โค้ดถูกใช้งานแล้ว");
 
         decreaseQuota(promotion);
 
@@ -188,12 +189,12 @@ function AllStepCheckOutForm() {
         setTotalPrice(discountedPrice);
 
       } else {
-          message.error("โค้ดหมดแล้ว");
+          notify.error("โค้ดหมดแล้ว");
       }
 
       
     } catch (error) {
-      message.error(error.message);
+      notify.error(error.message);
     }
   }, [promotionCode, getPromotion, promotion_code, isApplied, promotion_expiry_date, promotion_quota, setIsApplied, decreaseQuota, promotion, calculateDiscountedPrice]);
 
@@ -311,7 +312,7 @@ function AllStepCheckOutForm() {
       );
 
       if (response.status === 200) {
-        message.success("ซื้อบริการสำเร็จ");
+        notify.success("ซื้อบริการสำเร็จ");
       }
       next();
     } catch (error) {
@@ -847,7 +848,7 @@ function AllStepCheckOutForm() {
                 onClick={(e) => {
                   e.preventDefault();
                   handleFormSubmit(); // Prevent the default form submission
-                  message.success("Processing complete!");
+                  notify.success("Processing complete!");
                   // handleSubmitStripe(e); // Pass the event object
                   next();
                 }}

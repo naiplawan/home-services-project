@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, Space } from "antd";
 import Navbar from "../components/Navbar";
+import LoadingState from "@/components/ui/loading-state.jsx";
 
 const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,7 @@ const ProfilePage = () => {
     <div >
       <Navbar />
       {loading ? (
-        <p>Loading...</p>
+        <LoadingState label="กำลังโหลดข้อมูลโปรไฟล์" />
       ) : (
         <div className=" flex  justify-center bg-green900 h-screen items-center">
         <Space direction="vertical" size={200}>

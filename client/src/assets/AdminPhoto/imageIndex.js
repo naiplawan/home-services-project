@@ -14,22 +14,24 @@ import orderIcon from "./orderIcon.svg";
 import logoHomeService from "../HouseIcon.svg";
 import Frame from "../AdminPhoto/Frame.svg"
 
+const assetUrl = (asset) => (typeof asset === "string" ? asset : asset?.src);
+
 const image = {
-  editIcon,
-  trashIcon,
-  plusSign,
-  bluePlusSymbol,
-  coupon,
-  service,
-  category,
-  logout,
-  exclamation,
-  arrow,
-  addPhoto,
-  minus,
-  orderIcon,
-  logoHomeService,
-  Frame
+  editIcon: assetUrl(editIcon),
+  trashIcon: assetUrl(trashIcon),
+  plusSign: assetUrl(plusSign),
+  bluePlusSymbol: assetUrl(bluePlusSymbol),
+  coupon: assetUrl(coupon),
+  service: assetUrl(service),
+  category: assetUrl(category),
+  logout: assetUrl(logout),
+  exclamation: assetUrl(exclamation),
+  arrow: assetUrl(arrow),
+  addPhoto: assetUrl(addPhoto),
+  minus: assetUrl(minus),
+  orderIcon: assetUrl(orderIcon),
+  logoHomeService: assetUrl(logoHomeService),
+  Frame: assetUrl(Frame)
 };
 
 export default image;

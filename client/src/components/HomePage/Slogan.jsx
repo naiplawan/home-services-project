@@ -1,6 +1,7 @@
 import BlueMan from "../../assets/homepagePhoto/blueMan.png";
+import assetUrl from "../../assets/assetUrl.js";
 import '../../styles/App.css'
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
 
 
 function Slogan () {
@@ -30,7 +31,7 @@ function Slogan () {
 
       {/* left side */}
       <div className=" lg:absolute bottom-0 lg:right-0 xl:right-20">
-        <img src={BlueMan} alt="blueman" className="w-[100%]"/>
+        <img src={assetUrl(BlueMan)} alt="blueman" className="w-[100%]"/>
       </div>
     </div>
   )

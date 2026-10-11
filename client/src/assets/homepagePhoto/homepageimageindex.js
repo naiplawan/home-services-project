@@ -13,24 +13,26 @@ import AddImage from '../../assets/homepagePhoto/addImage.svg';
 import Bell from '../../assets/homepagePhoto/bell.svg';
 import Exclamation from '../../assets/homepagePhoto/exclamation.svg';
 
+const assetUrl = (asset) => (typeof asset === "string" ? asset : asset?.src);
+
 
 
 
 const homepageicon = {
-Tools
-,House
-,HouseIcon
-,LetterIcon
-,Phone
-,BlueMan
-,Cleaning
-,Air
-,Washing
-,SellBlack
-,Paper
-,AddImage
-,Bell
-,Exclamation
+Tools: assetUrl(Tools),
+House: assetUrl(House),
+HouseIcon: assetUrl(HouseIcon),
+LetterIcon: assetUrl(LetterIcon),
+Phone: assetUrl(Phone),
+BlueMan: assetUrl(BlueMan),
+Cleaning: assetUrl(Cleaning),
+Air: assetUrl(Air),
+Washing: assetUrl(Washing),
+SellBlack,
+Paper: assetUrl(Paper),
+AddImage: assetUrl(AddImage),
+Bell: assetUrl(Bell),
+Exclamation: assetUrl(Exclamation),
 
 }
 

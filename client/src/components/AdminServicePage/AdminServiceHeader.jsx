@@ -1,6 +1,6 @@
 import "../../styles/App.css";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
 import axios from "axios";
 import image from "../../assets/AdminPhoto/imageIndex";
 

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
 import axios from "axios";
 import dateFormat from "../../utils/dateFormat.js";
 import trashIcon from "../../assets/AdminPhoto/trash-icon.png";
 import editIcon from "../../assets/AdminPhoto/edit-icon.png";
+import assetUrl from "../../assets/assetUrl.js";
 import plusSign from "../../assets/AdminPhoto/plus-sign.svg";
 import AlertBoxDelete from "../AlertBox.jsx";
+import LoadingState from "@/components/ui/loading-state.jsx";
 import drag from "../../assets/AdminPhoto/drag.svg";
 import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 
@@ -129,7 +131,7 @@ function AdminCategory() {
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <div className="results w-[95%]">
             {data.length === 0 ? (
-              <p>loading</p>
+              <LoadingState label="กำลังโหลดหมวดหมู่" />
             ) : (
               <div className="category-list mt-10  w-[100%]">
                 <ul>
@@ -213,7 +215,7 @@ function AdminCategory() {
                                         <div className="pr-[5%] pt-[10px] flex ">
                                           <img
                                             className="cursor-pointer w-[25px] h-[25px] mr-[50%] "
-                                            src={trashIcon}
+                                            src={assetUrl(trashIcon)}
                                             onClick={() =>
                                               categoryDeleteAlert(
                                                 category.category_id
@@ -221,7 +223,7 @@ function AdminCategory() {
                                             }
                                           />
                                           <img
-                                            src={editIcon}
+                                            src={assetUrl(editIcon)}
                                             className="cursor-pointer w-[25px] h-[25px]  "
                                             onClick={() =>
                                               navigate(

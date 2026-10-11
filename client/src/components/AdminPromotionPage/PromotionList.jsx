@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
 import axios from "axios";
 import dateFormat from "../../utils/dateFormat.js";
 import trashIcon from "../../assets/AdminPhoto/trash-icon.png";
 import editIcon from "../../assets/AdminPhoto/edit-icon.png";
+import assetUrl from "../../assets/assetUrl.js";
 import plusSign from "../../assets/AdminPhoto/plus-sign.svg";
 import AlertBoxDelete from "../AlertBox.jsx";
+import LoadingState from "@/components/ui/loading-state.jsx";
 
 function PromotionList() {
   const [keyword, setKeyword] = useState("");
@@ -102,7 +104,7 @@ function PromotionList() {
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <div className="results w-[95%]">
           {data.length === 0 ? (
-            <p>loading</p>
+            <LoadingState label="กำลังโหลดโปรโมชั่น" />
           ) : (
             <div className="category-list mt-10 w-[100%] ">
               <ul>
@@ -183,13 +185,13 @@ function PromotionList() {
                               <div className="pr-[5%] flex items-center">
                                 <img
                                   className="cursor-pointer w-[25px] h-[25px] mr-[50%]"
-                                  src={trashIcon}
+                                  src={assetUrl(trashIcon)}
                                   onClick={() =>
                                     promotionDeleteAlert(promotion.promotion_id)
                                   }
                                 />
                                 <img
-                                  src={editIcon}
+                                  src={assetUrl(editIcon)}
                                   className="cursor-pointer w-[25px] h-[25px]"
                                   onClick={() =>
                                     navigate(

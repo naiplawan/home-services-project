@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios"; //npm install axios
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/routing/navigation.jsx";
 import jwtDecode from "jwt-decode"; //package npm install jwt-decode //npm install jsonwebtoken
-import { message } from "antd";
+import { notify } from "@/components/ui/notify.js";
 
 /* eslint-disable react-refresh/only-export-components */
 import PropTypes from "prop-types";
@@ -45,12 +45,12 @@ function AuthProvider(props) {
       // ใส่ condition login ตรวจสอบ role
       if (userDataFromToken.role === "admin") {
         navigate("/admin-category");
-        message.success("เข้าสู่ระบบสำเร็จ");
+        notify.success("เข้าสู่ระบบสำเร็จ");
       } else if (userDataFromToken.role === "customer") {
         navigate("/");
-        message.success("เข้าสู่ระบบสำเร็จ");
+        notify.success("เข้าสู่ระบบสำเร็จ");
       } else {
-        message.error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+        notify.error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
       }  
     } catch (e) {
       console.error("Login failed:", e);

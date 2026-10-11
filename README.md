@@ -24,7 +24,9 @@ Welcome to Home Services Project, the revolutionary on-demand household services
 -   CSS
 -   JavaScript
 -   React
+-   Next.js App Router
 -   Tailwind CSS
+-   shadcn/ui primitives with Framer Motion transitions
 -   Ant Design
 
 **Server:**
@@ -37,9 +39,9 @@ Welcome to Home Services Project, the revolutionary on-demand household services
 -   PostgreSQL
 -   Supabase
 
-**Building Tool:**
+**Frontend Framework:**
 
--   Vite
+-   Next.js
 
 **Other Tools and Methodologies:**
 
@@ -55,8 +57,9 @@ To get started with this project, you can follow these steps:
 
 1.  Clone the repository to your local machine.
 2.  Install the necessary dependencies for both the client and server.
-3.  Configure your database settings.
-4.  Run the development server.
+3.  Configure the backend environment variables in `server/.env`.
+4.  Start the Express backend from `server/` with `npm install` and `npm run dev`.
+5.  Start the Next.js frontend from `client/` with `npm install` and `npm run dev`.
 
 Feel free to explore the project, and if you're interested in contributing or have any questions, don't hesitate to reach out to the authors listed above.
 

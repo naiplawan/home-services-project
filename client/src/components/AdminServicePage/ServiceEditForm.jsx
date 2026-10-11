@@ -3,15 +3,15 @@ import {
   Input,
   Upload,
   Select,
-  message,
   Image,
-  notification,
 } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "@/routing/navigation.jsx";
+import { notify } from "@/components/ui/notify.js";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import arrow from "../../assets/AdminPhoto/arrow.png";
+import assetUrl from "../../assets/assetUrl.js";
 import dateFormat from "../../utils/dateFormat.js";
 import AlertBoxDelete from "../AlertBox.jsx";
 import trash from "../../assets/homepagePhoto/trash.svg";
@@ -94,7 +94,7 @@ function ServiceEditForm() {
   const handleDelete = async () => {
     try {
       await axios.delete(`/api/service/${serviceId}`);
-      message.success("ลบserviceสำเร็จ");
+      notify.success("ลบserviceสำเร็จ");
       navigate("/admin-service");
     } catch (error) {
       console.error("เกิดข้อผิดพลาดในการลบโปรโมชั่น:", error);
@@ -161,14 +161,14 @@ function ServiceEditForm() {
       );
 
       if (response.status === 200) {
-        message.success("แก้ไข service สำเร็จ!");
+        notify.success("แก้ไข service สำเร็จ!");
       } else {
-        message.error("Cannot update service");
+        notify.error("Cannot update service");
       }
       navigate("/admin-service");
     } catch (error) {
       console.error(error);
-      message.error("Error updating service");
+      notify.error("Error updating service");
     }
   };
 
@@ -224,7 +224,7 @@ function ServiceEditForm() {
               <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
                 <div className="flex gap-[14px] h-12 w-fit">
                   <img
-                    src={arrow}
+                    src={assetUrl(arrow)}
                     className=" h-[40px] w-[40px] cursor-pointer hover:scale-110 transition"
                     onClick={() => navigate("/admin-service")}
                   />
@@ -471,12 +471,7 @@ function ServiceEditForm() {
                                     if (subServices.length > 1) {
                                       remove(name);
                                     } else {
-                                      notification.error({
-                                        message: "Error",
-                                        description:
-                                          "ต้องมีรายการย่อยอย่างน้อย  1 รายการ",
-                                        duration: 5, // Set duration (in seconds)
-                                      });
+                                      notify.error("ต้องมีรายการย่อยอย่างน้อย 1 รายการ");
                                     }
                                   }}
                                 >

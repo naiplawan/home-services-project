@@ -21,29 +21,31 @@ import arrowBlue from "./icons/arrow-blue.svg";
 import arrowWhite from "./icons/arrow-white.svg";
 import Header from "./icons/Header-service.jpg";
 
+const assetUrl = (asset) => (typeof asset === "string" ? asset : asset?.src);
+
 const image = {
-  orderIcon,
-  paymentIcon,
-  penIcon,
-  personIcon,
-  time,
-  calendarIcon,
-  personIcon2,
-  completeIcon,
-  StepOrderIcon,
-  StepPenIcon,
-  FinalPenIcon,
-  StepPaymentIcon,
-  VISA,
-  AMEX,
-  MASTERCARD,
-  PhoneNumber,
-  Home,
-  name,
-  email,
-  arrowBlue,
-  arrowWhite,
-  Header,
+  orderIcon: assetUrl(orderIcon),
+  paymentIcon: assetUrl(paymentIcon),
+  penIcon: assetUrl(penIcon),
+  personIcon: assetUrl(personIcon),
+  time: assetUrl(time),
+  calendarIcon: assetUrl(calendarIcon),
+  personIcon2: assetUrl(personIcon2),
+  completeIcon: assetUrl(completeIcon),
+  StepOrderIcon: assetUrl(StepOrderIcon),
+  StepPenIcon: assetUrl(StepPenIcon),
+  FinalPenIcon: assetUrl(FinalPenIcon),
+  StepPaymentIcon: assetUrl(StepPaymentIcon),
+  VISA: assetUrl(VISA),
+  AMEX: assetUrl(AMEX),
+  MASTERCARD: assetUrl(MASTERCARD),
+  PhoneNumber: assetUrl(PhoneNumber),
+  Home: assetUrl(Home),
+  name: assetUrl(name),
+  email: assetUrl(email),
+  arrowBlue: assetUrl(arrowBlue),
+  arrowWhite: assetUrl(arrowWhite),
+  Header: assetUrl(Header),
 };
 
 export default image;

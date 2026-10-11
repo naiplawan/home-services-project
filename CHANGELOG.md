@@ -2,7 +2,19 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add Next.js App Router to the frontend with shadcn-style buttons, alert dialogs, and skeleton loading states animated with Framer Motion.
+- Add animated success, warning, and error notifications and retain the existing service, admin, customer, checkout, and profile screens.
+
+### Changed
+
+- Move frontend routing and Vercel's client service from Vite/React Router to Next.js while keeping the Express `/api` service and local development proxy.
+- Update local image handling for Next.js static asset imports and document the Next.js development workflow.
+
 ### Fixed
+
+- Keep the service listing page rendered when an API response has no service data, instead of throwing a client-side exception.
 
 - Correct case-sensitive imports for homepage components and assets so the Vite production build resolves them on Linux.
 - Resolve the bundled Prompt font assets from Vite's public directory.
