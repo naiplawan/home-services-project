@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import arrow from "../../assets/AdminPhoto/arrow.png";
 import assetUrl from "../../assets/assetUrl.js";
+import { buttonStyles } from "@/lib/ui-classes.js";
 import trash from "../../assets/homepagePhoto/trash.svg";
 import AlertBoxDelete from "../AlertBox.jsx";
 import dayjs from 'dayjs';
@@ -179,8 +180,8 @@ function PromotionEdit() {
         onFinish={handleSubmitEdit}
         requiredMark={false}
       >
-        <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
-          <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
+        <div className="min-h-screen bg-grey100 pb-8 pl-14 lg:pb-0 lg:pl-60">
+          <div className="header-detail flex min-h-20 flex-wrap items-center justify-between gap-3 border-b border-grey300 bg-white px-4 py-3 text-grey600 sm:px-6 lg:px-10">
             <div className="flex gap-[14px] h-12 w-fit">
               <img
                 src={assetUrl(arrow)}
@@ -197,22 +198,22 @@ function PromotionEdit() {
                 </h1>
               </div>
             </div>
-            <div className="flex">
+            <div className="flex gap-2 sm:gap-3">
               <button
-                className="btn-secondary flex items-center justify-center text-base font-medium w-28 h-11"
+                className={`${buttonStyles.secondary} flex h-10 w-24 items-center justify-center !px-3 !py-0 text-sm sm:h-11 sm:w-28 sm:!px-6 sm:!py-2.5 sm:text-base`}
                 onClick={() => navigate("/admin-promotion")}
               >
                 ยกเลิก
               </button>
               <button
-                className="btn-primary flex items-center justify-center ml-6 text-base font-medium w-28 h-11"
+                className={`${buttonStyles.primary} flex h-10 w-24 items-center justify-center !px-3 !py-0 text-sm sm:h-11 sm:w-28 sm:!px-6 sm:!py-2.5 sm:text-base`}
                 type="submit"
               >
                 ยืนยัน
               </button>
             </div>
           </div>
-          <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
+          <div className="mx-3 mt-4 rounded-lg border border-grey200 bg-white p-4 sm:mx-6 sm:mt-6 sm:p-6 lg:mx-10 lg:mt-10">
             <Form.Item
               label={<span style={labelStyle}>Promotion Code</span>}
               colon={false}
@@ -288,7 +289,7 @@ function PromotionEdit() {
                     ]}
                   >
                     <Input
-                      style={{ width: "50%" }}
+                      style={{ width: "100%", maxWidth: 520 }}
                       suffix="฿"
                       value={
                         newFormData.promotion_types === "fixed"
@@ -350,7 +351,7 @@ function PromotionEdit() {
                           promotion_discount: e.target.value,
                         })
                       }
-                      style={{ width: "50%" }}
+                      style={{ width: "100%", maxWidth: 520 }}
                       suffix="%"
                       disabled={newFormData.promotion_types === "fixed"}
                     />
@@ -386,7 +387,7 @@ function PromotionEdit() {
               ]}
             >
               <Input
-                style={{ width: "50%" }}
+                style={{ width: "100%", maxWidth: 520 }}
                 suffix="ครั้ง"
                 value={newFormData.promotion_quota}
                 onChange={(e) =>
@@ -427,7 +428,7 @@ function PromotionEdit() {
                       disabledDate={(current) =>
                         current && current < moment().startOf("day")
                       }
-                      style={{ width: "50%" }}
+                      style={{ width: "100%", maxWidth: 520 }}
                  
                     />
                   </Form.Item>
@@ -447,7 +448,7 @@ function PromotionEdit() {
                       value={newFormData.promotion_expiry_time}
                       onChange={handleTimeChange}                   
                       format="HH:mm"
-                      style={{ width: "50%" }}
+                      style={{ width: "100%", maxWidth: 520 }}
                     />
                   </Form.Item>
                 </Col>

@@ -1,18 +1,17 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-// import "./App.css";
 import { useNavigate } from "@/routing/navigation.jsx";
 
 function NotFoundPage() {
   const navigate = useNavigate();
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center px-4 py-8">
       <h1 className="text-center font-semibold  text-blue950">
         {" "}
         Sorry, Page Not Found.
       </h1>
       <h2
-        className="text-center font-bold text-8xl text-white pt-5 tracking-widest"
+        className="pt-5 text-center text-7xl font-bold tracking-widest text-white sm:text-8xl"
         style={css`
           -webkit-text-stroke-width: 3px;
           -webkit-text-stroke-color: #001c59;

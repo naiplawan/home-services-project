@@ -1,9 +1,9 @@
 import { Form, Input } from "antd";
 import { useNavigate } from "@/routing/navigation.jsx";
+import { buttonStyles } from "@/lib/ui-classes.js";
 import Navbar from "../components/Navbar.jsx";
 import { notify } from "@/components/ui/notify.js";
 import { useAuth } from "../contexts/authentication";
-import "../styles/App.css";
 
 function LoginForm() {
   const { login } = useAuth();
@@ -35,7 +35,7 @@ function LoginForm() {
   const inputStyle = "border rounded-lg border-grey300 w-[100%] h-11 px-4 py-2.5";
 
   const formStyle =
-    "bg-white border border-grey300 rounded-lg h-full mt-[52px] mb-[87px] px-[87px] pt-[32px] pb-[53px] w-[740px] items-center gap-4";
+    "mx-4 my-8 flex w-full max-w-[740px] flex-col items-center gap-4 rounded-lg border border-grey300 bg-white px-4 pb-8 pt-6 sm:mx-6 sm:my-12 sm:px-8 lg:px-[87px] lg:pb-[53px] lg:pt-[32px]";
 
   const labelStyle = {
     marginTop: "10px",
@@ -51,7 +51,7 @@ function LoginForm() {
     <>
       <div className="flex flex-col">
         <Navbar />
-        <div className="flex w-[100%] min-h-screen justify-center bg-bg ">
+        <div className="flex min-h-screen w-full justify-center bg-bg px-2 sm:px-4">
           <Form
             labelCol={{ span: 10 }}
             wrapperCol={{ span: 24 }}
@@ -67,7 +67,7 @@ function LoginForm() {
               เข้าสู่ระบบ
             </h1>
             <Form.Item
-              className="w-440px h-72px"
+              className="min-h-[72px] w-full"
               label={<span style={labelStyle}>อีเมล</span>}
               name="email"
               labelAlign="top"
@@ -83,7 +83,7 @@ function LoginForm() {
             </Form.Item>
 
             <Form.Item
-              className="w-440px h-72px"
+              className="min-h-[72px] w-full"
               label={<span style={labelStyle}>รหัสผ่าน</span>}
               labelAlign="top"
               name="password"
@@ -103,7 +103,7 @@ function LoginForm() {
 
             <Form.Item style={{textAlign: 'center'}}>
               <button  
-              className="btn-primary w-[100%] mt-5 mb-5"
+              className={`${buttonStyles.primary} mb-5 mt-5 w-full`}
               type="submit">
                 เข้าสู่ระบบ
               </button>
@@ -112,7 +112,7 @@ function LoginForm() {
               <span className="text-base text-grey700">
                 ยังไม่มีบัญชีผู้ใช้ HomeServices?
               </span>
-              <a className="btn-ghost" onClick={handleRegisterClick}>
+              <a className={buttonStyles.ghost} onClick={handleRegisterClick}>
                 <span className="underline">ลงทะเบียน</span>
               </a>
             </div>

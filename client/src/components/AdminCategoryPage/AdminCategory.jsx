@@ -8,6 +8,7 @@ import assetUrl from "../../assets/assetUrl.js";
 import plusSign from "../../assets/AdminPhoto/plus-sign.svg";
 import AlertBoxDelete from "../AlertBox.jsx";
 import LoadingState from "@/components/ui/loading-state.jsx";
+import { buttonStyles } from "@/lib/ui-classes.js";
 import drag from "../../assets/AdminPhoto/drag.svg";
 import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 
@@ -103,22 +104,22 @@ function AdminCategory() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="bg-bg h-[100%] pb-[4%] pl-60 min-h-screen">
+      <div className="min-h-screen bg-bg pb-[4%] pl-16 lg:pl-60">
         <div className="  flex flex-col items-center  ">
-          <div className="header-name justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
+          <div className="header-name flex min-h-20 items-center justify-between gap-4 border-b border-grey300 bg-white px-4 py-4 text-grey600 sm:px-6 lg:px-10">
             <h1 className="text-black   font-semibold text-xl">หมวดหมู่</h1>
-            <div className="flex">
+            <div className="flex min-w-0 flex-1 justify-end gap-3 sm:flex-none">
               <input
                 type="text"
                 placeholder="ค้นหาหมวดหมู่..."
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
-                className="px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[400px] "
+                className="w-full min-w-0 rounded-lg border border-grey300 bg-white px-4 py-2 focus:border-blue-300 focus:outline-none focus:ring sm:w-[400px]"
               />
 
               <button
                 alt="add-category"
-                className="flex  btn-primary rounded-lg ml-7  h-[100%] w-[190px] text-white focus:outline-none "
+                className={`${buttonStyles.primary} flex shrink-0 items-center justify-center sm:w-[190px]`}
                 onClick={() => navigate("/admin-category-create")}
               >
                 <p className=" pl-[15%]">เพิ่มหมวดหมู่</p>
@@ -129,13 +130,13 @@ function AdminCategory() {
             </div>
           </div>
           {error && <p className="text-red-500 mb-4">{error}</p>}
-          <div className="results w-[95%]">
+          <div className="results w-[95%] min-w-0">
             {data.length === 0 ? (
               <LoadingState label="กำลังโหลดหมวดหมู่" />
             ) : (
-              <div className="category-list mt-10  w-[100%]">
+              <div className="category-list mt-10 w-full overflow-x-auto">
                 <ul>
-                  <li className=" flex text-sm text-grey600 list-none p-[20px]  rounded-t-lg bg-grey200 border-[1px] border-grey300">
+                  <li className="flex min-w-[900px] list-none rounded-t-lg border-[1px] border-grey300 bg-grey200 p-[20px] text-sm text-grey600">
                     <span className=" text-grey700 mx-[8%]"> ลำดับ</span>
                     <span className=" text-grey700 mx-[%] ">
                       {" "}
@@ -175,7 +176,7 @@ function AdminCategory() {
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
-                                    className=" flex hover:bg-grey100 bg-white list-none p-[20px] border-[1px] border-grey200"
+                                    className="flex min-w-[900px] list-none border-[1px] border-grey200 bg-white p-[20px] hover:bg-grey100"
                                   >
                                     <div className=" flex justify-start items-center">
                                       <img

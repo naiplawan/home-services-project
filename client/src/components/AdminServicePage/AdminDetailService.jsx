@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "@/routing/navigation.jsx";
 import dateFormat from "../../utils/dateFormat.js";
 import arrow from "../../assets/AdminPhoto/arrow.png";
 import assetUrl from "../../assets/assetUrl.js";
+import { buttonStyles } from "@/lib/ui-classes.js";
 
 function AdminDetailService() {
   const [service, setService] = useState({});
@@ -73,9 +74,9 @@ function AdminDetailService() {
   }, [params.serviceId]);
 
   return (
-    <div className="bg-grey100 min-h-screen pb-[4%] pl-60 ">
+    <div className="min-h-screen bg-grey100 pb-8 pl-14 lg:pb-[4%] lg:pl-60">
       <div key={service.service_id}>
-        <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
+        <div className="header-detail flex min-h-20 items-center justify-between gap-3 border-b border-grey300 bg-white px-3 py-3 text-grey600 sm:px-6 lg:px-10">
           <div className="flex">
             <img
               src={assetUrl(arrow)}
@@ -93,7 +94,7 @@ function AdminDetailService() {
             </div>
           </div>
           <button
-            className="btn-primary  h-[100%] w-[112px] p-[20px] text-white focus:outline-none "
+            className={`${buttonStyles.primary} h-10 w-28 p-2.5`}
             onClick={() =>
               navigate(`/admin-service-edit/${service.service_id}`)
             }
@@ -102,22 +103,22 @@ function AdminDetailService() {
           </button>
         </div>
         <div className="flex flex-col items-center">
-          <div className="detail-container w-[95%] rounded-lg border border-grey300 bg-white font-normal flex-col items-center  px-10 mt-10 pt-[20px] py-[10px] ">
+          <div className="detail-container mt-6 flex w-[calc(100%-2rem)] flex-col items-start rounded-lg border border-grey300 bg-white px-4 py-5 font-normal sm:mt-10 sm:w-[95%] sm:px-10">
             <p className="pb-[40px] pt-[20px] ">
               <span className="text-grey700">ชื่อบริการ</span>
-              <span className="px-[182px] text-black ">
+              <span className="break-words px-2 text-black sm:px-4 lg:px-[182px]">
                 {service.service_name}
               </span>
             </p>
             <p className="pb-[40px] pt-[20px] ">
               <span className="text-grey700">หมวดหมู่</span>
-              <span className="px-[182px] text-black">{categoryName}</span>
+              <span className="break-words px-2 text-black sm:px-4 lg:px-[182px]">{categoryName}</span>
             </p>
             <p className="pb-[40px] pt-[20px] ">
               <span className="text-grey700">รูปภาพ</span>
-              <span className="px-[182px] text-black ">
+              <span className="px-2 text-black sm:px-4 lg:px-[182px]">
                 <img
-                  className="px-[182px] text-black"
+                  className="mt-3 max-h-72 max-w-full object-contain sm:mt-0 sm:inline-block sm:align-middle"
                   src={service.service_photo}
                 />
               </span>
@@ -131,7 +132,7 @@ function AdminDetailService() {
               {service.sub_service &&
                 service.sub_service.map((subService, index) => (
                   <div
-                    className="flex justify-between items-center gap-6"
+                    className="flex flex-col justify-between gap-3 border-b border-grey200 py-4 sm:flex-row sm:items-center sm:gap-6"
                     key={index}
                   >
                     <div className="subServiceName self-stretch text-grey700 text-base">
@@ -156,13 +157,13 @@ function AdminDetailService() {
 
             <p className="mt-10 pb-[25px] ">
               <span className="text-grey700">สร้างเมื่อ</span>
-              <span className="px-[200px] text-black ">
+              <span className="px-2 text-black sm:px-4 lg:px-[200px]">
                 {dateFormat(service.service_created_date)}
               </span>
             </p>
             <p className="pb-[40px] ">
               <span className="text-grey700">แก้ไขล่าสุด</span>
-              <span className="px-[190px] text-black ">
+              <span className="px-2 text-black sm:px-4 lg:px-[190px]">
                 {dateFormat(service.service_edited_date)}
               </span>
             </p>

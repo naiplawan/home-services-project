@@ -7,7 +7,7 @@ import Footer from "../components/HomePage/Footer.jsx";
 
 function Homepage() {
   return (
-    <div className="prompt">
+    <div className="font-prompt">
       <div>
         <Navbar />
         <Slogan />

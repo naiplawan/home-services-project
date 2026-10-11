@@ -9,7 +9,7 @@ function LogoutMock() {
 
   return (
     <div>
-      <button className="prompt text-sm font-bold text-[#336DF2] border border-[#336DF2] w-[100px] h-[35px] rounded-lg" onClick={handleLogout}>
+      <button className="w-[100px] rounded-lg border border-[#336DF2] text-sm font-prompt font-bold text-[#336DF2] h-[35px]" onClick={handleLogout}>
         Logout
       </button>
     </div>

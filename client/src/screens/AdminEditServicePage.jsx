@@ -5,7 +5,7 @@ function AdminEditServicePage () {
 
   return (
     <>
-    <div className=" h-screen bg-bg">
+    <div className="min-h-screen bg-bg">
     <AdminSidebar />
     <ServiceEditForm />
     </div>

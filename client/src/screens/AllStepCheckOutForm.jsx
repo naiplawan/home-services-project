@@ -12,6 +12,7 @@ import greyarrow from "../assets/CustomerPhoto/icons/BackGrey.svg";
 import { Steps, Form, Input, DatePicker, TimePicker } from "antd";
 import moment from "moment";
 import { notify } from "@/components/ui/notify.js";
+import { buttonStyles } from "@/lib/ui-classes.js";
 // import { Elements } from "@stripe/react-stripe-js"; // npm install --save @stripe/react-stripe-js @stripe/stripe-js
 // import { loadStripe } from "@stripe/stripe-js";
 import { usePromotion } from "../hooks/promotion";
@@ -376,16 +377,16 @@ function AllStepCheckOutForm() {
       <Navbar />
       <div className="">
         {service.service_photo && service.service_photo ? (
-          <div className="h-[300px] overflow-hidden flex items-center justify-center relative bg-blue900">
+          <div className="relative flex h-48 items-center justify-center overflow-hidden bg-blue900 sm:h-64 lg:h-[300px]">
             <img
               src={service.service_photo}
               alt="Service Photo"
-              className="min-w-full mt-40 mix-blend-screen"
+              className="absolute inset-0 h-full w-full object-cover object-center mix-blend-screen"
             />
-            <div className="rounded-lg px-10 py-[10px] w-auto h-[68px] text-center text-[#646C80]  bg-opacity-12 shadow-[2px_2px_24px_rgba(23,51,106,0.12)] absolute bg-white left-[12rem]">
+            <div className="absolute bottom-4 left-4 max-w-[calc(100%-2rem)] rounded-lg bg-white/95 px-4 py-2 text-sm text-[#646C80] shadow-[2px_2px_24px_rgba(23,51,106,0.12)] sm:bottom-6 sm:left-8 sm:px-6 lg:left-48">
               บริการของเรา
-              <img src={greyarrow} className="inline mx-3" />
-              <span className="text-[32px] text-[#336DF2] ">
+              <img src={greyarrow} className="mx-2 inline sm:mx-3" />
+              <span className="text-xl text-[#336DF2] sm:text-[32px]">
                 {service.service_name}
               </span>
             </div>
@@ -394,14 +395,14 @@ function AllStepCheckOutForm() {
           <p>No service photo available.</p>
         )}
         {current !== 3 && ( // Hide Steps on the Summary page
-          <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
+          <div className="relative z-10 mx-auto my-4 h-auto w-[calc(100%-2rem)] max-w-6xl rounded-lg border border-[#D8D8D8] bg-white px-3 py-4 sm:w-[90%] sm:px-8 lg:px-20">
             <Steps current={current} labelPlacement="vertical" items={items} />
           </div>
         )}
       </div>
-      <div className="flex my-8 lg:mx-[12rem] md:mx-10 justify-between min-h-screen w-[80%]   ">
+      <div className="mx-auto my-6 flex min-h-screen w-full max-w-[1440px] flex-col gap-6 px-4 md:px-8 lg:flex-row lg:items-start lg:justify-between lg:px-10">
         {current === 0 ? (
-          <div className="h-full w-[900px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border border-grey300 rounded-lg  bg-white mt-20 ">
+          <div className="mb-24 mt-2 flex h-auto w-full max-w-[900px] flex-col justify-between rounded-lg border border-grey300 bg-white px-4 py-6 sm:px-6 lg:mb-8 lg:mt-4 lg:min-w-0 lg:flex-1 lg:px-8">
             <div className="text-[20px] text-[#646C80]">
               เลือกรายการบริการ{service.service_name}
             </div>
@@ -463,10 +464,10 @@ function AllStepCheckOutForm() {
           </div>
         ) : current === 1 ? (
           <div
-            className="Second-content h-[680px] lg:w-[800px] md:w-[600px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border border-grey300 rounded-lg  bg-white mt-20  "
+            className="Second-content mb-24 mt-2 flex h-auto min-h-[680px] w-full max-w-[800px] flex-col justify-between rounded-lg border border-grey300 bg-white px-4 py-6 sm:px-6 lg:mb-8 lg:mt-4 lg:min-w-0 lg:flex-1 lg:px-8"
             content="Second-content"
           >
-            <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
+            <div className="relative z-10 mx-auto my-4 h-auto w-full rounded-lg border border-[#D8D8D8] bg-white px-3 py-4 sm:px-8 lg:px-20">
               <Steps
                 current={current}
                 labelPlacement="vertical"
@@ -474,8 +475,8 @@ function AllStepCheckOutForm() {
               />
             </div>
 
-            <div className="flex my-8 lg:mx-[12rem] md:mx-10 justify-between min-h-screen w-[80%] ">
-              <div className="h-full  w-[900px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between  rounded-lg mt-[-50px] ml-[-200px] md:ml-[-210px] ">
+            <div className="flex w-full min-w-0 flex-col justify-between gap-6 lg:flex-row">
+              <div className="flex h-auto w-full min-w-0 flex-col justify-between rounded-lg py-4 sm:py-8 lg:max-w-[900px] lg:px-2">
                 <Form
                   labelCol={{ span: 5 }}
                   wrapperCol={{ span: 19 }}
@@ -499,7 +500,7 @@ function AllStepCheckOutForm() {
                     <DatePicker
                       format="DD/MM/YYYY"
                       placeholder="กรุณาเลือกวันที่"
-                      className="w-[22.5vw] h-[44px] px-4 py-2.5"
+                      className="h-11 w-full max-w-full px-4 py-2.5 sm:max-w-[420px]"
                       value={formData.date}
                       onChange={(date) =>
                         handleFormChange({ date: dayjs(date) })
@@ -515,7 +516,7 @@ function AllStepCheckOutForm() {
                     <TimePicker
                       format="HH:mm"
                       placeholder="กรุณาเลือกเวลา"
-                      className="w-[22.5vw] h-[44px] px-4 py-2.5"
+                      className="h-11 w-full max-w-full px-4 py-2.5 sm:max-w-[420px]"
                       value={formData.time}
                       onChange={(time) =>
                         handleFormChange({ time: dayjs(time) })
@@ -572,7 +573,7 @@ function AllStepCheckOutForm() {
                     </Form.Item>
                   </div>
 
-                  <div className="w-full flex justify-between ml-[95px]">
+                  <div className="flex w-full flex-col justify-between sm:flex-row sm:gap-4 sm:pl-10 lg:pl-24">
                     <Form.Item
                       label="จังหวัด"
                       className="font-medium  text-grey900"
@@ -627,10 +628,10 @@ function AllStepCheckOutForm() {
           </div>
         ) : current === 2 ? (
           <div
-            className="Last-content  h-full w-[687px] lg:mr-[2vw] py-8 px-6 mb-[125px] flex flex-col justify-between border bg-white border-grey300 rounded-lg mt-20"
+            className="Last-content mb-24 mt-2 flex h-auto w-full max-w-[687px] flex-col justify-between rounded-lg border border-grey300 bg-white px-4 py-6 sm:px-6 lg:mb-8 lg:mt-4 lg:min-w-0 lg:flex-1 lg:px-8"
             content="Last-content"
           >
-            <div className="w-[80%] h-[129px] border border-[#D8D8D8] py-[19px] px-[160px] rounded-lg mx-auto top-80 absolute bg-white left-[12rem] ">
+            <div className="relative z-10 mx-auto mb-6 h-auto w-full rounded-lg border border-[#D8D8D8] bg-white px-3 py-4 sm:px-8 lg:px-20">
               <Steps
                 current={current}
                 labelPlacement="vertical"
@@ -722,7 +723,7 @@ function AllStepCheckOutForm() {
             </div>
             <div className="pt-6 ml-5">
               <button
-                className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-20 p-1 px-1 bg-[#336DF2] rounded-lg"
+                className={`${buttonStyles.primary} flex h-10 w-20 items-center justify-center px-2 py-1 text-sm`}
                 onClick={handleApplyPromotion}
               >
                 ใช้โค้ด
@@ -732,8 +733,8 @@ function AllStepCheckOutForm() {
           </div>
         ) : null}
         {/* summary-box */}
-        <div className="h-full w-[562px] py-8 px-6 flex flex-col justify-between bg-white border border-grey300 rounded-lg mr-0 top-40 mt-20 ">
-          <div className="summary-box flex-auto text-center pb-3 text-[40px] text-[#646C80]">
+        <div className="mt-0 flex h-auto w-full flex-col justify-between rounded-lg border border-grey300 bg-white px-4 py-6 sm:px-6 lg:mt-4 lg:w-[min(35vw,562px)] lg:shrink-0 lg:px-8">
+          <div className="summary-box flex-auto pb-3 text-center text-2xl text-[#646C80] sm:text-[40px]">
             {" "}
             {current === 3 ? "ชำระเงินเรียบร้อยแล้ว" : "สรุปรายการ"}
           </div>
@@ -749,7 +750,7 @@ function AllStepCheckOutForm() {
               </li>
             ))}
           </ul>
-          <div className="w-[301]px h-[1px] border border-[#CCD0D7] mt-3"></div>
+          <div className="mt-3 h-px w-full border-t border-[#CCD0D7]"></div>
           <div className="pt-10">
             <div>
               {" "}
@@ -782,7 +783,7 @@ function AllStepCheckOutForm() {
               ) : null}
             </div>
           </div>
-          <div className="w-[301]px h-[1px] border border-[#CCD0D7] mt-3"></div>
+          <div className="mt-3 h-px w-full border-t border-[#CCD0D7]"></div>
           <div className="flex justify-between pt-5 mb-2">
             <div className="text-[16px] text-[#646C80]">รวม</div>
             <div className="text-black font-bold">
@@ -801,11 +802,11 @@ function AllStepCheckOutForm() {
           )}
         </div>
       </div>
-      <div className="flex justify-between p-5 sticky bottom-0 z-[100] border-y-grey300 border-x-white border px-40 bg-white">
+      <div className="sticky bottom-0 z-[100] flex justify-between gap-3 border border-x-white border-y-grey300 bg-white p-3 sm:p-5 lg:px-10 xl:px-40">
         {current === 0 ? (
           <>
             <button
-              className="btn-secondary flex items-center justify-center text-base font-medium w-40 p-2 px-6"
+              className={`${buttonStyles.secondary} flex w-full items-center justify-center p-2 sm:w-40 sm:px-6`}
               onClick={() => {
                 // Navigate to "/services-list" when current === 0
                 navigate("/services-list");
@@ -815,7 +816,7 @@ function AllStepCheckOutForm() {
               <img src={arrowBlue} alt="arrow" />
             </button>
             <button
-              className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-40 p-2 px-6 bg-[#336DF2] rounded-lg"
+              className={`${buttonStyles.primary} flex w-full items-center justify-center p-2 sm:w-40 sm:px-6`}
               onClick={next}
             >
               ดำเนินการต่อ
@@ -826,7 +827,7 @@ function AllStepCheckOutForm() {
           <>
             {current > 0 && (
               <button
-                className="btn-secondary flex items-center justify-center text-base font-medium w-40 p-2 px-6"
+                className={`${buttonStyles.secondary} flex w-full items-center justify-center p-2 sm:w-40 sm:px-6`}
                 onClick={() => prev()}
               >
                 ย้อนกลับ
@@ -835,7 +836,7 @@ function AllStepCheckOutForm() {
             )}
             {current < steps.length - 1 && (
               <button
-                className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-40 p-2 px-6 bg-[#336DF2] rounded-lg"
+                className={`${buttonStyles.primary} flex w-full items-center justify-center p-2 sm:w-40 sm:px-6`}
                 onClick={current === 2 ? () => next() : () => next()}
               >
                 ดำเนินการต่อ
@@ -852,7 +853,7 @@ function AllStepCheckOutForm() {
                   // handleSubmitStripe(e); // Pass the event object
                   next();
                 }}
-                className="btn-secondary-[#336DF2]  flex items-center justify-center text-white font-medium w-45 p-2 px-6 bg-[#336DF2] rounded-lg"
+                className={`${buttonStyles.primary} flex w-full items-center justify-center p-2 sm:w-48 sm:px-6`}
               >
                 ยืนยันการชำระเงิน
               </button>

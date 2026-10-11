@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import classnames from "classnames";
 import PropTypes from "prop-types";
-import "./InputPriceRange.css";
-// import "./MultiRangeSlider.css";
 
 const InputPriceRange = ({
   min,
@@ -58,8 +56,7 @@ const InputPriceRange = ({
       <p className="text-xs font-normal text-grey700 px-5 my-1.5">
         {minVal}-{maxVal}฿
       </p>
-      <div className="container">
-        <br></br>
+      <div className="relative flex w-full max-w-[216px] items-center justify-center py-4">
         <input
           type="range"
           min={min}
@@ -73,9 +70,13 @@ const InputPriceRange = ({
             event.target.value = value.toString();
             setMinFilter(Number(event.target.value));
           }}
-          className={classnames("thumb thumb--zindex-3", {
-            "thumb--zindex-5": minVal > max - 100,
-          })}
+          className={classnames(
+            "pointer-events-none absolute h-0 w-full appearance-none bg-transparent outline-none [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:relative [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-blue700 [&::-moz-range-thumb]:bg-white [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:mt-1 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-blue700 [&::-webkit-slider-thumb]:bg-white",
+            {
+              "z-[5]": minVal > max - 100,
+              "z-[3]": minVal <= max - 100,
+            }
+          )}
         />
         <input
           type="range"
@@ -90,14 +91,13 @@ const InputPriceRange = ({
             event.target.value = value.toString();
             setMaxFilter(Number(event.target.value));
           }}
-          className="thumb thumb--zindex-4"
+          className="pointer-events-none absolute z-[4] h-0 w-full appearance-none bg-transparent outline-none [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:relative [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-blue700 [&::-moz-range-thumb]:bg-white [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:mt-1 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-blue700 [&::-webkit-slider-thumb]:bg-white"
         />
 
-        <div className="slider">
-          <div className="slider__track" />
-          <div ref={range} className="slider__range" />
-          <div className="slider__left-value">{minVal}</div>
-          <div className="slider__right-value">{maxVal}</div>
+        <div className="relative h-[5px] w-full max-w-[216px] rounded-sm bg-grey300">
+          <div ref={range} className="absolute z-[2] h-[5px] rounded-sm bg-blue500" />
+          <div className="absolute -left-1.5 top-4 text-xs text-blue500">{minVal}</div>
+          <div className="absolute -right-1 top-4 text-xs text-blue500">{maxVal}</div>
         </div>
       </div>
     </div>

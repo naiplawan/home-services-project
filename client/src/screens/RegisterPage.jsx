@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Form, Input, Checkbox } from "antd";
 import Navbar from "../components/Navbar.jsx";
 import { useNavigate } from "@/routing/navigation.jsx";
+import { buttonStyles } from "@/lib/ui-classes.js";
 import axios from "axios";
 import { notify } from "@/components/ui/notify.js";
 
@@ -13,7 +14,7 @@ function RegisterPage() {
   const inputStyle = "border rounded-lg border-grey300 w-[100%] h-12 px-4 py-2" ;
 
   const formStyle =
-    "bg-white border border-grey300 rounded-lg h-full mt-[3.25rem] mb-[5.4375rem] px-[5.4375rem] pt-[2rem] pb-[3.3125rem] flex flex-col w-[840px] items-center gap-4";
+    "mx-4 my-8 flex w-full max-w-[840px] flex-col items-center gap-4 rounded-lg border border-grey300 bg-white px-4 pb-8 pt-6 sm:mx-6 sm:my-12 sm:px-8 lg:px-[5.4375rem] lg:pb-[3.3125rem] lg:pt-[2rem]";
 
   const labelStyle = {
     marginTop: "10px",
@@ -75,7 +76,7 @@ function RegisterPage() {
   return (
     <div className="flex flex-col">
       <Navbar />
-      <div className="flex w-[100%] min-h-screen justify-center bg-bg">
+      <div className="flex min-h-screen w-full justify-center bg-bg px-2 sm:px-4">
         <Form
           labelCol={{ span: 10 }}
           wrapperCol={{ span: 24 }}
@@ -90,7 +91,7 @@ function RegisterPage() {
           </h1>
 
           <Form.Item
-            className="w-[80%] h-[72px]"
+            className="min-h-[72px] w-full sm:w-[80%]"
             name="fullName"
             validateFirst
             label={<span style={labelStyle}>ชื่อ - นามสกุล</span>}
@@ -119,7 +120,7 @@ function RegisterPage() {
 
           {/* Phone Number */}
           <Form.Item
-            className="w-[80%] h-[72px]"
+            className="min-h-[72px] w-full sm:w-[80%]"
             name="phoneNumber"
             validateFirst
             label={<span style={labelStyle}>เบอร์โทรศัพท์</span>}
@@ -148,7 +149,7 @@ function RegisterPage() {
 
           {/* Email */}
           <Form.Item
-            className="w-[80%] h-[72px]"
+            className="min-h-[72px] w-full sm:w-[80%]"
             name="email"
             validateFirst
             label={<span style={labelStyle}>อีเมล </span>}
@@ -183,7 +184,7 @@ function RegisterPage() {
 
           {/* Password */}
           <Form.Item
-            className="w-[80%]"
+            className="w-full sm:w-[80%]"
             name="password"
             validateFirst
             label={<span style={labelStyle}>รหัสผ่าน</span>}
@@ -304,7 +305,7 @@ function RegisterPage() {
 
             <div className="text-center">
               <a
-                className="btn-ghost"
+                className={buttonStyles.ghost}
                 onClick={() => navigate("/login")}
                 style={{
                   color: "var(--blue-600, #336DF2)",

@@ -6,9 +6,9 @@ function AdminDashboard() {
   const navigate = useNavigate();
   return (
     <>
-      <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-        <h1 className=" text-9xl"> Hello Admin !! </h1>
-        <div className="join"> 
+      <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-gray-100 px-4 py-10">
+        <h1 className="text-center text-5xl sm:text-7xl lg:text-9xl"> Hello Admin !! </h1>
+        <div className="join flex flex-wrap justify-center gap-3">
         <button
         className="btn primary"
         onClick={() => navigate("/")}

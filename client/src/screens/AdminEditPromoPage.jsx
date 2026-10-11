@@ -5,7 +5,7 @@ function AdminEditPromoPage () {
 
   return (
     <>
-    <div className=" h-screen bg-bg">
+    <div className="min-h-screen bg-bg">
     <AdminSidebar />
     <PromotionEdit />
     </div>

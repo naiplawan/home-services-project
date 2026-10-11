@@ -7,11 +7,11 @@ function AdminSidebar() {
     const navigate = useNavigate();
     const { logout } = useAuth();   
 return (
-    <div className="left-nav w-60 h-screen bg-blue950 top-0 z-50 fixed pb-20 shadow-[inset_-1px_0px_0px_#3e3e3e]">
+    <aside className="left-nav fixed top-0 z-50 h-dvh w-14 overflow-y-auto bg-blue950 pb-20 shadow-[inset_-1px_0px_0px_#3e3e3e] sm:w-16 lg:w-60">
       <div>
-        <div className="flex justify-center my-8">
+        <div className="my-8 flex justify-center px-1 lg:px-0">
           <div
-            className="py-2 px-2.5 bg-blue100 rounded-xl w-48 h-12 cursor-pointer relative"
+            className="relative h-12 w-10 cursor-pointer rounded-xl bg-blue100 px-2.5 py-2 lg:w-48"
             onClick={() => navigate("/")}
           >
             <img
@@ -19,65 +19,65 @@ return (
               className="w-7 h-7 absolute "
               src={image.logoHomeService}
             />
-            <p className=" text-blue500 font-medium text-xl absolute ml-8">
+            <p className="absolute ml-8 hidden whitespace-nowrap text-xl font-medium text-blue500 lg:block">
               HomeServices
             </p>
           </div>
         </div>
         <div>
           <div
-            className="hover:bg-blue900 h-12 my-1 cursor-pointer flex items-center"
+            className="my-1 flex h-12 cursor-pointer items-center justify-center hover:bg-blue900 lg:justify-start"
             onClick={() => navigate("/admin-category")}
           >
             <img
-              className="inline-block w-5 mr-2 ml-7"
+              className="inline-block w-5 shrink-0 lg:ml-7 lg:mr-2"
               src={image.category}
               alt="หมวดหมู่"
             />
-            <button className="h-14 text-grey100 font-medium text-base no-underline hover:text-white">
+            <button aria-label="หมวดหมู่" className="hidden h-14 text-base font-medium text-grey100 no-underline hover:text-white lg:block">
               หมวดหมู่
             </button>
           </div>
           <div
-            className="hover:bg-blue900 h-12 my-1 cursor-pointer flex items-center"
+            className="my-1 flex h-12 cursor-pointer items-center justify-center hover:bg-blue900 lg:justify-start"
             onClick={() => navigate("/admin-service")}
           >
             <img
-              className="inline-block h-6 mr-1 ml-7"
+              className="inline-block h-6 shrink-0 lg:ml-7 lg:mr-1"
               src={image.service}
               alt="บริการ"
             />
-            <button className="h-14 text-grey100 font-medium text-base no-underline hover:text-white">
+            <button aria-label="บริการ" className="hidden h-14 text-base font-medium text-grey100 no-underline hover:text-white lg:block">
               บริการ
             </button>
           </div>
-          <div className="hover:bg-blue900 h-12 my-1 cursor-pointer flex items-center" onClick={() => navigate("/admin-promotion")}>
+          <div className="my-1 flex h-12 cursor-pointer items-center justify-center hover:bg-blue900 lg:justify-start" onClick={() => navigate("/admin-promotion")}>
           <img
-              className="inline-block h-6 mr-1 ml-7"
+              className="inline-block h-6 shrink-0 lg:ml-7 lg:mr-1"
               src={image.coupon}
               alt="โปรโมชั่น"
             />
-            <button className="h-14 text-grey100 font-medium text-base no-underline hover:text-white">
+            <button aria-label="Promotion Code" className="hidden h-14 text-base font-medium text-grey100 no-underline hover:text-white lg:block">
               Promotion Code
             </button>
           </div>
           <div>
-            <div className="hover:bg-blue900 h-12 my-1 cursor-pointer pt-3 absolute bottom-5 w-60" onClick={() => {
+            <div className="absolute bottom-5 left-0 my-1 flex h-12 w-14 cursor-pointer items-center justify-center pt-3 hover:bg-blue900 sm:w-16 lg:w-60 lg:justify-start" onClick={() => {
                   logout();
                 }}>
               <img
-                className="inline-block mr-2 ml-7"
+                className="inline-block shrink-0 lg:ml-7 lg:mr-2"
                 src={image.logout}
                 alt="Logout"
               />
-              <button className="h-14 text-grey100 font-medium text-base no-underline hover:text-white">
+              <button aria-label="ออกจากระบบ" className="hidden h-14 text-base font-medium text-grey100 no-underline hover:text-white lg:block">
                 ออกจากระบบ
               </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
 

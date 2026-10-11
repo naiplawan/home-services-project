@@ -3,7 +3,7 @@ import AddService from "../components/AdminServicePage/AdminAddService.jsx";
 
 function AdminCreateServicePage() {
   return (
-    <div className="h-screen bg-bg">
+    <div className="min-h-screen bg-bg">
       <SideBar />
       <AddService />
     </div>

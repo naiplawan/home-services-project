@@ -8,6 +8,7 @@ import {
 import { InboxOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@/routing/navigation.jsx";
 import { notify } from "@/components/ui/notify.js";
+import { buttonStyles } from "@/lib/ui-classes.js";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import arrow from "../../assets/AdminPhoto/arrow.png";
@@ -218,10 +219,10 @@ function ServiceEditForm() {
             },
           }}
         >
-          <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
+          <div className="min-h-screen bg-grey100 pb-8 pl-14 lg:pb-0 lg:pl-60">
             <div key={service.service_id}>
               {/* header */}
-              <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
+              <div className="header-detail flex min-h-20 flex-wrap items-center justify-between gap-3 border-b border-grey300 bg-white px-4 py-3 text-grey600 sm:px-6 lg:px-10">
                 <div className="flex gap-[14px] h-12 w-fit">
                   <img
                     src={assetUrl(arrow)}
@@ -238,15 +239,15 @@ function ServiceEditForm() {
                     </h1>
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex gap-2 sm:gap-3">
                   <button
-                    className="btn-secondary flex items-center justify-center text-base font-medium w-28 h-11"
+                    className={`${buttonStyles.secondary} flex h-10 w-24 items-center justify-center !px-3 !py-0 text-sm sm:h-11 sm:w-28 sm:!px-6 sm:!py-2.5 sm:text-base`}
                     onClick={() => navigate("/admin-service")}
                   >
                     ยกเลิก
                   </button>
                   <button
-                    className="btn-primary flex items-center justify-center ml-6 text-base font-medium w-28 h-11"
+                    className={`${buttonStyles.primary} flex h-10 w-24 items-center justify-center !px-3 !py-0 text-sm sm:h-11 sm:w-28 sm:!px-6 sm:!py-2.5 sm:text-base`}
                     type="submit"
                   >
                     ยืนยัน
@@ -482,7 +483,7 @@ function ServiceEditForm() {
                           </div>
                         ))}
                       <button
-                        className="btn-secondary flex items-center justify-center text-base font-medium w-56 h-11"
+                        className={`${buttonStyles.secondary} flex h-11 w-full max-w-56 items-center justify-center`}
                         type="button"
                         onClick={() => {
                           add();

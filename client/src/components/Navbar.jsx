@@ -1,5 +1,6 @@
 import HouseIcon from '../assets/HouseIcon.svg';
 import { useNavigate } from "@/routing/navigation.jsx";
+import { buttonStyles } from "@/lib/ui-classes.js";
 import { useAuth } from "../contexts/authentication";
 import person from '../assets/homepagePhoto/person.svg'
 import form from '../assets/homepagePhoto/form.svg'
@@ -20,13 +21,13 @@ function Navbar () {
 
 
   return (
-    <div className="flex justify-between p-5 shadow-[2px_2px_24px_rgba(23,51,106,0.12)] sticky top-0 z-[100] bg-white">
-      <div className="flex lg:ml-40 items-center">
-        <img src={HouseIcon} alt="" />
-        <button className="text-2xl font-semibold text-[#336DF2] prompt ml-2" onClick={() => navigate('/')}>
+    <div className="sticky top-0 z-[100] flex items-center justify-between gap-1 bg-white px-2 py-3 shadow-[2px_2px_24px_rgba(23,51,106,0.12)] sm:gap-4 sm:p-5">
+      <div className="flex min-w-0 items-center">
+        <img src={HouseIcon} alt="" className="h-6 w-6 shrink-0 sm:h-8 sm:w-8" />
+        <button className="ml-1 whitespace-nowrap text-sm font-semibold text-[#336DF2] prompt sm:ml-2 sm:text-2xl" onClick={() => navigate('/')}>
           HomeServices
         </button>
-        <div className="items-center text-base font-bold prompt lg:ml-10 px-3 pt-1.5">
+        <div className="items-center whitespace-nowrap px-1 pt-1.5 text-xs font-bold prompt sm:ml-6 sm:px-3 sm:text-base">
           <button className="cursor-pointer"
             onClick={() => navigate("/services-list")}
             >บริการของเรา</button>
@@ -34,16 +35,16 @@ function Navbar () {
       </div>
 
 
-      <div className="lg:mr-40 flex items-center">
+      <div className="flex shrink-0 items-center">
         {auth.isAuthenticated ? (
           <>
-            <p className="mr-4 text-[#646C80]">{loginName}</p>
+            <p className="mr-2 max-w-20 truncate text-[#646C80] sm:mr-4 sm:max-w-40">{loginName}</p>
             {loginRole === 'admin' ? <div className="relative">
               <div className="flex items-center justify-center w-[30px] h-[30px] rounded-full border border-grey600 overflow-hidden cursor-pointer">
                 <img src={person} className="w-[25px] h-[25px] rounded-full" onClick={() => setOpen(!open)}/>
               </div>
               {open && (
-              <div className="absolute right-0 mt-2 bg-white w-[200px] rounded-lg">
+              <div className="absolute right-0 z-20 mt-2 w-52 max-w-[calc(100vw-1.5rem)] rounded-lg bg-white">
                 <ul className="flex flex-col shadow-2xl self-stretch rounded-lg text-[#4B5160] overflow-hidden">
                 <button className="flex p-2 hover:bg-[#EFEFF2] hover:text-[#232630]" onClick={()=> navigate("/profile")}><span><img src={person} className="mr-3 "/></span>ข้อมูลผู้ใช้งาน</button>
                 <button className="flex p-1 hover:bg-[#EFEFF2] hover:text-[#232630]" onClick={() => navigate(`/customer-ordered-list/${userId}`)}><span><img src={form} className="mr-3"/></span>รายการคำสั่งซ่อม</button>
@@ -60,7 +61,7 @@ function Navbar () {
                 <img src={person} className="w-[25px] h-[25px] rounded-full" onClick={() => setOpen(!open)}/>
               </div>
               {open && (
-              <div className="absolute right-0 mt-2 bg-white w-[200px] rounded-lg">
+              <div className="absolute right-0 z-20 mt-2 w-52 max-w-[calc(100vw-1.5rem)] rounded-lg bg-white">
                 <ul className="flex flex-col shadow-2xl self-stretch rounded-lg text-[#4B5160] overflow-hidden">
                 <button className="flex p-2 hover:bg-[#EFEFF2] hover:text-[#232630]" onClick={()=> navigate("/profile")}><span><img src={person} className="mr-3 "/></span>ข้อมูลผู้ใช้งาน</button>
                 <button className="flex p-1 hover:bg-[#EFEFF2] hover:text-[#232630]" onClick={() => navigate(`/customer-ordered-list/${userId}`)}><span><img src={form} className="mr-3"/></span>รายการคำสั่งซ่อม</button>
@@ -77,7 +78,7 @@ function Navbar () {
           </>
         ) : (
           <button
-            className="btn-secondary"
+            className={`${buttonStyles.secondary} shrink-0 whitespace-nowrap !px-2 !py-1 text-xs sm:!px-4 sm:!py-2.5 sm:text-base`}
             onClick={() => navigate("/login")}
           >
             เข้าสู่ระบบ

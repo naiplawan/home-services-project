@@ -7,6 +7,7 @@ import image from "../../assets/AdminPhoto/imageIndex.js";
 import axios from "axios";
 import drag from "../../assets/AdminPhoto/drag.svg";
 import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
+import { buttonStyles } from "@/lib/ui-classes.js";
 
 function AdminServiceList() {
   const [keyword, setKeyword] = useState("");
@@ -127,11 +128,11 @@ function AdminServiceList() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <header className="bg-bg h-[100%] pl-60">
+      <header className="bg-bg pl-14 lg:pl-60">
         <div className="flex flex-col items-center">
-          <div className="header-name justify-between flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white text-grey600 pb-[20px] border-b border-grey300">
+          <div className="header-name flex min-h-20 flex-col items-stretch justify-between gap-3 border-b border-grey300 bg-white px-4 py-4 text-grey600 sm:px-6 lg:flex-row lg:items-center lg:px-10">
             <h1 className="text-black font-semibold text-xl">บริการ</h1>
-            <div className="flex">
+            <div className="flex min-w-0 flex-col gap-3 sm:flex-row">
               <input
                 id="search-text"
                 name="search-text"
@@ -139,10 +140,10 @@ function AdminServiceList() {
                 placeholder="ค้นหาบริการ..."
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
-                className="px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[400px]"
+                className="w-full min-w-0 rounded-lg border border-grey300 bg-white px-4 py-2 focus:border-blue-300 focus:outline-none focus:ring sm:w-[400px]"
               />
               <button
-                className="flex btn-primary rounded-lg ml-7 h-[100%] w-[190px] text-white focus:outline-none"
+                className={`${buttonStyles.primary} flex shrink-0 items-center justify-center sm:w-[190px] lg:ml-7`}
                 onClick={() => navigate("/admin-service-create")}
               >
                 <p className="pl-[15%]">เพิ่มบริการ</p>
@@ -159,13 +160,13 @@ function AdminServiceList() {
         </div>
       </header>
       {error && <p className="text-red-500 mb-4">{error}</p>}
-      <div className="categories-data min-h-screen bg-bg p-[41px] ml-60">
+      <div className="categories-data min-h-screen min-w-0 bg-bg p-4 sm:p-6 lg:ml-60 lg:p-[41px] ml-14">
         {!Array.isArray(services.data) ? (
           <LoadingState label="กำลังโหลดบริการ" />
         ) : (
-          <div className="category-list w-[100%]">
+          <div className="category-list w-full overflow-x-auto">
             <ul>
-              <li className="flex w-[100%] text-sm text-grey600 list-none p-[20px] rounded-t-lg bg-grey200 border-[1px] border-grey300 gap-[20px]">
+              <li className="flex min-w-[960px] list-none gap-[20px] rounded-t-lg border-[1px] border-grey300 bg-grey200 p-[20px] text-sm text-grey600">
                 <span className="text-grey700 pl-[7%]">ลำดับ</span>
                 <span className="text-grey700 pl-[4%]">ชื่อหมวดบริการ</span>
                 <span className="text-grey700 pl-[11%]">หมวดหมู่</span>
@@ -193,7 +194,7 @@ function AdminServiceList() {
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
-                                className="flex hover:bg-grey100 bg-white list-none p-[5px] border-[1px] border-grey200"
+                                className="flex min-w-[960px] list-none border-[1px] border-grey200 bg-white p-[5px] hover:bg-grey100"
                               >
                                 <div className="ml-[1%] flex justify-start items-center ">
                                   <img

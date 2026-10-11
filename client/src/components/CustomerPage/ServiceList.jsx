@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "@/routing/navigation.jsx";
 import axios from "axios";
 import image from "../../assets/CustomerPhoto/imageIndex.js";
+import { buttonStyles } from "@/lib/ui-classes.js";
 import SellBlack from "../../assets/homepagePhoto/SellBlack.jsx";
 import InputPriceRange from "./InputPriceRange";
 import AlertBoxDelete from "../AlertBox.jsx";
@@ -177,10 +178,10 @@ function ServiceList() {
       <div>
         <header>
           <div className="Header relative">
-            <img src={image.Header} alt="Test" className="inline" />
-            <div className="absolute top-0 h-[100%] left-0 right-0 z-10 text-center text-black bg-[#00195199]"></div>
-            <span className="absolute top-[64px]  left-0 right-0 z-10 text-center text-white ">
-              <h1 className="text-[32px]">บริการของเรา</h1>
+            <img src={image.Header} alt="" className="block h-[220px] w-full object-cover sm:h-[280px] lg:h-auto" />
+            <div className="absolute inset-0 z-10 bg-[#00195199]"></div>
+            <span className="absolute inset-x-0 top-1/2 z-10 -translate-y-1/2 px-4 text-center text-white">
+              <h1 className="text-2xl sm:text-[32px]">บริการของเรา</h1>
               <p>
                 ซ่อมเครื่องใช้ไฟฟ้า ซ่อมแอร์ ทำความสะอาดบ้าน และอื่น ๆ อีกมากมาย
                 <br />
@@ -190,23 +191,23 @@ function ServiceList() {
           </div>
         </header>
 
-        <div className="filter-bar flex items-center p-5 sticky top-0 z-[100] bg-white border-b-[1px] border-[#CCD0D7]">
+        <div className="filter-bar sticky top-0 z-[100] border-b border-[#CCD0D7] bg-white p-3 sm:p-5">
           <div className="container mx-auto">
-            <div className="xl:px-[120px] flex row items-center space-x-4 justify-between">
+            <div className="flex flex-col gap-3 sm:grid sm:grid-cols-2 sm:gap-4 lg:flex lg:flex-row lg:items-center lg:justify-between lg:space-x-4 xl:px-[120px]">
               <input
                 type="text"
                 placeholder="ค้นหาบริการ"
-                className="search-filter text-black  px-4 py-2 border-grey300 border bg-white rounded-lg focus:outline-none focus:ring focus:border-blue-300 w-[318px] "
+                className="search-filter w-full min-w-0 rounded-lg border border-grey300 bg-white px-4 py-2 text-black focus:border-blue-300 focus:outline-none focus:ring lg:w-[318px]"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
               />
-              <div className="w-[80px]"></div>
-              <div className=" category-option-filter  ">
-                <p className="pl-[10px] w-[120px] text-[12px] text-[#646C80]">
+              <div className="hidden w-[80px] lg:block"></div>
+              <div className="category-option-filter min-w-0">
+                <p className="pl-[10px] text-[12px] text-[#646C80]">
                   หมวดหมู่บริการ
                 </p>
                 <select
-                  className="px-2 bg-white text-[16px] text-black font-semibold"
+                  className="w-full max-w-full bg-white px-2 text-sm font-semibold text-black sm:text-base"
                   value={selectedCategory}
                   onChange={handleCategoryChange}
                 >
@@ -222,21 +223,21 @@ function ServiceList() {
                     ))}
                 </select>
               </div>
-              <div className="line-1 border-[#CCD0D7] border-l border-[1px] h-[44px] "></div>{" "}
+              <div className="line-1 hidden h-[44px] border-l border-[#CCD0D7] lg:block"></div>{" "}
               <div>
-                <p className="pl-[10px] w-[120px] text-[12px] text-[#646C80]">
+                <p className="pl-[10px] text-[12px] text-[#646C80]">
                   ราคา
                 </p>
                 <div className="price-range-filter relative inline-block text-black font-semibold">
                   <p
-                    className="cursor-pointer w-[150px] mb-1"
+                    className="mb-1 w-full cursor-pointer sm:w-[150px]"
                     onClick={handleDropdownToggle}
                   >
                     {minPriceFilter} - {maxPriceFilter} ฿ ▾
                   </p>
 
                   {isDropdownVisible && (
-                    <div className="dropdown-content bg-white w-64 h-28 absolute right-[-50px] top-[50px] rounded-md shadow-lg">
+                    <div className="dropdown-content absolute left-0 top-[calc(100%+0.5rem)] z-20 h-28 w-64 max-w-[calc(100vw-2rem)] rounded-md bg-white shadow-lg sm:left-auto sm:right-[-50px]">
                       <div className="pt-[15px]">
                         <InputPriceRange
                           min={0}
@@ -252,11 +253,11 @@ function ServiceList() {
                   )}
                 </div>
               </div>
-              <div className="line-2 border-[#CCD0D7] border-l border-[1px] h-[44px] "></div>
-              <div className="sort-filter">
+              <div className="line-2 hidden h-[44px] border-l border-[#CCD0D7] lg:block"></div>
+              <div className="sort-filter min-w-0">
                 <p className="pl-[10px] text-[12px] text-[#646C80]">เรียงตาม</p>
                 <select
-                  className="px-2 bg-white text-black font-semibold"
+                  className="w-full max-w-full bg-white px-2 font-semibold text-black"
                   value={orderFilter}
                   onChange={handleSortChange}
                 >
@@ -266,8 +267,8 @@ function ServiceList() {
                   <option value="descending">ตามตัวอักษร (Descending)</option>
                 </select>
               </div>
-              <div className="w-[80px]"></div>
-              <button className="btn-primary" onClick={handleSearchClick}>
+              <div className="hidden w-[80px] lg:block"></div>
+              <button className={`${buttonStyles.primary} w-full sm:col-span-2 lg:w-auto`} onClick={handleSearchClick}>
                 ค้นหา
               </button>
             </div>
@@ -275,7 +276,7 @@ function ServiceList() {
         </div>
 
         <section>
-          <div className="xl:px-[159px] flex flex-wrap justify-center items-center top-20 pb-20 h-full bg-[#f0f0f0]">
+          <div className="grid h-full grid-cols-1 items-stretch justify-items-center gap-5 bg-[#f0f0f0] px-4 pb-16 pt-8 sm:grid-cols-2 sm:px-8 xl:grid-cols-3 xl:px-[159px]">
             {services &&
               services.data &&
               Array.isArray(services.data) &&
@@ -284,13 +285,13 @@ function ServiceList() {
                   filteredServices.map((service) => (
                     <div
                       key={service.id}
-                      className="lg:mx-[37px] lg:w-[369px] mt-[48px] w-[25%] h-[35%] rounded-md overflow-hidden border border-[#CCD0D7] m-2"
+                      className="m-2 mt-4 h-full w-full max-w-md overflow-hidden rounded-md border border-[#CCD0D7] xl:max-w-none"
                     >
                       <div className="img-display">
                         <img
                           src={service.service_photo}
                           alt={service.sub_service.name}
-                          className="w-full h-[210px] object-cover"
+                          className="aspect-[16/10] w-full object-cover"
                         />
                       </div>
                       <div className="p-2 md:p-5 bg-white min-h-full">
@@ -324,7 +325,7 @@ function ServiceList() {
                             <div className="mt-[-20px]">
                               {role === "customer" ? (
                                 <button
-                                  className="btn-ghost"
+                                  className={buttonStyles.ghost}
                                   onClick={() =>
                                     navigate(`/checkout/${service.service_id}`)
                                   }
@@ -333,7 +334,7 @@ function ServiceList() {
                                 </button>
                               ) : (
                                 <button
-                                  className="btn-ghost"
+                                  className={buttonStyles.ghost}
                                   onClick={handleAlertRole}
                                 >
                                   เลือกบริการ
@@ -342,7 +343,7 @@ function ServiceList() {
                             </div>
                           ) : (
                             <button
-                              className="btn-ghost"
+                              className={buttonStyles.ghost}
                               onClick={() => navigate(`/login`)}
                             >
                               เลือกบริการ
@@ -353,8 +354,8 @@ function ServiceList() {
                     </div>
                   ))
                 ) : (
-                  <div className="text-center h-[500px]">
-                    <h1 className="mt-[100px]">
+                  <div className="flex min-h-[320px] flex-col items-center justify-center px-4 py-12 text-center sm:col-span-2 xl:col-span-3">
+                    <h1 className="mb-3">
                       ขออภัยค่ะ ไม่พบการค้นหาบริการที่ท่านต้องการ
                     </h1>
                     <p> หากลูกค้าต้องการบริการใดๆเพิ่มเติม</p>
@@ -365,13 +366,13 @@ function ServiceList() {
                 services.data.map((service) => (
                   <div
                     key={service.id}
-                    className="lg:mx-[37px] lg:w-[369px] mt-[48px] w-[25%] h-[35%] rounded-md overflow-hidden border border-[#CCD0D7] m-2"
+                    className="m-2 mt-4 h-full w-full max-w-md overflow-hidden rounded-md border border-[#CCD0D7] xl:max-w-none"
                   >
                     <div className="img-display ">
                       <img
                         src={service.service_photo}
                         alt={service.sub_service.name}
-                        className="w-full h-[210px] object-cover"
+                        className="aspect-[16/10] w-full object-cover"
                       />
                     </div>
                     <div className="p-2 md:p-5 bg-white min-h-full">
@@ -406,7 +407,7 @@ function ServiceList() {
                           <div className="mt-[-20px]">
                             {role === "customer" ? (
                               <button
-                                className="btn-ghost"
+                                className={buttonStyles.ghost}
                                 onClick={() =>
                                   navigate(`/checkout/${service.service_id}`)
                                 }
@@ -415,7 +416,7 @@ function ServiceList() {
                               </button>
                             ) : (
                               <button
-                                className="btn-ghost"
+                                className={buttonStyles.ghost}
                                 onClick={handleAlertRole}
                               >
                                 เลือกบริการ
@@ -424,7 +425,7 @@ function ServiceList() {
                           </div>
                         ) : (
                           <button
-                            className="btn-ghost"
+                            className={buttonStyles.ghost}
                             onClick={() => navigate(`/login`)}
                           >
                             เลือกบริการ
@@ -448,8 +449,8 @@ function ServiceList() {
           )}
         </section>
 
-        <footer className="h-[284px] bg-[#336DF2] text-center flex justify-center items-center">
-          <p className="text-[20px] text-white">
+        <footer className="flex min-h-[220px] items-center justify-center bg-[#336DF2] px-5 py-10 text-center sm:min-h-[284px]">
+          <p className="text-base text-white sm:text-[20px]">
             เพราะเราคือช่าง ผู้ให้บริการเรื่องบ้านอันดับ 1 แบบครบวงจร
             โดยทีมช่างมืออาชีพมากกว่า 100 ทีม
             <br />

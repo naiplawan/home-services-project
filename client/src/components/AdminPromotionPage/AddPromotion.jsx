@@ -10,6 +10,7 @@ import {
 import moment from "moment";
 import { useNavigate } from "@/routing/navigation.jsx";
 import { notify } from "@/components/ui/notify.js";
+import { buttonStyles } from "@/lib/ui-classes.js";
 import { useState } from "react";
 import axios from "axios";
 
@@ -110,25 +111,25 @@ function AddPromotionForm() {
       onFinish={onFinish}
       requiredMark={false}
     >
-      <div className="bg-grey100 h-full pb-4% md:pb-0 md:pl-60">
-        <div className="flex items-center h-20 px-10 justify-between border-b border-grey300 bg-white">
+      <div className="min-h-screen bg-grey100 pb-8 pl-14 lg:pb-0 lg:pl-60">
+        <div className="flex min-h-20 flex-wrap items-center justify-between gap-3 border-b border-grey300 bg-white px-4 py-3 sm:px-6 lg:px-10">
           <h1 className="text-xl font-medium">เพิ่ม Promotion Code</h1>
-          <div className="flex">
+          <div className="flex gap-2 sm:gap-3">
             <button
-              className="btn-secondary flex items-center justify-center text-base font-medium w-28 h-11"
+              className={`${buttonStyles.secondary} flex h-10 w-24 items-center justify-center !px-3 !py-0 text-sm sm:h-11 sm:w-28 sm:!px-6 sm:!py-2.5 sm:text-base`}
               onClick={() => navigate("/admin-promotion")}
             >
               ยกเลิก
             </button>
             <button
-              className="btn-primary flex items-center justify-center ml-6 text-base font-medium w-28 h-11"
+              className={`${buttonStyles.primary} flex h-10 w-24 items-center justify-center !px-3 !py-0 text-sm sm:h-11 sm:w-28 sm:!px-6 sm:!py-2.5 sm:text-base`}
               type="submit"
             >
               สร้าง
             </button>
           </div>
         </div>
-        <div className="bg-white mx-10 mt-10 p-6 border border-grey200 rounded-lg">
+        <div className="mx-3 mt-4 rounded-lg border border-grey200 bg-white p-4 sm:mx-6 sm:mt-6 sm:p-6 lg:mx-10 lg:mt-10">
           <Form.Item
             label={<span style={labelStyle}>Promotion Code</span>}
             colon={false}
@@ -140,7 +141,7 @@ function AddPromotionForm() {
               },
             ]}
           >
-            <Input className="w-1/2" />
+            <Input style={{ width: "100%", maxWidth: 520 }} />
           </Form.Item>
 
           <Form.Item
@@ -198,7 +199,7 @@ function AddPromotionForm() {
                   ]}
                 >
                   <Input
-                    style={{ width: "50%" }}
+                    style={{ width: "100%", maxWidth: 520 }}
                     suffix="฿"
                     disabled={promotionType === "percent"}
                   />
@@ -240,7 +241,7 @@ function AddPromotionForm() {
                   ]}
                 >
                   <Input
-                    style={{ width: "50%" }}
+                    style={{ width: "100%", maxWidth: 520 }}
                     suffix="%"
                     disabled={promotionType === "fixed"}
                   />
@@ -275,7 +276,7 @@ function AddPromotionForm() {
               },
             ]}
           >
-            <Input style={{ width: "50%" }} suffix="ครั้ง" />
+            <Input style={{ width: "100%", maxWidth: 520 }} suffix="ครั้ง" />
           </Form.Item>
 
           <Form.Item

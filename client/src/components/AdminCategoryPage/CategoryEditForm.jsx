@@ -7,6 +7,7 @@ import assetUrl from "../../assets/assetUrl.js";
 import trash from "../../assets/homepagePhoto/trash.svg";
 import AlertBoxDelete from "../AlertBox.jsx";
 import { notify } from "@/components/ui/notify.js";
+import { buttonStyles } from "@/lib/ui-classes.js";
 
 function EditedCategoryForm() {
   const [categoryData, setCategoryData] = useState([]);
@@ -74,10 +75,10 @@ function EditedCategoryForm() {
     navigate("/admin-category");
   };
   return (
-    <div className="edit-container h-screen bg-bg pl-60">
+    <div className="edit-container min-h-screen bg-bg pl-16 lg:pl-60">
       {categoryData.map((category) => (
         <form onSubmit={handleEditSubmit} key={category.category_id}>
-          <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
+          <div className="header-detail flex min-h-20 items-center justify-between gap-3 border-b border-grey300 bg-white px-4 py-4 text-grey600 sm:px-6 lg:px-10">
             <div className="flex">
               <img
                 src={assetUrl(arrow)}
@@ -100,15 +101,13 @@ function EditedCategoryForm() {
             >
               <div className="flex">
                 <button
-                  className="btn-secondary flex items-center
-                  justify-center text-base font-medium w-28 h-11"
+                  className={`${buttonStyles.secondary} flex h-11 w-28 items-center justify-center`}
                   onClick={handleCancel}
                 >
                   ยกเลิก
                 </button>
                 <button
-                  className="btn-primary flex items-center justify-center
-                  ml-6 text-base font-medium w-28 h-11"
+                  className={`${buttonStyles.primary} flex h-11 w-28 items-center justify-center sm:ml-3`}
                   type="submit"
                 >
                   ยืนยัน
@@ -117,11 +116,11 @@ function EditedCategoryForm() {
             </div>
           </div>
           <div className="flex flex-col items-center">
-            <div className="detail-container w-[95%] rounded-lg border border-grey300 bg-white font-normal flex-col items-center  px-10 mt-10 pt-[20px] py-[10px] ">
+              <div className="detail-container mt-6 flex w-[95%] flex-col items-start rounded-lg border border-grey300 bg-white px-4 py-5 font-normal sm:mt-10 sm:px-10">
               <p className="pb-[40px] pt-[20px] ">
                 <span className="text-grey700">ชื่อหมวดหมู่</span>
                 <input
-                  className="rounded-lg bg-white text-black border ml-16 px-4 h-11 w-4/6 border-grey300 focus:border-blue600 focus:outline-none"
+                  className="w-full rounded-lg border border-grey300 bg-white px-4 text-black focus:border-blue600 focus:outline-none sm:ml-4 sm:h-11 sm:w-4/6 lg:ml-16"
                   type="text"
                   name="edited_category"
                   value={editedCategoryName}
@@ -131,13 +130,13 @@ function EditedCategoryForm() {
               <hr className="py-[20px]" />
               <p className="pb-[25px] ">
                 <span className="text-grey700">สร้างเมื่อ</span>
-                <span className="px-[200px] text-black ">
+                <span className="px-2 text-black sm:px-4 lg:px-[200px]">
                   {dateFormat(category.category_created_date)}
                 </span>
               </p>
               <p className="pb-[40px] ">
                 <span className="text-grey700">แก้ไขล่าสุด</span>
-                <span className="px-[190px] text-black ">
+                <span className="px-2 text-black sm:px-4 lg:px-[190px]">
                   {dateFormat(category.category_edited_date)}
                 </span>
               </p>

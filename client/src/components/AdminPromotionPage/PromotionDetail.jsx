@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "@/routing/navigation.jsx";
 import dateFormat from "../../utils/dateFormat.js";
 import arrow from "../../assets/AdminPhoto/arrow.png";
 import assetUrl from "../../assets/assetUrl.js";
+import { buttonStyles } from "@/lib/ui-classes.js";
 
 function PromotionDetail() {
   const [promotionById, setPromotionById] = useState([]);
@@ -26,11 +27,11 @@ function PromotionDetail() {
   }, [params.promotionId]);
 
   return (
-    <div className="bg-grey100 h-[100%] pb-[4%] pl-60 ">
+    <div className="min-h-screen bg-grey100 pb-8 pl-14 lg:pb-[4%] lg:pl-60">
       {promotionById.map((promotion) => {
         return (
           <>
-            <div className="header-detail justify-between  flex items-center h-20 px-10 mt-0 pt-[20px] py-[10px] w-[100%] bg-white  text-grey600 pb-[20px] border-b border-grey300">
+            <div className="header-detail flex min-h-20 items-center justify-between gap-3 border-b border-grey300 bg-white px-3 py-3 text-grey600 sm:px-6 lg:px-10">
               <div className="flex">
                 <img
                   src={assetUrl(arrow)}
@@ -48,7 +49,7 @@ function PromotionDetail() {
                 </div>
               </div>
               <button
-                className="btn-primary  h-[100%] w-[112px] p-[20px] text-white focus:outline-none "
+                className={`${buttonStyles.primary} h-10 w-28 p-2.5`}
                 onClick={() =>
                   navigate(`/admin-promotion-edit/${promotion.promotion_id}`)
                 }
@@ -57,53 +58,53 @@ function PromotionDetail() {
               </button>
             </div>
             <div className="flex flex-col items-center">
-              <div className="detail-container w-[95%] rounded-lg border border-grey300 bg-white font-normal flex-col items-center  px-10 mt-10 pt-[20px] py-[10px] ">
-                <p className="pb-[40px] pt-[20px] ">
+              <div className="detail-container mt-6 flex w-[calc(100%-2rem)] flex-col rounded-lg border border-grey300 bg-white px-4 py-5 font-normal sm:mt-10 sm:w-[95%] sm:px-10">
+                <p className="flex flex-col gap-2 pb-8 pt-4 sm:flex-row sm:items-center">
                   <span className="text-grey700">Promotion Code</span>
-                  <span className="px-[135px] text-black ">
+                  <span className="break-words text-black sm:ml-8 lg:ml-24">
                     {promotion.promotion_code}
                   </span>
                 </p>
-                <p className="pb-[40px] pt-[20px] ">
+                <p className="flex flex-col gap-2 pb-8 pt-4 sm:flex-row sm:items-center">
                   <span className="text-grey700">ประเภท</span>
-                  <span className="px-[215px] text-black ">
+                  <span className="text-black sm:ml-8 lg:ml-24">
                     {promotion.promotion_types.charAt(0).toUpperCase() +
                       promotion.promotion_types.slice(1).toLowerCase()}
                   </span>
                 </p>
-                <p className="pb-[40px] pt-[20px] ">
+                <p className="flex flex-col gap-2 pb-8 pt-4 sm:flex-row sm:items-center">
                   <span className="text-grey700">ราคาที่ลด</span>
-                  <span className="px-[200px] text-[#C82438] ">
+                  <span className="text-[#C82438] sm:ml-8 lg:ml-24">
                     -
                     {promotion.promotion_types === "fixed"
                       ? `${promotion.promotion_discount}฿`
                       : `${promotion.promotion_discount}%`}
                   </span>
                 </p>
-                <p className="pb-[40px] pt-[20px] ">
+                <p className="flex flex-col gap-2 pb-8 pt-4 sm:flex-row sm:items-center">
                   <span className="text-grey700">โควต้าการใช้คงเหลือ</span>
-                  <span className="px-[125px] text-black ">
+                  <span className="text-black sm:ml-8 lg:ml-24">
                     {promotion.promotion_quota} ครั้ง
                   </span>
                 </p>
-                <p className="pb-[40px] pt-[20px] ">
+                <p className="flex flex-col gap-2 pb-8 pt-4 sm:flex-row sm:items-center">
                   <span className="text-grey700">วันหมดอายุ</span>
-                  <span className="px-[185px] text-black ">
+                  <span className="text-black sm:ml-8 lg:ml-24">
                     {dateFormat(
                       `${promotion.promotion_expiry_date} ${promotion.promotion_expiry_time}`
                     )}
                   </span>
                 </p>
                 <hr className="py-[20px]" />
-                <p className="pb-[25px] ">
+                <p className="flex flex-col gap-2 pb-6 sm:flex-row sm:items-center">
                   <span className="text-grey700">สร้างเมื่อ</span>
-                  <span className="px-[200px] text-black ">
+                  <span className="text-black sm:ml-8 lg:ml-24">
                     {dateFormat(promotion.promotion_created_date_time)}
                   </span>
                 </p>
-                <p className="pb-[40px] ">
+                <p className="flex flex-col gap-2 pb-8 sm:flex-row sm:items-center">
                   <span className="text-grey700">แก้ไขล่าสุด</span>
-                  <span className="px-[189px] text-black ">
+                  <span className="text-black sm:ml-8 lg:ml-24">
                     {dateFormat(promotion.promotion_edited_date_time)}
                   </span>
                 </p>

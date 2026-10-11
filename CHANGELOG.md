@@ -9,6 +9,8 @@
 
 ### Changed
 
+- Make public, customer, admin, profile, and checkout screens responsive across mobile, tablet, and desktop widths.
+- Replace app-specific stylesheets with Tailwind utilities and load the Prompt font through Next.js local font support.
 - Move frontend routing and Vercel's client service from Vite/React Router to Next.js while keeping the Express `/api` service and local development proxy.
 - Update local image handling for Next.js static asset imports and document the Next.js development workflow.
 

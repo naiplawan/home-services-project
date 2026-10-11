@@ -20,13 +20,13 @@ const ProfilePage = () => {
       {loading ? (
         <LoadingState label="กำลังโหลดข้อมูลโปรไฟล์" />
       ) : (
-        <div className=" flex  justify-center bg-green900 h-screen items-center">
-        <Space direction="vertical" size={200}>
+        <div className="flex min-h-screen items-start justify-center bg-green900 px-4 py-8 sm:items-center">
+        <Space direction="vertical" className="w-full max-w-[600px]">
             
-            <Card title="Profile Detail" style={{ width: 600, height:900 }}>
-              <p >Full Name: {fullName}</p>
+            <Card title="Profile Detail" className="w-full">
+              <p className="break-words">Full Name: {fullName}</p>
               <p>Phone Number: {phoneNumber}</p>
-              <p>Email: {email}</p>
+              <p className="break-all">Email: {email}</p>
             </Card>
         </Space>
         </div>

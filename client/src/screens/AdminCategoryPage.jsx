@@ -3,7 +3,7 @@ import AdminSidebar from "../components/ServicePage/AdminSidebar.jsx";
 
 function AdminCategoryPage() {
   return (
-    <div className="bg-bg h-[100%]  ">
+    <div className="min-h-screen bg-bg">
       <AdminSidebar />
       <AdminCategory />
     </div>

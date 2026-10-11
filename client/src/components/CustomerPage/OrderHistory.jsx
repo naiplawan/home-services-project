@@ -38,7 +38,7 @@ function OrderHistory () {
     return (
         <div className="flex-col">
             {order.length === 0 ? (
-                <div className="p-6 w-[50vw] ml-10 mb-8 bg-white border border-grey300 rounded-lg">
+                <div className="mb-8 w-full rounded-lg border border-grey300 bg-white p-4 md:ml-8 md:flex-1 md:p-6">
                     <h1 className="text-grey700 text-2xl font-normal text-center">
                         ไม่มีประวัติการซ่อม
                     </h1>
@@ -49,14 +49,14 @@ function OrderHistory () {
                         if (data.status === "ดำเนินการสำเร็จแล้ว") {
                             return (
                                 <div 
-                                    className="p-6 w-[50vw] ml-10 mb-[28px] bg-white border border-grey300 rounded-lg flex justify-between"
+                                    className="mb-7 flex w-full flex-col gap-6 rounded-lg border border-grey300 bg-white p-4 md:ml-8 md:flex-1 md:flex-row md:justify-between md:p-6"
                                     key={index}
                                 >
                                     <div>
                                         <div className="text-xl font-medium leading-normal">
                                             คำสั่งซ่อมรหัส : {data.order_number}
                                         </div>
-                                        <div className="h-12 flex flex-col gap-y-[9px] mt-3 mb-5 text-sm font-normal leading-[150%] text-grey700">
+                                        <div className="mt-3 mb-5 flex min-h-12 flex-col gap-y-[9px] text-sm font-normal leading-[150%] text-grey700">
                                             <div className="flex gap-x-[15px]">
                                                 <img 
                                                     className="w-5 h-5" 
@@ -97,8 +97,8 @@ function OrderHistory () {
                                             </ul> 
                                         </div>
                                     </div>
-                                    <div className="flex flex-col gap-y-12 items-end justify-between">
-                                        <div className="h-[65px] flex flex-col gap-y-[13px]">
+                                    <div className="flex flex-col items-start justify-between gap-y-6 md:items-end md:gap-y-12">
+                                        <div className="flex min-h-[65px] flex-col gap-y-[13px]">
                                             <div className="text-grey700 font-normal text-sm leading-[150%] flex gap-x-3 justify-end items-center">
                                                 สถานะ:{" "}
                                                     <div className="bg-[#DFF9F6] text-grey900 text-sm font-normal px-3 py-[2px] rounded-[99px]">

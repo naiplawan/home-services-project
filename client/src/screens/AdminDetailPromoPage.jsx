@@ -4,11 +4,11 @@ import PromotionDetail from '../components/AdminPromotionPage/PromotionDetail';
 function AdminPromoDetailPage () {
 
   return (
-    <div className=" h-screen bg-bg">
+    <div className="min-h-screen bg-bg">
       <AdminSidebar />
       <PromotionDetail />
     </div>
   )
 }
 
-export default AdminPromoDetailPage 
+export default AdminPromoDetailPage
