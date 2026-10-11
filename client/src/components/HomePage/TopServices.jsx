@@ -14,13 +14,13 @@ import {
 function TopServices() {
   const navigate = useNavigate();
 
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState({ data: [] });
 
   const getCategory = async () => {
     try {
       const response = await axios("/api/service");
-      setServices(response.data?.data ?? []);
-      console.log("ผลลัพธ์การค้นหา", response.data?.data);
+      const serviceList = response.data?.data;
+      setServices({ data: Array.isArray(serviceList) ? serviceList : [] });
     } catch (error) {
       console.error("Error fetching services:", error);
     }

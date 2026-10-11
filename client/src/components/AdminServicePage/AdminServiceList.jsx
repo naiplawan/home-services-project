@@ -10,7 +10,7 @@ import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 
 function AdminServiceList() {
   const [keyword, setKeyword] = useState("");
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState({ data: null });
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -19,7 +19,8 @@ function AdminServiceList() {
   const getServices = async () => {
     try {
       const response = await axios.get("/api/service");
-      setServices(response.data.data);
+      const serviceList = response.data?.data;
+      setServices({ data: Array.isArray(serviceList) ? serviceList : [] });
     } catch (error) {
       setError("เกิดข้อผิดพลาดในการเรียกข้อมูลบริการ");
     }
@@ -159,7 +160,7 @@ function AdminServiceList() {
       </header>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <div className="categories-data min-h-screen bg-bg p-[41px] ml-60">
-        {services.length === 0 ? (
+        {!Array.isArray(services.data) ? (
           <LoadingState label="กำลังโหลดบริการ" />
         ) : (
           <div className="category-list w-[100%]">
