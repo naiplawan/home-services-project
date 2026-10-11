@@ -16,6 +16,7 @@
 
 ### Fixed
 
+- Disable Ant Design's failing click-wave fallback, validate registration again on the server, and return a clear conflict when an email or phone number is already registered.
 - Populate the homepage featured section from the current service list instead of matching outdated service names.
 - Show animated loading states while homepage, customer, and admin service lists fetch results, with retry actions when requests fail.
 - Show only the first validation error for each registration field so required and format messages do not appear together.
@@ -30,4 +31,5 @@
 
 ### Security
 
+- Stop logging registration credentials and restrict registration to validated customer accounts.
 - Stop tracking the server environment file and provide a blank environment-variable template.

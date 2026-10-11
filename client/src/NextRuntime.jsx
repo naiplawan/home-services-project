@@ -1,6 +1,7 @@
 "use client";
 
 import { MotionConfig } from "framer-motion";
+import { ConfigProvider } from "antd";
 import { useEffect } from "react";
 import App from "./App.jsx";
 import { AuthProvider } from "./contexts/authentication.jsx";
@@ -14,10 +15,12 @@ export default function NextRuntime() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <AuthProvider>
-        <App />
-        <MotionNotifications />
-      </AuthProvider>
+      <ConfigProvider wave={{ disabled: true }}>
+        <AuthProvider>
+          <App />
+          <MotionNotifications />
+        </AuthProvider>
+      </ConfigProvider>
     </MotionConfig>
   );
 }

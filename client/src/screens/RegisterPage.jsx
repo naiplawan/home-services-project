@@ -60,8 +60,9 @@ function RegisterPage() {
           notify.error("ลงทะเบียนล้มเหลว");
         }
       } catch (error) {
-        console.error(error);
-        notify.error("กรุณากรอกข้อมูลให้ครบถ้วน");
+        notify.error(
+          error.response?.data?.error ?? "ไม่สามารถลงทะเบียนได้ กรุณาลองอีกครั้ง"
+        );
       } finally {
         setIsSubmitting(false);
       }

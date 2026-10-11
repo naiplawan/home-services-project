@@ -19,23 +19,38 @@ authRouter.get("/", async (req, res) => {
 });
 
 authRouter.post("/register", async (req, res) => {
+  const { fullName, phoneNumber, email, password } = req.body ?? {};
+  const validName =
+    typeof fullName === "string" &&
+    fullName.trim().length <= 100 &&
+    /^[-a-zA-Z'.ก-๙\s]+$/.test(fullName.trim());
+  const validPhone =
+    typeof phoneNumber === "string" && /^0[6-9][0-9]{8}$/.test(phoneNumber);
+  const validEmail =
+    typeof email === "string" &&
+    email.length <= 254 &&
+    /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(email.trim());
+  const validPassword =
+    typeof password === "string" &&
+    password.length >= 8 &&
+    password.length <= 72 &&
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])/.test(password);
+
+  if (!validName || !validPhone || !validEmail || !validPassword) {
+    return res.status(400).json({ error: "กรุณาตรวจสอบข้อมูลที่กรอก" });
+  }
+
   const user = {
-    fullName: req.body.fullName,
-    phoneNumber: req.body.phoneNumber,
-    email: req.body.email,
-    password: req.body.password,
-    role: req.body.role,
+    fullName: fullName.trim(),
+    phoneNumber,
+    email: email.trim(),
+    password,
+    role: "customer",
   };
 
-  console.log("Received data from frontend:", user); // Log the data
-
   try {
-    // Generate a salt
-    const salt = await bcrypt.genSalt(10);
-
-    // Hash the password with the generated salt
-    const hashedPassword = await bcrypt.hash(user.password, salt);
-    const { data, error } = await supabase
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const { error } = await supabase
       .from("users")
       .insert([
         {
@@ -45,21 +60,24 @@ authRouter.post("/register", async (req, res) => {
           password: hashedPassword,
           role: user.role,
         },
-      ])
-      .select();
+      ]);
 
     if (error) {
+      if (error.code === "23505") {
+        return res.status(409).json({
+          error: "อีเมลหรือเบอร์โทรศัพท์นี้ถูกใช้แล้ว",
+        });
+      }
+
+      console.error("Registration database error:", { code: error.code ?? "UNKNOWN" });
       return res.status(500).json({ error: "Failed to register user." });
     }
-
-    // Log the data
-    console.log("User data after registration:", data);
 
     return res.json({
       message: "Your account has been created successfully",
     });
   } catch (err) {
-    console.error("Error while registering user:", err);
+    console.error("Registration request failed:", { code: err?.code ?? "UNKNOWN" });
     return res.status(500).json({ error: "Failed to register user." });
   }
 });
